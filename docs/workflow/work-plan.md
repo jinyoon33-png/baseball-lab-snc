@@ -1,8 +1,9 @@
 1. 요청 요약
 - 활성 티켓: `AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차`
-- 현재 단계: `[Step 1. 작업 대기 — AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차]`
+- 현재 단계: `[Step 1. 사용자 Push origin 대기 — AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차]`
 - 담당: 총괄 Codex 직접 수행
 - 목적: URL/canonical 정준화, privacy 능동 고지, AdSense nonce CSP 미들웨어를 GitHub에 반영하고 Cloudflare 공개 배포에서 실제 CSP가 적용되는지 확인한다.
+- 현재 상태: 로컬 커밋 `7bb8ce8 Prepare AdSense CSP and canonical URLs` 생성 완료. CLI `git push origin main`은 GitHub HTTPS 인증 문제로 실패했고, 로컬은 `main...origin/main [ahead 1]` 상태라 GitHub Desktop `Push origin` 사용자 실행 대기.
 
 2. 대상 파일
 - 커밋 대상: `functions/_middleware.js`, `site/*.html`, `site/robots.txt`, `site/sitemap.xml`, `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
