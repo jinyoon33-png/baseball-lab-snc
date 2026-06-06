@@ -1,5 +1,15 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense 사이트 연결 스크립트 삽입 1차
+- Result: Step 2 로컬 구현 완료. 배포 확인은 다음 티켓에서 진행.
+- Owner: 총괄 Codex 직접 수행.
+- Scope: 공개 HTML 13개 `<head>`의 `<title>` 직후에 Google AdSense 사이트 연결 스크립트 삽입.
+- Client: `ca-pub-2911719487887723`.
+- Static: `node --check site/app.js`·`site/data.js` PASS. AdSense script 13건, `crossorigin="anonymous"` 13건, 공개 HTML 13개와 1:1 일치.
+- Safety: 광고 단위 `<ins class="adsbygoogle">` 삽입 0건. `site/app.js`, `site/data.js`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/_headers`, assets/vendor/evidence/security 변경 0건.
+- CSP: 기존 static fallback CSP가 `script-src ... https:`를 허용하므로 AdSense script 로드 가능.
+- Next: `AdSense 사이트 연결 스크립트 배포 확인 1차`.
+
 ## 2026-06-07 — AdSense 선행 변경 GitHub push·Cloudflare 배포 확인 1차
 - Result: Step 2 완료. 공개 사이트 기준 AdSense 신청 선행 조건 통과.
 - Owner: 총괄 Codex 직접 수행. GitHub Desktop push 후 원격/공개 도메인을 대조.
