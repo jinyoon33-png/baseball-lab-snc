@@ -1,9 +1,10 @@
 1. 요청 요약
 - 활성 티켓: `신규 선수 등록 필수 입력·체중 검증 GitHub push·Cloudflare 재배포 확인 1차`
-- 현재 단계: `[Step 1. 총괄 Codex 작업 대기 — 신규 선수 등록 필수 입력·체중 검증 GitHub push·Cloudflare 재배포 확인 1차]`
+- 현재 단계: `[Step 1. 사용자 Push origin 대기 — 신규 선수 등록 필수 입력·체중 검증 GitHub push·Cloudflare 재배포 확인 1차]`
 - 담당: 총괄 Codex 직접 수행
 - 목적: 신규 선수 등록 필수 표시·체중 검증 변경을 GitHub에 반영하고 Cloudflare 공개 도메인에 배포됐는지 확인한다.
 - 직전 결과: 로컬 브라우저 실사용 확인 PASS.
+- 현재 상태: 로컬 커밋 `1f4bfc8 Require player weight inputs` 생성 완료. CLI `git push origin main`은 GitHub HTTPS 인증 문제(`could not read Username`)로 실패해 GitHub Desktop `Push origin` 사용자 실행 대기.
 
 2. 대상 파일
 - Git 커밋 대상: `site/index.html`, `site/app.js`, `site/style.css`, `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
