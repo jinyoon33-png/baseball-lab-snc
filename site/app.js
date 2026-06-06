@@ -1847,6 +1847,7 @@ function addPlayer() {
     if (!Number.isFinite(ageInput) || !Number.isInteger(ageInput) || ageInput <= 0) return customAlert('올바른 나이를 입력하세요.');
     if (ageInput < 5 || ageInput > 80) return customAlert('나이는 5~80 범위만 허용됩니다.');
 
+    if (_pExpRaw === '') return customAlert('구력을 입력하세요. 야구 경력이 없으면 0을 입력하세요.');
     let expInput = 0;
     if (_pExpRaw !== '') {
         const expNum = Number(_pExpRaw);
@@ -1864,13 +1865,14 @@ function addPlayer() {
     }
     if (heightInput !== 0 && (heightInput < 100 || heightInput > 230)) return customAlert('키는 100~230cm 범위만 허용됩니다.');
 
+    if (_pWeightRaw === '') return customAlert('체중을 입력하세요.');
     let weightInput = 0;
     if (_pWeightRaw !== '') {
         const weightNum = Number(_pWeightRaw);
         if (!Number.isFinite(weightNum) || !Number.isInteger(weightNum)) return customAlert('몸무게는 정수만 입력 가능합니다.');
         weightInput = weightNum;
     }
-    if (weightInput !== 0 && (weightInput < 20 || weightInput > 200)) return customAlert('몸무게는 20~200kg 범위만 허용됩니다.');
+    if (weightInput < 20 || weightInput > 200) return customAlert('몸무게는 20~200kg 범위만 허용됩니다.');
 
     let ageGroup = '성인';
     if (ageInput <= 12) ageGroup = 'U-12';
@@ -2533,6 +2535,7 @@ function savePlayerEdit() {
     if (!Number.isFinite(ageInput) || !Number.isInteger(ageInput) || ageInput <= 0) return customAlert('올바른 나이를 입력하세요.');
     if (ageInput < 5 || ageInput > 80) return customAlert('나이는 5~80 범위만 허용됩니다.');
 
+    if (_eExpRaw === '') return customAlert('구력을 입력하세요. 야구 경력이 없으면 0을 입력하세요.');
     let expInput = 0;
     if (_eExpRaw !== '') {
         const expNum = Number(_eExpRaw);
@@ -2550,13 +2553,14 @@ function savePlayerEdit() {
     }
     if (eHeightInput !== 0 && (eHeightInput < 100 || eHeightInput > 230)) return customAlert('키는 100~230cm 범위만 허용됩니다.');
 
+    if (_eWeightRaw === '') return customAlert('체중을 입력하세요.');
     let eWeightInput = 0;
     if (_eWeightRaw !== '') {
         const weightNum = Number(_eWeightRaw);
         if (!Number.isFinite(weightNum) || !Number.isInteger(weightNum)) return customAlert('몸무게는 정수만 입력 가능합니다.');
         eWeightInput = weightNum;
     }
-    if (eWeightInput !== 0 && (eWeightInput < 20 || eWeightInput > 200)) return customAlert('몸무게는 20~200kg 범위만 허용됩니다.');
+    if (eWeightInput < 20 || eWeightInput > 200) return customAlert('몸무게는 20~200kg 범위만 허용됩니다.');
 
     let ageGroup = '성인';
     if (ageInput <= 12) ageGroup = 'U-12';

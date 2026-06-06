@@ -477,6 +477,20 @@ h3 {
     color: var(--ink-2);
 }
 
+.form-required {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.6;
+    letter-spacing: 0;
+    color: var(--danger);
+    background-color: var(--danger-light);
+    vertical-align: middle;
+}
+
 .form-help-text {
     font-size: 11.5px;
     line-height: 1.5;

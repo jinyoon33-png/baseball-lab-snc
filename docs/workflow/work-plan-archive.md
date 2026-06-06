@@ -1,5 +1,43 @@
 # Work Plan Archive
 
+## 2026-06-06 — 신규 선수 등록 필수 입력·체중 검증 브라우저 실사용 확인 1차
+- Result: Step 2 완료. 브라우저 반실사용 확인 PASS.
+- Owner: 총괄 Codex 직접 수행. 로컬 `site/` 서버와 Playwright 브라우저로 신규 등록·편집 검증을 확인.
+- Static: `node --check site/app.js`·`site/data.js` PASS, 체중 `!== 0` 예외 0건, 체중 범위 검증 2곳 유지, inline handler/광고/analytics/JSON-LD 0건.
+- Browser: 필수 배지 8건, 키 필수 배지 0건. 구력 빈 값 → `구력을 입력하세요...`, 체중 빈 값 → `체중을 입력하세요.`, 체중 `0` → `몸무게는 20~200kg 범위만 허용됩니다.` 확인.
+- Browser: 구력 `0` + 체중 `70` 정상 등록, `pLDB_v4_5`에 선수 1명 저장, 화면 `s2` 전환 확인.
+- Browser: 편집 모달 필수 배지 4건, 체중 `0` 수정 시 범위 오류 차단 및 편집 모달 유지 확인.
+- Note: Playwright 테스트는 별도 브라우저 세션/localStorage에서 수행해 사용자 실데이터를 건드리지 않음.
+- Next: `신규 선수 등록 필수 입력·체중 검증 GitHub push·Cloudflare 재배포 확인 1차`.
+
+## 2026-06-06 — 신규 선수 등록 체중 0 범위 검증 보정 1차
+- Result: Step 2 완료 정밀검토 통과. BLOCKER/MAJOR/MINOR/NIT 0건.
+- Owner: 코드 담당 Claude가 `site/app.js` 체중 범위 조건 2곳을 보정했고 총괄 Codex가 직접 정적 검증.
+- Scope: `addPlayer()`와 `savePlayerEdit()`에서 체중 `0` 예외(`weightInput !== 0`, `eWeightInput !== 0`) 제거. 빈 값 차단, 키 선택 입력, 구력 `0` 허용은 유지.
+- Static: 체중 `!== 0` 예외 0건, `몸무게는 20~200kg` 검증 2곳 유지, 키 예외 2곳 유지, 구력 0 허용 유지, `node --check site/app.js`·`site/data.js` PASS.
+- Safety: inline handler 0건, 광고/analytics/JSON-LD 0건. 이번 티켓 변경은 `site/app.js`로 한정.
+- Note: `site/index.html`·`site/style.css` diff는 직전 필수 배지 티켓의 미커밋 변경분. 다음 티켓에서 로컬 브라우저 실사용 확인 후 묶어서 커밋/배포하는 것이 적절.
+- Next: `신규 선수 등록 필수 입력·체중 검증 브라우저 실사용 확인 1차`.
+
+## 2026-06-06 — 신규 선수 등록 필수 입력 표시·검증 보정 1차
+- Result: 총괄 정밀검토에서 MINOR 1건 발견. 다음 티켓은 체중 `0` 예외 제거 보정으로 전환.
+- Owner: 코드 담당 Claude가 구현했고 총괄 Codex가 직접 정적 검증.
+- Scope: `site/index.html` 등록/편집 라벨 8곳에 `필수` 배지 추가, `site/style.css` `.form-required` 추가, `site/app.js` `addPlayer()`/`savePlayerEdit()` 구력·체중 빈 값 차단 추가.
+- Static: `node --check site/app.js`·`site/data.js` PASS, inline handler 0건, 광고/analytics/JSON-LD 0건, 수정 금지 경로 diff 0건.
+- Issue: `site/app.js`의 체중 범위 검증이 `weightInput !== 0` / `eWeightInput !== 0` 예외를 유지해 체중에 리터럴 `0`을 입력하면 필수/20~200kg 정책을 우회할 수 있음.
+- Decision: 완료로 밀지 않고 `신규 선수 등록 체중 0 범위 검증 보정 1차` 수정 티켓 등록.
+
+## 2026-06-06 — SEO 기본 파일 GitHub push·Cloudflare 재배포 확인 1차
+- Result: Step 2 완료. GitHub push 및 Cloudflare 공개 반영 확인.
+- Owner: 총괄 Codex 직접 수행. GitHub Desktop push 완료 후 원격/공개 도메인을 대조.
+- Git: `ff9d2c4 Add SEO sitemap and canonical URLs`가 `origin/main`에 반영됨. `main...origin/main` 차이 0.
+- Public robots: `https://baseballlabsnc.com/robots.txt`에서 `Sitemap: https://baseballlabsnc.com/sitemap.xml` 확인.
+- Public sitemap: `https://baseballlabsnc.com/sitemap.xml`에서 `<loc>` 13건 확인.
+- Public canonical: `https://baseballlabsnc.com/`에서 `rel="canonical" href="https://baseballlabsnc.com/"` 확인.
+- Headers: `HTTP/2 200`, `server: cloudflare`, `cf-cache-status: HIT`, CSP 헤더 유지.
+- Note: 로컬 기본 resolver 캐시 지연으로 강제 resolve를 병행했으나 공용 DNS/공개 응답 기준 정상.
+- Next: `신규 선수 등록 필수 입력 표시·검증 보정 1차`.
+
 ## 2026-06-06 — 도메인 확정 후 SEO 기본 파일 구현 1차
 - Result: Step 2 완료 정밀검토 통과. BLOCKER/MAJOR/MINOR/NIT 0건.
 - Owner: 코드 담당 Claude가 SEO 기본 파일과 canonical을 구현했고 총괄 Codex가 직접 정적 검증.
