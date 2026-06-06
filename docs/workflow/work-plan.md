@@ -1,37 +1,43 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 승인 대기 중 사이트 품질 보강 1차`
-- 현재 단계: `[Step 1. 사용자 결정 대기 — 승인 대기 중 품질 보강 범위 선택]`
-- 담당: 총괄 Codex
-- 목적: AdSense 신청은 완료됐고 승인 대기 상태이므로, 승인 기간 동안 사이트 품질·정책 안정성을 높일 보강 작업을 선택한다.
+- 활성 티켓: `공개 가이드 3종 콘텐츠 보강 설계 1차`
+- 현재 단계: `[Step 1. 작업 대기 — 공개 가이드 3종 콘텐츠 보강 설계 1차]`
+- 담당: 코드 담당 Claude
+- 목적: AdSense 승인 대기 중 콘텐츠 품질을 높이기 위해 `assessment-guide`, `recovery-guide`, `workload-guide` 3개 공개 문서의 보강 방향을 설계한다.
+- 배경: 3개 문서는 현재 각각 약 374~425단어 수준이며, 정보성은 있으나 승인 심사 관점에서 더 충분한 설명·사용 예시·주의 문구가 있으면 유리하다.
 
-2. 현재 완료 상태
-- AdSense 신청: 사용자 완료, 승인 대기 중.
-- 공개 스크립트: `https://www.baseballlabsnc.com/`에서 `pagead2.googlesyndication.com` 및 `ca-pub-2911719487887723` 확인.
-- 공개 CSP: AdSense script/frame/connect/img 로드 가능한 static fallback CSP 확인.
-- Privacy: `Google AdSense`, `쿠키`, `광고 식별자`, `최종 수정: 2026년 6월` 공개 반영 확인.
-- Ads.txt: AdSense 상태가 `찾을 수 없음`으로 표시되어 `site/ads.txt`에 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0` 추가 보정 중.
-- Git: `main...origin/main` 동기화 완료.
+2. 대상 파일
+- 수정 허용: `docs/workflow/work-plan.md`
+- 읽기 허용: `site/assessment-guide.html`, `site/recovery-guide.html`, `site/workload-guide.html`, `docs/evidence/evidence-research.md`
+- 수정 금지: `site/*` 실제 콘텐츠 수정, `site/app.js`, `site/data.js`, `site/style.css`, `site/_headers`, `site/ads.txt`, `docs/evidence/**`, `docs/security/**`
 
-3. 승인 대기 중 권장 작업
-- A. 콘텐츠 보강: `assessment-guide`, `recovery-guide`, `workload-guide` 본문을 더 두껍게 보강한다.
-- B. 광고 슬롯 설계: 승인 후 넣을 광고 위치를 문서 하단·가이드 중간·앱 보조 영역 중심으로 설계한다. 아직 광고 단위 삽입은 하지 않는다.
-- C. apex → www 301 리디렉션 확인: `baseballlabsnc.com`을 `www.baseballlabsnc.com`으로 정리해 정준 URL 혼선을 줄인다.
+3. 설계 범위
+- 각 문서별로 추가할 섹션 2~3개를 제안한다.
+- 목표는 광고 승인용 얕은 분량 늘리기가 아니라, 사용자에게 실제로 도움이 되는 설명 보강이다.
+- 각 문서는 다음 축을 포함한다:
+  - `assessment-guide`: 평가 전 준비, 결과를 스케줄에 반영하는 방식, 재평가/기록 비교 예시.
+  - `recovery-guide`: 회복 기록 항목 해석, 다음 훈련 전 확인 신호, 학생선수/동호인 적용 시 주의.
+  - `workload-guide`: RPE·훈련량 입력 예시, ACWR 참고 방식, 숫자 과신 방지, 코치/보호자와 함께 보는 방법.
 
-4. 우선순위 판단
-- 1순위: 콘텐츠 보강. 승인 심사에는 광고 위치보다 사이트 내용의 충분성·정책 안정성이 더 직접적이다.
-- 2순위: apex → www 301. SEO 정합성 보강.
-- 3순위: 광고 슬롯 설계. 승인 후 실제 광고 단위 삽입 전 준비.
+4. 표현 제한
+- 의료 진단·치료·처방 표현 금지.
+- 부상 예방 보장, 성과 향상 보장, 자동 위험 판정, 최적화 표현 금지.
+- ACWR/RPE 숫자 임계값 직접 처방 금지. 필요한 경우 “참고 신호”, “확인”, “조정 고려” 수준으로만 표현.
+- 외부 자료 장문 인용 금지. 근거문서 내용은 요약·재구성만 허용.
 
-5. 보존 조건
-- 승인 전에는 광고 단위 `<ins class="adsbygoogle">`를 삽입하지 않는다.
-- 건강·훈련 관련 문구는 의료·진단·치료·부상 예방 보장·성과 보장 표현을 피한다.
-- 앱 핵심 입력 흐름과 스케줄 생성 흐름에는 광고를 넣지 않는다.
+5. 정적 검증 기준
+- `node --check site/app.js`
+- `node --check site/data.js`
+- `wc -w site/assessment-guide.html site/recovery-guide.html site/workload-guide.html`
+- `rg -n "진단|치료|처방|보장|부상 예방|성과 향상|최적화|자동 위험 판정" site/assessment-guide.html site/recovery-guide.html site/workload-guide.html docs/workflow/work-plan.md`
+- `git diff -- site/app.js site/data.js site/style.css site/docs.css site/tokens.css site/_headers site/ads.txt site/assets site/vendor docs/evidence docs/security`
 
-6. 다음 선택지
-- 사용자가 품질 보강을 원하면 `공개 가이드 3종 콘텐츠 보강 설계 1차`로 진행한다.
-- 사용자가 URL 정리부터 원하면 `apex → www 301 리디렉션 확인 1차`로 진행한다.
-- 사용자가 광고 배치부터 원하면 `AdSense 승인 후 광고 슬롯 설계 1차`로 진행한다.
+6. 완료 조건
+- 3개 문서별 보강 설계가 명확하다.
+- 다음 구현 티켓에서 어떤 섹션을 어디에 추가할지 파일별로 바로 알 수 있다.
+- 금지 표현을 사용자 노출 문구로 권장하지 않는다.
+- 이번 티켓에서는 `site/*` 콘텐츠를 수정하지 않는다.
 
-7. 총괄 Codex 지침
-- 사용자가 `ㄱㄱ`라고 하면 1순위인 콘텐츠 보강 설계 티켓을 작성한다.
-- AdSense 승인 또는 보류/반려 메시지가 오면 그 내용을 우선 분석한다.
+7. Claude 작업 지침
+- 이번 티켓은 설계 전용이다. `site/*` 수정 금지.
+- work-plan에 결과 섹션만 추가하고 Step 2 설계 완료로 갱신한다.
+- 완료 보고는 파일별 보강 섹션안, 금지 표현 회피 원칙, 검증 결과만 짧게 적는다.

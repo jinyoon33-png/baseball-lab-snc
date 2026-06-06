@@ -1,5 +1,14 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense 승인 대기 중 사이트 품질 보강 1차
+- Result: Step 1 의사결정 완료. 다음 우선순위는 `공개 가이드 3종 콘텐츠 보강 설계 1차`.
+- Owner: 총괄 Codex.
+- Current: AdSense 신청 완료, 승인 대기 중. 공개 AdSense script, CSP, privacy, ads.txt 반영 확인.
+- Decision: 승인 대기 중에는 광고 슬롯 설계보다 콘텐츠 품질 보강을 우선한다.
+- Target: `assessment-guide.html`, `recovery-guide.html`, `workload-guide.html`.
+- Rationale: 세 문서는 현재 약 374~425단어 수준이며, 핵심 정보는 있으나 사용자 예시·해석 가이드·주의 문구를 보강할 여지가 있다.
+- Next: `공개 가이드 3종 콘텐츠 보강 설계 1차`.
+
 ## 2026-06-07 — AdSense ads.txt 찾을 수 없음 보정 1차
 - Result: Step 1 로컬 보정 완료. 공개 반영은 GitHub push 후 확인 필요.
 - Owner: 총괄 Codex 직접 수행.
