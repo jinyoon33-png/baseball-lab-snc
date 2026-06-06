@@ -1,47 +1,46 @@
 1. 요청 요약
-- 활성 티켓: `Cloudflare Pages 프로젝트 배포·커스텀 도메인 연결 1차`
-- 현재 단계: `[Step 1. 사용자 실행 대기 — Cloudflare Pages 프로젝트 배포·커스텀 도메인 연결 1차]`
-- 담당: 사용자 실행 + 총괄 Codex 안내
-- 목적: 구매 완료된 `baseballlabsnc.com`을 Cloudflare Pages 배포본에 연결하고 HTTPS 접속 가능한 상태로 만든다.
-- 직전 결과: WHOIS 기준 `baseballlabsnc.com` 구매/소유 확인 완료. DNS A/CNAME과 HTTPS는 아직 미응답.
+- 활성 티켓: `SEO 기본 파일 GitHub push·Cloudflare 재배포 확인 1차`
+- 현재 단계: `[Step 1. 총괄 Codex 작업 대기 — SEO 기본 파일 GitHub push·Cloudflare 재배포 확인 1차]`
+- 담당: 총괄 Codex 직접 수행
+- 목적: SEO 기본 파일 변경사항을 GitHub에 push하고 Cloudflare 재배포 후 공개 도메인에서 sitemap/robots/canonical이 반영됐는지 확인한다.
+- 직전 결과: `site/sitemap.xml`, `site/robots.txt`, 공개 HTML 13개 canonical 구현 정밀검토 통과.
 
-2. 사용자 실행 항목
-- Cloudflare Dashboard → Workers & Pages → Pages → Create project로 이동한다.
-- GitHub 연결 또는 Direct Upload 중 현재 가능한 방식으로 프로젝트를 생성한다.
-- 배포 루트는 `site/`가 되도록 설정한다. 빌드 명령은 정적 HTML이면 비워둔다.
-- 배포가 완료되면 Pages 기본 주소(`*.pages.dev`)로 접속 가능한지 확인한다.
-- Pages 프로젝트 → Custom domains에서 `baseballlabsnc.com`을 추가한다.
-- 필요하면 `www.baseballlabsnc.com`도 추가하되, 최종 대표 URL은 `https://baseballlabsnc.com/`으로 둔다.
-- Cloudflare가 안내하는 DNS 레코드가 자동 생성됐는지 확인한다.
+2. 대상 파일
+- 수정 허용: `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
+- Git 작업 대상: SEO 구현 변경 파일 전체
+- 수정 금지: `site/*` 추가 코드 수정, `docs/evidence/**`, `docs/security/**`
 
-3. 총괄 Codex 확인 항목
-- 사용자가 Pages 배포/도메인 연결 완료를 보고하면 DNS와 HTTPS를 확인한다.
-- `https://baseballlabsnc.com/`이 정상 응답하면 `_headers` CSP 적용 여부를 헤더로 확인한다.
-- `www`가 연결됐다면 대표 도메인으로 리다이렉트할지 별도 결정한다.
-- 확인 완료 후 다음 티켓 `도메인 확정 후 SEO 기본 파일 구현 1차`를 작성한다.
+3. 수행 범위
+- 현재 변경사항을 확인한다.
+- SEO 구현 변경과 워크플랜 기록을 커밋한다.
+- `origin main`으로 push한다.
+- Cloudflare가 GitHub push를 받아 재배포하는지 확인한다.
+- 공개 도메인에서 `robots.txt`, `sitemap.xml`, canonical을 확인한다.
 
-4. 보존 조건
-- Pages 연결 전 `site/sitemap.xml`, canonical, robots `Sitemap:` 구현 금지.
-- AdSense/analytics/gtag/JSON-LD 삽입 금지.
-- 앱 조작 화면 주변 광고 배치 금지 원칙 유지.
-- 이번 티켓에서 site 파일을 수정하지 않는다.
+4. 검증 명령
+- `git status -sb`
+- `git diff --stat`
+- `git log --oneline -2`
+- `git push`
+- `curl -sL https://baseballlabsnc.com/robots.txt`
+- `curl -sL https://baseballlabsnc.com/sitemap.xml | rg -n "<loc>"`
+- `curl -sL https://baseballlabsnc.com/ | rg -n "rel=\"canonical\"|https://baseballlabsnc.com/"`
+- `curl -I https://baseballlabsnc.com | rg -i "content-security-policy|server|cf-cache-status|HTTP/"`
 
-5. 연결 후 검증 명령
-- `dig +short baseballlabsnc.com`
-- `dig +short www.baseballlabsnc.com`
-- `curl -I https://baseballlabsnc.com`
-- `curl -I https://www.baseballlabsnc.com`
-- `curl -I https://baseballlabsnc.com | rg -i "content-security-policy|cf-cache-status|server"`
-- `curl -sL https://baseballlabsnc.com | rg -n "Baseball Lab S&C|투수·타자 모두를 위한 야구 훈련"`
+5. 완료 조건
+- GitHub `origin/main`에 SEO 구현 커밋이 반영된다.
+- Cloudflare 공개 도메인에서 `robots.txt` Sitemap이 보인다.
+- 공개 도메인에서 `sitemap.xml` URL 13건이 보인다.
+- 공개 `index.html`에 canonical이 보인다.
+- CSP 헤더가 유지된다.
 
-6. 완료 조건
-- Cloudflare Pages 기본 주소가 정상 접속된다.
-- `https://baseballlabsnc.com/`이 정상 접속된다.
-- HTTPS가 활성화된다.
-- CSP 헤더가 응답에 포함된다.
-- 다음 구현 티켓에서 base URL을 `https://baseballlabsnc.com/`으로 사용할 수 있다.
+6. 이슈 분류 기준
+- BLOCKER: push 실패, 배포 실패, 공개 도메인 404/5xx.
+- MAJOR: sitemap/canonical 미반영, CSP 헤더 누락.
+- MINOR: Cloudflare 캐시 지연, 일부 공개 문서 반영 지연.
+- NIT: 문구/기록 정리.
 
 7. 총괄 Codex 지침
-- 이번 티켓은 사용자 실행 확인 티켓이다.
-- 사용자가 Pages 배포/도메인 연결 완료를 보고하기 전에는 site 파일을 수정하지 않는다.
-- 연결 완료 확인 후 SEO 기본 파일 구현 티켓을 작성한다.
+- 이번 티켓은 총괄 Codex가 직접 수행한다.
+- push 전 변경 범위를 확인하고, SEO 구현 범위를 벗어난 site 코드 수정은 하지 않는다.
+- 완료 후 다음 티켓은 `신규 선수 등록 필수 입력 표시·검증 보정 1차`로 등록한다.

@@ -1,5 +1,46 @@
 # Work Plan Archive
 
+## 2026-06-06 — 도메인 확정 후 SEO 기본 파일 구현 1차
+- Result: Step 2 완료 정밀검토 통과. BLOCKER/MAJOR/MINOR/NIT 0건.
+- Owner: 코드 담당 Claude가 SEO 기본 파일과 canonical을 구현했고 총괄 Codex가 직접 정적 검증.
+- Scope: `site/sitemap.xml` 신규 생성, `site/robots.txt` Sitemap 추가, 공개 HTML 13개 자기 canonical 추가.
+- Canonical: `rel="canonical"` 13건, 모두 `https://baseballlabsnc.com/` 기준. `www`, `workers.dev`, `pages.dev` 매칭 0건.
+- Sitemap: `<loc>` 13건, XML well-formed 검사 PASS.
+- Safety: AdSense/analytics/gtag/JSON-LD 0건, inline handler 0건.
+- Static: `node --check site/app.js`·`site/data.js` PASS, 수정 금지 경로 diff 0건.
+- Next: `SEO 기본 파일 GitHub push·Cloudflare 재배포 확인 1차`.
+
+## 2026-06-06 — baseballlabsnc.com 커스텀 도메인 연결 확인 1차
+- Result: Step 2 완료. `baseballlabsnc.com` 및 `www.baseballlabsnc.com` 커스텀 도메인 연결 확인.
+- Owner: 사용자가 Cloudflare route/DNS 설정을 완료했고 총괄 Codex가 DNS/HTTPS/CSP/콘텐츠를 확인.
+- DNS: Cloudflare authoritative/public DNS 기준 루트와 `www` 모두 Cloudflare IP 응답.
+- HTTPS: 강제 resolve 기준 `https://baseballlabsnc.com` 및 `https://www.baseballlabsnc.com` 모두 `HTTP/2 200`.
+- CSP: `content-security-policy` 헤더 정상 포함.
+- Content: `Baseball Lab S&C` 및 `투수·타자 모두를 위한 야구 훈련·회복·워크로드 관리` 매칭 확인.
+- User check: 사용자가 모바일 폰에서도 `baseballlabsnc.com` 접속 정상 확인.
+- Note: 로컬 Mac 기본 resolver는 전파/캐시 지연이 있었으나 공용 DNS와 모바일 실사용 기준 연결 완료로 판단.
+- Next: `도메인 확정 후 SEO 기본 파일 구현 1차`.
+
+## 2026-06-06 — Cloudflare Pages GitHub 저장소 연결·배포 확인 1차
+- Result: Step 2 부분 완료. Cloudflare 배포 주소 정상 응답, 커스텀 도메인 연결은 아직 미완료.
+- Owner: 사용자가 Cloudflare 배포 주소를 제공했고 총괄 Codex가 HTTPS/콘텐츠/CSP를 직접 확인.
+- Deploy URL: `https://baseball-lab-snc.jinyoon33.workers.dev`
+- HTTP: `/` 응답 `HTTP/2 200`, `server: cloudflare`, `cf-cache-status: HIT`.
+- CSP: `content-security-policy` 헤더 정상 포함.
+- Content: `Baseball Lab S&C` 및 `투수·타자 모두를 위한 야구 훈련·회복·워크로드 관리` 매칭 확인.
+- Note: 주소가 `*.workers.dev` 형태라 Pages 기본 `*.pages.dev`가 아니라 Cloudflare Workers/Pages 배포 도메인으로 보임. 배포 자체는 정상.
+- Blocker: `baseballlabsnc.com`과 `www.baseballlabsnc.com` DNS/HTTPS는 아직 미응답.
+- Next: `baseballlabsnc.com 커스텀 도메인 연결 확인 1차`.
+
+## 2026-06-06 — GitHub 저장소 생성·초기 push 1차
+- Result: Step 2 완료. GitHub 원격 저장소 연결 및 `main` push 확인.
+- Owner: 사용자가 GitHub 저장소를 생성했고 총괄 Codex가 로컬 첫 커밋/remote 연결 상태를 확인.
+- Repository: `https://github.com/jinyoon33-png/baseball-lab-snc.git`
+- Commit: `896ecb4 Initial Baseball Lab S&C site`
+- Remote: `origin/main`이 로컬 `main`과 동일 커밋으로 확인됨.
+- Guardrail: `.claude/`는 `.gitignore`에 추가되어 로컬 세션 설정 파일이 저장소에 올라가지 않음.
+- Next: `Cloudflare Pages GitHub 저장소 연결·배포 확인 1차`.
+
 ## 2026-06-06 — baseballlabsnc.com 구매·Cloudflare Pages 연결 확인 1차
 - Result: Step 2 부분 완료. 도메인 구매/소유 확인 완료, Cloudflare Pages 연결은 아직 미확인.
 - Owner: 사용자가 `baseballlabsnc.com` 구매 완료를 보고했고 총괄 Codex가 WHOIS/DNS/HTTPS를 직접 확인.
