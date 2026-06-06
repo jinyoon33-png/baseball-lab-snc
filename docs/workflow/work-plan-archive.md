@@ -1,5 +1,32 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense 광고 게재 선행: CSP 완화 + privacy 능동 고지 1차
+- Result: Step 2 구현 보정 완료. AdSense CSP는 도메인 allowlist가 아니라 Cloudflare Pages Function nonce 방식으로 정리.
+- Owner: Claude 위임 작업 후 총괄 Codex가 복귀 검증·보정. `site/functions/_middleware.js` 위치 오류를 루트 `functions/_middleware.js`로 수정.
+- Scope: `functions/_middleware.js` 신규, `site/privacy.html` 광고·쿠키 능동 고지 및 최종 수정 월 2026년 6월 반영. 광고 단위 코드 실삽입 0건.
+- Static: `node --check site/app.js`·`site/data.js`·`functions/_middleware.js` PASS, `adsbygoogle|pagead2` 0건, 수정 금지 경로 diff 0건.
+- URL: T1 정준화도 재검증 완료. canonical 13건, sitemap `<loc>` 13건, apex URL·`.html` 내부 링크 잔재 0건.
+- Note: 실제 AdSense 신청 가능 여부는 GitHub push 후 Cloudflare 공개 응답에서 nonce CSP가 적용되는지 확인해야 확정.
+- Next: `AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차`.
+
+## 2026-06-07 — URL/canonical 정준화 www+clean 1차
+- Result: Step 2 완료. 정준 호스트를 `https://www.baseballlabsnc.com`으로 통일하고 공개 URL을 clean URL 기준으로 정리.
+- Owner: Claude 위임 구현 후 총괄 Codex가 재검증.
+- Scope: 공개 HTML 13개 canonical, 내부 문서 링크, `site/sitemap.xml`, `site/robots.txt`를 `www` + clean URL로 정리.
+- Static: canonical 13건, sitemap `<loc>` 13건, `https://baseballlabsnc.com` apex 잔재 0건, `.html` 내부 링크 잔재 0건, node check PASS.
+- Note: Cloudflare 대시보드에서 apex `baseballlabsnc.com`은 `www.baseballlabsnc.com`으로 301 리디렉션하는 것이 권장 상태.
+- Next: `AdSense 광고 게재 선행: CSP 완화 + privacy 능동 고지 1차`.
+
+## 2026-06-06 — 신규 선수 등록 필수 입력·체중 검증 GitHub push·Cloudflare 재배포 확인 1차
+- Result: Step 2 완료. GitHub push 및 Cloudflare 공개 반영 확인.
+- Owner: 총괄 Codex 직접 수행. 사용자가 GitHub Desktop `Push origin`을 완료했고 총괄 Codex가 원격/공개 도메인을 대조.
+- Git: `f5e3c35 Record deployment push wait status`, `1f4bfc8 Require player weight inputs`가 `origin/main`에 반영됨. `main...origin/main` 차이 0.
+- Public HTML: `https://www.baseballlabsnc.com/` 및 강제 resolve `https://baseballlabsnc.com/`에서 `form-required` 8건, 체중 필수 라벨 확인.
+- Public JS: 공개 `app.js`에서 체중 빈 값 차단 2곳, `if (weightInput < 20 || weightInput > 200)`, `if (eWeightInput < 20 || eWeightInput > 200)` 확인. 체중 `!== 0` 예외 매칭 0건.
+- SEO/CSP: `robots.txt` Sitemap 유지, `sitemap.xml` `<loc>` 13건 유지, canonical 유지, CSP 헤더 유지.
+- Note: 로컬 resolver는 루트 도메인에서 간헐적으로 `Could not resolve host`가 있었으나 DNS `dig`, `www`, 강제 resolve, 모바일 실사용 기준 정상.
+- Next: `AdSense 신청 전 공개 사이트 정책·보안 점검 1차`.
+
 ## 2026-06-06 — 신규 선수 등록 필수 입력·체중 검증 브라우저 실사용 확인 1차
 - Result: Step 2 완료. 브라우저 반실사용 확인 PASS.
 - Owner: 총괄 Codex 직접 수행. 로컬 `site/` 서버와 Playwright 브라우저로 신규 등록·편집 검증을 확인.
