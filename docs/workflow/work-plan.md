@@ -9,6 +9,7 @@
 - 공개 스크립트: `https://www.baseballlabsnc.com/`에서 `pagead2.googlesyndication.com` 및 `ca-pub-2911719487887723` 확인.
 - 공개 CSP: AdSense script/frame/connect/img 로드 가능한 static fallback CSP 확인.
 - Privacy: `Google AdSense`, `쿠키`, `광고 식별자`, `최종 수정: 2026년 6월` 공개 반영 확인.
+- Ads.txt: AdSense 상태가 `찾을 수 없음`으로 표시되어 `site/ads.txt`에 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0` 추가 보정 중.
 - Git: `main...origin/main` 동기화 완료.
 
 3. 승인 대기 중 권장 작업

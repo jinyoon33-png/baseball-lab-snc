@@ -1,5 +1,12 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense ads.txt 찾을 수 없음 보정 1차
+- Result: Step 1 로컬 보정 완료. 공개 반영은 GitHub push 후 확인 필요.
+- Owner: 총괄 Codex 직접 수행.
+- Issue: 공개 `https://www.baseballlabsnc.com/ads.txt`가 `HTTP/2 404`라 AdSense에서 `Ads.txt 상태: 찾을 수 없음` 표시.
+- Fix: `site/ads.txt` 신규 추가. 내용은 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0`.
+- Next: GitHub Desktop `Push origin` 후 공개 `https://www.baseballlabsnc.com/ads.txt`에서 200 및 파일 내용 확인.
+
 ## 2026-06-07 — AdSense 사이트 연결 스크립트 배포 확인 1차
 - Result: Step 2 완료. AdSense 사이트 연결 스크립트 공개 반영 확인 후 사용자가 AdSense 신청 완료.
 - Owner: 총괄 Codex 직접 수행.
