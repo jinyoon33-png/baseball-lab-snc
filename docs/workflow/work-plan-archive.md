@@ -1,5 +1,16 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense 선행 변경 GitHub push·Cloudflare 배포 확인 1차
+- Result: Step 2 완료. 공개 사이트 기준 AdSense 신청 선행 조건 통과.
+- Owner: 총괄 Codex 직접 수행. GitHub Desktop push 후 원격/공개 도메인을 대조.
+- Git: 최신 커밋 `4218f3e Use static AdSense CSP fallback`가 `origin/main`에 반영됨. `main...origin/main` 차이 0.
+- CSP: `https://www.baseballlabsnc.com` 공개 응답에서 `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`, `style-src 'self' 'unsafe-inline' https:`, `img-src 'self' data: blob: https:`, `connect-src 'self' https:`, `frame-src https:` 확인. `object-src 'none'`, `base-uri 'none'`, `frame-ancestors 'none'`, `form-action 'none'` 유지.
+- Privacy: 공개 `privacy`에서 `Google AdSense`, `쿠키`, `광고 식별자`, `최종 수정: 2026년 6월` 확인.
+- SEO: 공개 sitemap `<loc>` 13건 모두 `https://www.baseballlabsnc.com` + clean URL. 공개 index canonical도 `https://www.baseballlabsnc.com/`.
+- Ads: 실제 광고 단위 코드 `adsbygoogle|pagead2.googlesyndication.com` 0건 유지.
+- Note: nonce/Functions 방식은 현재 Cloudflare 배포 설정에서 실행되지 않아 정적 CSP fallback으로 전환. 장기적으로는 Pages Functions/Worker 설정 재구성 시 strict nonce CSP 재검토 가능.
+- Next: `AdSense 신청 준비 완료 후 다음 작업 선정 1차`.
+
 ## 2026-06-07 — AdSense 광고 게재 선행: CSP 완화 + privacy 능동 고지 1차
 - Result: Step 2 구현 보정 완료. AdSense CSP는 도메인 allowlist가 아니라 Cloudflare Pages Function nonce 방식으로 정리.
 - Owner: Claude 위임 작업 후 총괄 Codex가 복귀 검증·보정. `site/functions/_middleware.js` 위치 오류를 루트 `functions/_middleware.js`로 수정.

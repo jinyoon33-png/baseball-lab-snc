@@ -1,43 +1,36 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차`
-- 현재 단계: `[Step 1. 사용자 Push origin 대기 — AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차]`
-- 담당: 총괄 Codex 직접 수행
-- 목적: URL/canonical 정준화, privacy 능동 고지, AdSense nonce CSP 미들웨어를 GitHub에 반영하고 Cloudflare 공개 배포에서 실제 CSP가 적용되는지 확인한다.
-- 현재 상태: 커밋 `7bb8ce8`, `47aa955`, `b6b33aa`, `72a46ae` 원격 반영 확인. 공개 privacy 문구와 clean URL은 반영됐으나 `functions/_middleware.js`, `site/functions/_middleware.js`, `site/_worker.js` 모두 공개 CSP에 반영되지 않음. 현재 Cloudflare 배포는 Functions/advanced Worker를 실행하지 않는 설정으로 판단해 정적 `_headers` AdSense fallback CSP로 전환 중.
+- 활성 티켓: `AdSense 신청 준비 완료 후 다음 작업 선정 1차`
+- 현재 단계: `[Step 1. 사용자 결정 대기 — AdSense 신청 또는 광고 슬롯 설계 선택]`
+- 담당: 총괄 Codex
+- 목적: Google AdSense 사이트 신청 전 선행 조건을 완료했으므로, 사용자가 실제 AdSense 신청을 먼저 할지 광고 슬롯 설계를 먼저 할지 결정한다.
 
-2. 대상 파일
-- 커밋 대상: `site/_headers`, `site/*.html`, `site/robots.txt`, `site/sitemap.xml`, `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
-- 수정 허용: `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
-- 수정 금지: 추가 `site/*` 코드 변경, `site/app.js`, `site/data.js`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`
+2. 현재 완료 상태
+- GitHub 원격: `main...origin/main` 동기화 완료, 최신 커밋 `4218f3e Use static AdSense CSP fallback`.
+- 공개 도메인: `https://www.baseballlabsnc.com` 정상 응답.
+- CSP: 공개 응답에 AdSense fallback CSP 적용 완료.
+- Privacy: 공개 `privacy` 페이지에 Google AdSense·쿠키·광고 식별자 능동 고지 반영 완료.
+- SEO: canonical 13건과 sitemap 13 URL 모두 `https://www.baseballlabsnc.com` + clean URL 기준.
 
-3. 수행 범위
-- 현재 작업 트리 변경 범위를 재확인한다.
-- 정적 `site/_headers` CSP가 AdSense 로드 fallback으로 완화됐고, 미실행 `functions`/`site/functions`/`site/_worker.js` 잔재가 없는지 확인한다.
-- 정적 검증 후 커밋을 생성하고 `origin/main`에 push한다. CLI push가 인증 문제로 실패하면 사용자가 GitHub Desktop `Push origin`을 수행한다.
-- Cloudflare 배포 후 `https://www.baseballlabsnc.com`에서 clean URL, privacy 문구, CSP nonce 헤더 적용 여부를 확인한다.
+3. AdSense 신청 가능 판단
+- 신청 URL 기준: `https://www.baseballlabsnc.com`
+- 현재 광고 단위 코드 실삽입: 0건. 신청/검토 단계에서는 사이트 등록용 스크립트 또는 AdSense가 안내하는 검증 코드를 별도 티켓으로 삽입해야 할 수 있다.
+- 루트 `https://baseballlabsnc.com`은 현재 200 응답이며 canonical은 `www`를 가리킨다. 가능하면 Cloudflare에서 apex → `www` 301 리디렉션을 추가 권장.
 
-4. 정적 검증 명령
-- `git status --short --branch`
-- `node --check site/app.js && node --check site/data.js`
-- `find functions site/functions -maxdepth 2 -type f 2>/dev/null | sort`
-- `rg -n 'href="[^"]*\.html|canonical.*baseballlabsnc\.com/.*\.html|https://baseballlabsnc\.com' site/*.html site/sitemap.xml site/robots.txt || true`
-- `rg -n 'adsbygoogle|pagead2\.googlesyndication\.com' site functions || true`
-- `git diff -- site/app.js site/data.js site/style.css site/docs.css site/tokens.css site/assets site/vendor docs/evidence docs/security`
+4. 선택지
+- 선택지 A: Google AdSense에 `https://www.baseballlabsnc.com`으로 사이트 신청을 먼저 진행한다.
+- 선택지 B: 광고 슬롯 설계 1차를 먼저 진행한다. 후보 위치는 문서 하단, 가이드 본문 중간, 앱 하단/사이드 보조 영역이며 핵심 입력·스케줄 생성 흐름에는 삽입하지 않는다.
+- 선택지 C: apex → www 301 리디렉션 설정 확인 티켓을 먼저 진행한다.
 
-5. 배포 후 검증 명령
-- `curl -sI https://www.baseballlabsnc.com | rg -i 'content-security-policy|cf-cache-status|server'`
-- `curl -sL https://www.baseballlabsnc.com/?codex_cache_bust=adsense-csp-$(date +%s) | rg -n 'nonce=|Baseball Lab S&C'`
-- `curl -sL https://www.baseballlabsnc.com/privacy?codex_cache_bust=adsense-privacy-$(date +%s) | rg -n 'Google AdSense|쿠키|광고 식별자|최종 수정: 2026년 6월'`
-- `curl -sL https://www.baseballlabsnc.com/sitemap.xml | rg -n '<loc>'`
+5. 다음 작업 원칙
+- AdSense 코드 또는 광고 슬롯을 삽입하기 전에는 사용자 확인을 받는다.
+- 앱 핵심 기능 화면에 방해되는 광고는 넣지 않는다.
+- 의료·성과 보장·자동 위험 판정 표현은 계속 금지한다.
 
-6. 완료 조건
-- 커밋 생성 및 `origin/main` 반영 완료.
-- 공개 HTML 응답 CSP에 `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`, `frame-src https:`, `connect-src 'self' https:`, `img-src 'self' data: blob: https:`가 포함된다.
-- `privacy` 공개 페이지에 AdSense/쿠키 능동 고지가 반영된다.
-- 광고 단위 코드 실삽입은 여전히 0건이다.
-- 완료 후 사용자는 Google AdSense에 `https://www.baseballlabsnc.com`으로 사이트 신청 가능.
+6. 검증 기준
+- 광고 삽입 전: `adsbygoogle|pagead2.googlesyndication.com` 0건 유지.
+- 광고 삽입 후: CSP, privacy, 레이아웃, 모바일, AdSense 정책 충돌 여부를 별도 QA한다.
+- 배포 후: 공개 URL에서 직접 `curl`과 브라우저 실사용 확인을 수행한다.
 
 7. 총괄 Codex 지침
-- 이번 티켓은 총괄 Codex가 직접 수행한다.
-- 배포 전에는 AdSense 신청 가능하다고 확정하지 않는다.
-- Cloudflare Functions가 적용되지 않으면 완료 처리하지 말고 수정 티켓으로 전환한다.
+- 사용자가 AdSense 신청을 진행하면, 신청 중 Google이 제공하는 코드/문구를 그대로 받아 별도 삽입 티켓을 작성한다.
+- 사용자가 광고 슬롯 설계를 선택하면, 코드 구현 전 위치·형식·모바일 영향부터 설계한다.
