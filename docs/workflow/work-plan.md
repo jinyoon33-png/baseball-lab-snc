@@ -3,22 +3,22 @@
 - 현재 단계: `[Step 1. 사용자 Push origin 대기 — AdSense 선행 변경 GitHub push·Cloudflare Functions 배포 확인 1차]`
 - 담당: 총괄 Codex 직접 수행
 - 목적: URL/canonical 정준화, privacy 능동 고지, AdSense nonce CSP 미들웨어를 GitHub에 반영하고 Cloudflare 공개 배포에서 실제 CSP가 적용되는지 확인한다.
-- 현재 상태: 커밋 `7bb8ce8`, `47aa955`, `b6b33aa` 원격 반영 확인. 공개 privacy 문구와 clean URL은 반영됐으나 CSP가 기존 정적 `_headers`로 응답해 `functions/_middleware.js`와 `site/functions/_middleware.js` 모두 실행되지 않음. Cloudflare 배포가 Functions 라우팅을 쓰지 않는 상태로 판단해 Pages advanced mode `site/_worker.js`로 전환 중.
+- 현재 상태: 커밋 `7bb8ce8`, `47aa955`, `b6b33aa`, `72a46ae` 원격 반영 확인. 공개 privacy 문구와 clean URL은 반영됐으나 `functions/_middleware.js`, `site/functions/_middleware.js`, `site/_worker.js` 모두 공개 CSP에 반영되지 않음. 현재 Cloudflare 배포는 Functions/advanced Worker를 실행하지 않는 설정으로 판단해 정적 `_headers` AdSense fallback CSP로 전환 중.
 
 2. 대상 파일
-- 커밋 대상: `site/_worker.js`, `site/*.html`, `site/robots.txt`, `site/sitemap.xml`, `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
+- 커밋 대상: `site/_headers`, `site/*.html`, `site/robots.txt`, `site/sitemap.xml`, `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
 - 수정 허용: `docs/workflow/work-plan.md`, `docs/workflow/work-plan-archive.md`
 - 수정 금지: 추가 `site/*` 코드 변경, `site/app.js`, `site/data.js`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`
 
 3. 수행 범위
 - 현재 작업 트리 변경 범위를 재확인한다.
-- `site/_worker.js`가 output directory advanced mode Worker로 존재하고, `functions`/`site/functions` 잔재가 없는지 확인한다.
+- 정적 `site/_headers` CSP가 AdSense 로드 fallback으로 완화됐고, 미실행 `functions`/`site/functions`/`site/_worker.js` 잔재가 없는지 확인한다.
 - 정적 검증 후 커밋을 생성하고 `origin/main`에 push한다. CLI push가 인증 문제로 실패하면 사용자가 GitHub Desktop `Push origin`을 수행한다.
 - Cloudflare 배포 후 `https://www.baseballlabsnc.com`에서 clean URL, privacy 문구, CSP nonce 헤더 적용 여부를 확인한다.
 
 4. 정적 검증 명령
 - `git status --short --branch`
-- `node --check site/app.js && node --check site/data.js && node --check site/_worker.js`
+- `node --check site/app.js && node --check site/data.js`
 - `find functions site/functions -maxdepth 2 -type f 2>/dev/null | sort`
 - `rg -n 'href="[^"]*\.html|canonical.*baseballlabsnc\.com/.*\.html|https://baseballlabsnc\.com' site/*.html site/sitemap.xml site/robots.txt || true`
 - `rg -n 'adsbygoogle|pagead2\.googlesyndication\.com' site functions || true`
@@ -32,8 +32,7 @@
 
 6. 완료 조건
 - 커밋 생성 및 `origin/main` 반영 완료.
-- 공개 HTML 응답 CSP에 `nonce-...`와 `strict-dynamic`이 포함된다.
-- 공개 HTML `<script>` 태그에 nonce가 주입된다.
+- 공개 HTML 응답 CSP에 `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`, `frame-src https:`, `connect-src 'self' https:`, `img-src 'self' data: blob: https:`가 포함된다.
 - `privacy` 공개 페이지에 AdSense/쿠키 능동 고지가 반영된다.
 - 광고 단위 코드 실삽입은 여전히 0건이다.
 - 완료 후 사용자는 Google AdSense에 `https://www.baseballlabsnc.com`으로 사이트 신청 가능.
