@@ -1,0 +1,85 @@
+# Follow-Up Queue
+
+> 2026-05-25 총괄 Codex 복귀 검증 후 정리. 디자인 결정 사항 3건(equip, 다크모드, 본문 폰트 사이즈)은 처리 완료.
+
+## 현재 활성 큐
+
+- `앱 전환 로드맵 후속 결정` — 웹사이트 출시 후 사용자 결정 대기. 설계 결과는 `docs/workflow/work-plan-archive.md`에 기록 완료. 다음 결정은 `PWA/TWA 우선 검토`로 갈지, `네이티브 앱 설계`로 바로 갈지 선택하는 것이다.
+- `도메인/운영자 연락처 확정 후 SEO 구현 1차` — 차단. 최종 도메인과 운영자 이메일 확정 후 sitemap/canonical/robots Sitemap 지시문을 구현한다.
+- `AdSense 코드 삽입 전 보안/QA 1차` — 차단. 실제 광고 코드/분석 코드 삽입 직전에 보안/QA Claude가 외부 스크립트, CSP, 개인정보/약관, 광고 배치 정책을 점검한다.
+
+---
+
+## AdSense/출시 준비 체크리스트
+
+### 0. 현재 상태
+- 공개 HTML: 13개(`index`, `about`, `workload-guide`, `recovery-guide`, `assessment-guide`, `rpe-guide`, `acwr-guide`, `training-program-guide`, `warmup-shoulder-guide`, `fielding-baserunning-agility-guide`, `privacy`, `terms`, `contact`).
+- 현재 허용: `site/robots.txt` 기본 허용 2줄(`User-agent: *`, `Allow: /`).
+- 현재 보류: `sitemap.xml`, canonical, JSON-LD, AdSense 코드, analytics/gtag, Search Console 제출.
+- 정책 문서: `privacy`, `terms`, `contact`는 광고/분석 도입 전 갱신 원칙과 운영자 이메일 미확정 상태를 이미 고지한다.
+
+### 1. 도메인/연락처 확정 전 금지
+- `sitemap.xml` 생성 금지: Google sitemap은 완전한 절대 URL이 필요하므로 최종 도메인 전에는 만들지 않는다.
+- canonical 삽입 금지: 대표 URL 확정 전에는 중복 URL 신호를 만들지 않는다.
+- `robots.txt`의 `Sitemap:` 지시문 금지: sitemap 절대 URL 확정 후 추가한다.
+- JSON-LD 삽입 금지: 구조화 데이터는 보안/QA와 실제 공개 정보 정합성 확인 후 진행한다.
+- AdSense/analytics/gtag 코드 삽입 금지: 정책 문서 최종 고지와 보안/QA 전에는 외부 스크립트를 넣지 않는다.
+
+### 2. 사용자 확정 필요값
+- 최종 도메인: 예) `https://example.com`.
+- 운영자 이메일: `contact.html`과 `privacy.html`에 동일하게 공개할 주소.
+- 배포 호스트: 정적 호스팅 경로, `_headers` 적용 여부, HTTPS 강제 여부.
+- Search Console 소유권 확인 방식: DNS TXT 또는 HTML 파일 방식 중 선택.
+- 광고 배치 원칙: 공개 가이드 문서 본문 중간/하단만 후보. 앱 조작 화면, 저장/삭제/복원/워크로드 입력/평가 저장 주변은 금지.
+
+### 3. 도메인/연락처 확정 후 작업
+- `contact.html` 운영자 이메일 반영.
+- `privacy.html` 문의 경로와 광고/분석 도입 시 사용자 선택 방법 최종 문구 보강.
+- `terms.html` 광고 배치 원칙과 광고/콘텐츠 구분 원칙 재확인.
+- `sitemap.xml` 생성 후 공개 HTML 13개 URL 포함.
+- `robots.txt`에 `Sitemap: https://.../sitemap.xml` 추가.
+- 각 HTML canonical URL 삽입 여부 설계 후 구현.
+- Search Console 등록, sitemap 제출, robots 테스트 진행.
+
+### 4. AdSense 신청/광고 코드 전 작업
+- Google AdSense site readiness 기준으로 고유 콘텐츠, 명확한 내비게이션, 정책 페이지 접근성을 재확인한다.
+- Google AdSense Program policies와 Ad placement policies 기준으로 클릭 유도, 앱 조작 영역 주변 광고, 콘텐츠와 혼동되는 광고 배치를 금지한다.
+- Google Required content 기준으로 쿠키/제3자 광고 기술 고지를 개인정보처리방침에 최종 반영한다.
+- 실제 광고 코드 삽입 전 보안/QA Claude 호출: 외부 스크립트, CSP, inline handler, 개인정보/약관 정합성, 광고 slot 위치, 모바일 레이아웃 회귀를 점검한다.
+
+### 5. 공식 기준 링크
+- Google AdSense site readiness: https://support.google.com/adsense/answer/7299563
+- Google AdSense Program policies: https://support.google.com/adsense/answer/48182
+- Google Ad placement policies: https://support.google.com/adsense/answer/1346295
+- Google AdSense Required content: https://support.google.com/adsense/answer/1348695
+- Google robots.txt reference: https://developers.google.com/search/reference/robots_txt
+- Google sitemap guide: https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap
+- Google canonical guide: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
+
+---
+
+## 처리 완료로 큐에서 제외한 항목
+
+- `웹 출시 전 공개 문구·근거 정합성 보정 묶음` (2026-06-05~06): `workload-guide` ACWR 숫자 임계값 공개 문구 보정, `recovery-guide` 수면·회복 단정 표현 완화, 운동 가이드 금지 표현 스윕, 준비운동·어깨 가동성 공개 문서, 수비·주루·민첩성 공개 문서, 웹 출시 전 보안/QA 최종 점검까지 완료.
+- `품질 안정화 회귀 QA 묶음 1차` (2026-06-05): 메인 앱 등록→평가→스케줄, 주간/월간 전환, 운동 가이드/대체/워크로드 모달, RPE 11셀, 선수 수정 모달, 공개 문서 11개와 모바일 390px overflow를 확인. BLOCKER/MAJOR/MINOR/NIT 0건.
+- `야구 S&C 훈련 프로그램 구성 가이드 브라우저 실사용 확인 1차` (2026-06-05): 신규 공개 문서와 기존 공개 문서 링크 실제 브라우저 로드 확인. 404/Not Found 0건, 모바일 overflow 0건, console error/warning 0건.
+- `야구 S&C 훈련 프로그램 구성 가이드 구현 1차` (2026-06-05): `site/training-program-guide.html` 신규 생성과 기존 공개 문서 링크 연결 완료. 정밀검토 결과 BLOCKER/MAJOR/MINOR/NIT 0건, 면책 문맥 금지어 매칭 3건은 부정·면책 문맥으로 분류.
+- `공개 콘텐츠 확장 후보 설계 1차` (2026-06-05): 다음 공개 문서는 `야구 S&C 훈련 프로그램 구성 가이드`로 선정. 활성 근거문서의 일반 야구 S&C·훈련 매칭·matchTags 설명 기준을 바로 활용 가능하고, 회복 가이드는 이미 존재하며 준비운동/수비·주루는 후순위로 보류.
+- `AdSense/출시 준비 체크리스트 작성 1차` (2026-06-05): 도메인/연락처 확정 전 금지, 확정 후 SEO 작업, 광고 코드 전 보안/QA 호출 조건을 단계별로 정리 완료.
+- HTML 클래스명 풀 리네임 (2026-05-27): 영향도 조사 결과 전면 리네임 보류. 현재 class는 JS selector와 동적 template의 안정 API로 유지하고, 필요한 화면만 영역별 alias 방식으로 진행.
+- `.brand-mark` 시안 미니 로고 패턴 (2026-05-27): `hero-mark` class 유지 + 텍스트 `B` + corner accent 방식으로 구현. 보안/QA PASS, 사용자 실사용 정상 확인.
+- 운동 가이드/대체/앱 가이드 모달 `.cl-*` 신규 클래스 (2026-05-27): v1 class-additive 방식으로 8개 class 도입. 보안/QA PASS, 사용자 실사용 정상 확인. `cl-tabs-list`는 v2 별도 설계로 보류.
+- RPE 입력 `.rpe-bar` 11셀 그리드 도입 (2026-05-26): 기존 hidden `#wlRPE` input 호환 유지 + 11셀 버튼 UI 적용. 보안/QA PASS, 사용자 실사용 정상 확인.
+- 7일 스케줄 시안 `.week-list / .week-row.today` 패턴 (2026-05-26): B2 방식으로 `renderWeeklyCalendar` 보조 보기만 `.week-list` 행 구조로 전환. 월간→주간 잔존 표시 버그 보정 후 사용자 실사용 정상 확인.
+- 8종목 평가 `.cl-assess-card` 도입 (2026-05-26): `renderAssessmentForm`에 `.cl-assess-card`/`.cl-assess-input` 보수적 도입 완료. 보안/QA PASS, 사용자 실사용 중 발견된 다크모드 대비 이슈도 후속 보정 완료.
+- 본문 폰트 사이즈 실사용 검토 (2026-05-25): 사용자 회신 `모두 정상`. 인터랙티브 13.5px / 문서 16px 유지, 보정 티켓 불필요.
+- 다크모드 도입 (2026-05-25): prefers-color-scheme 자동 적용. site/tokens.css L179-217에 `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }` 블록 추가. `[data-theme="dark"]` 강제 블록 + `data-theme="light"` 라이트 강제도 동시 지원.
+- equip 12색 유지/통일 디자인 결정: 절충안으로 처리 완료. 카테고리 식별성 유지 + 채도 낮춤 + text `var(--ink-2)` 통일.
+- `.doc-note` 어두운 amber 텍스트 매핑: `site/docs.css`에서 `.doc-note` 색상이 `var(--ink-2)`로 통일되고 보정 주석이 존재함.
+- `.player-velo-box` 보조 토큰 매핑: `site/style.css`에서 `--success-surface-soft`와 `--success-border`가 하단 alias로 매핑됨.
+
+## 운영 메모
+
+1. 현재 Stage 5 디자인 잔여 큐는 0개다.
+2. 이후 시안 class 추가는 전면 리네임이 아니라 화면 단위 alias 방식만 허용한다.
+3. 5/24 적용된 모든 변경은 `archive/root-file-backups/site-snapshot-2026-05-24-*/` 8개 시점 스냅샷으로 롤백 가능하다.

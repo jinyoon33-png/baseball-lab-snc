@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baseball Lab S&C · Clinical Trust · Export Preview</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="components.css" />
+  <style>
+    /* Local preview-only styles — not part of the design system. */
+    body { padding: 0; margin: 0; }
+    .preview-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+    .preview-h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+    .preview-sub {
+      font-size: 14px;
+      color: var(--mute);
+      margin-top: 10px;
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+    .preview-rule {
+      height: 1px;
+      background: var(--rule);
+      margin: 40px 0;
+    }
+    .preview-section {
+      margin-top: 56px;
+    }
+    .preview-section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
+    }
+    .preview-section .preview-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mute);
+      margin-bottom: 18px;
+    }
+    .preview-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .preview-frame {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      margin-top: 6px;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 18px; right: 18px;
+      padding: 8px 14px;
+      background: var(--ink); color: var(--surface);
+      border-radius: var(--r-pill);
+      font-size: 11.5px; font-weight: 600;
+      border: 0; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark';
+  this.textContent = r.dataset.theme === 'dark' ? '☀ Light' : '☾ Dark';
+">☾ Dark</button>
+
+<div class="preview-shell">
+
+  <!-- Cover -->
+  <div class="eyebrow">CLAUDE DESIGN · EXPORT · 2026-05-23</div>
+  <h1 class="preview-h1" style="margin-top: 14px">
+    Baseball Lab S&amp;C — Clinical Trust 컴포넌트 미리보기
+  </h1>
+  <p class="preview-sub">
+    이 페이지는 <code>tokens.css</code>와 <code>components.css</code>를 로드한 뒤,
+    <code>snippets/</code>의 모든 컴포넌트를 한 화면에 모은 것입니다.
+    우측 상단 토글로 라이트·다크 모드 전환을 확인할 수 있습니다.
+  </p>
+
+  <div class="preview-rule"></div>
+
+  <!-- 1. Buttons -->
+  <section class="preview-section">
+    <h2>01 · Buttons</h2>
+    <div class="preview-meta">.btn · .btn-primary | .btn-navy | .btn-outline | .btn-ghost · .btn-sm | .btn-lg | .btn-block</div>
+    <div class="preview-frame">
+      <div class="preview-row">
+        <button class="btn btn-primary">결과 →</button>
+        <button class="btn btn-navy">신규 선수 등록</button>
+        <button class="btn btn-outline">컨디션</button>
+        <button class="btn btn-ghost">취소</button>
+      </div>
+      <div class="preview-row">
+        <button class="btn btn-navy btn-sm">백업</button>
+        <button class="btn btn-navy">기본</button>
+        <button class="btn btn-navy btn-lg">정밀 평가 시작</button>
+        <button class="btn btn-navy" disabled>평가 완료 (4/8)</button>
+      </div>
+      <button class="btn btn-navy btn-block" style="margin-top: 8px">저장 후 스케줄 갱신</button>
+    </div>
+  </section>
+
+  <!-- 2. Badges + Chips + Eyebrow -->
+  <section class="preview-section">
+    <h2>02 · Badges / Chips / Eyebrow</h2>
+    <div class="preview-meta">.badge.{safe|watch|risk|muted} · .chip · .now-dot · .eyebrow</div>
+    <div class="preview-frame">
+      <div class="preview-row">
+        <span class="badge safe"><span class="dot"></span>정상 · 0.8–1.3</span>
+        <span class="badge watch"><span class="dot"></span>주의 · 1.3–1.5</span>
+        <span class="badge risk"><span class="dot"></span>초과 · 1.5+</span>
+        <span class="badge muted"><span class="dot"></span>여유 · 0.4–0.8</span>
+        <span class="now-dot">오늘 진행 중</span>
+      </div>
+      <div class="preview-row">
+        <button class="chip">어깨</button>
+        <button class="chip">팔꿈치</button>
+        <button class="chip">허리</button>
+        <button class="chip">무릎</button>
+        <button class="chip" aria-pressed="true">없음</button>
+        <button class="chip danger" aria-pressed="true">초과 1</button>
+      </div>
+      <div style="margin-top: 14px">
+        <span class="eyebrow">ACTION QUEUE · 집중 관리 대상</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Form -->
+  <section class="preview-section">
+    <h2>03 · Form controls</h2>
+    <div class="preview-meta">.field · .label · .input · .select · .toggle · .range · .fields-2</div>
+    <div class="preview-frame" style="display: flex; flex-direction: column; gap: 16px">
+      <div class="field">
+        <label class="label" for="pn">이름</label>
+        <input class="input" id="pn" value="김도현" />
+      </div>
+      <div class="fields-2">
+        <div class="field">
+          <label class="label">투타 구분</label>
+          <div class="toggle">
+            <button aria-pressed="true" onclick="this.setAttribute('aria-pressed','true');this.nextElementSibling.setAttribute('aria-pressed','false')">투수</button>
+            <button onclick="this.setAttribute('aria-pressed','true');this.previousElementSibling.setAttribute('aria-pressed','false')">타자</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">시즌 상태</label>
+          <select class="select">
+            <option>시즌 중 (In-season)</option>
+            <option>비시즌 (Off-season)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <div style="display: flex; justify-content: space-between">
+          <label class="label">수면 시간</label>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute)">권장 7h 이상</span>
+        </div>
+        <div class="range">
+          <div class="range-track">
+            <div class="range-fill" style="width: 44%"></div>
+            <div class="range-thumb" style="left: 44%"></div>
+          </div>
+          <span class="range-val">7.5h</span>
+        </div>
+        <div class="range-scale">
+          <span>4h</span><span>6h</span><span>8h</span><span>10h</span><span>12h</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Card with header -->
+  <section class="preview-section">
+    <h2>04 · Card</h2>
+    <div class="preview-meta">.card · .card-head · .eyebrow + h2</div>
+    <div class="card" style="max-width: 520px">
+      <div class="card-head">
+        <div>
+          <div class="eyebrow">01 · NEW PLAYER</div>
+          <h2 style="margin-top: 8px">신규 선수 등록</h2>
+        </div>
+        <span class="badge muted"><span class="dot"></span>4단계</span>
+      </div>
+      <p style="font-size: 13px; color: var(--mute); line-height: 1.55; margin: 0">
+        이름·투타·시즌 상태·운영 방향을 입력하고 정밀 평가로 이동합니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. Player rows -->
+  <section class="preview-section">
+    <h2>05 · Player row</h2>
+    <div class="preview-meta">.player-row · .player-avatar.{t-navy|t-sage|t-risk} · .badge.{safe|watch|risk}</div>
+    <div class="card" style="padding: 0 24px">
+      <div class="player-row">
+        <div class="player-main">
+          <span class="player-num">01</span>
+          <div class="player-avatar">KDH</div>
+          <div>
+            <div class="player-name-row">
+              <span class="player-name">김도현</span>
+              <span class="player-tag">투수 · 선발 · 16세</span>
+            </div>
+            <div class="player-meta">
+              <span>구력 <span class="num">7년</span></span>
+              <span>ACWR <span class="num">1.12</span></span>
+              <span>주차 <span class="num">3/4</span></span>
+              <span>구속 <span class="num">138/132</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="player-actions">
+          <span class="badge safe"><span class="dot"></span>정상</span>
+          <button class="btn btn-sm btn-outline">컨디션</button>
+          <button class="btn btn-sm btn-primary">결과 →</button>
+        </div>
+      </div>
+      <div class="player-row">
+        <div class="player-main">
+          <span class="player-num">02</span>
+          <div class="player-avatar t-navy">PSJ</div>
+          <div>
+            <div class="player-name-row">
+              <span class="player-name">박서준</span>
+              <span class="player-tag">투수 · 구원 · 28세</span>
+            </div>
+            <div class="player-meta">
+              <span>ACWR <span class="num">1.41</span></span>
+              <span>주차 <span class="num">2/4</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="player-actions">
+          <span class="badge watch"><span class="dot"></span>주의</span>
+          <button class="btn btn-sm btn-outline">컨디션</button>
+          <button class="btn btn-sm btn-primary">결과 →</button>
+        </div>
+      </div>
+      <div class="player-row">
+        <div class="player-main">
+          <span class="player-num">04</span>
+          <div class="player-avatar t-risk">CMJ</div>
+          <div>
+            <div class="player-name-row">
+              <span class="player-name">최민준</span>
+              <span class="player-tag">타자 · 외야수 · 35세</span>
+            </div>
+            <div class="player-meta">
+              <span>ACWR <span class="num">1.62</span></span>
+              <span>주차 <span class="num">4/4</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="player-actions">
+          <span class="badge risk"><span class="dot"></span>초과</span>
+          <button class="btn btn-sm btn-outline">컨디션</button>
+          <button class="btn btn-sm btn-primary">결과 →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. ACWR hero -->
+  <section class="preview-section">
+    <h2>06 · ACWR / Workload Hero</h2>
+    <div class="preview-meta">.hero-data · .hero-num · .stat-label</div>
+    <div class="hero-data">
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; opacity: 0.55">
+          ACWR · WORKLOAD STATUS
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 14px; margin-top: 6px">
+          <span class="hero-num">1.12</span>
+          <span style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500">정상 · 적정 부하 유지 중</span>
+        </div>
+        <div style="display: flex; gap: 28px; margin-top: 16px">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">급성 (7d)</div>
+            <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">412<span style="font-size: 10px; margin-left: 4px; opacity: 0.5">AU</span></div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">만성 (28d)</div>
+            <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">368<span style="font-size: 10px; margin-left: 4px; opacity: 0.5">AU</span></div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">주간 변동</div>
+            <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">+8%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. RPE strip -->
+  <section class="preview-section">
+    <h2>07 · RPE Strip · 0–10</h2>
+    <div class="preview-meta">.rpe-bar · .rpe-cell[data-zone="easy|moderate|hard|max"] · [aria-selected]</div>
+    <div class="preview-frame">
+      <div class="field">
+        <div style="display: flex; justify-content: space-between">
+          <label class="label">RPE · 운동 자각도</label>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--navy); font-weight: 600">선택: 7 = 힘듦</span>
+        </div>
+        <div class="rpe-bar">
+          <button class="rpe-cell" data-zone="easy">0</button>
+          <button class="rpe-cell" data-zone="easy">1</button>
+          <button class="rpe-cell" data-zone="easy">2</button>
+          <button class="rpe-cell" data-zone="easy">3</button>
+          <button class="rpe-cell" data-zone="moderate">4</button>
+          <button class="rpe-cell" data-zone="moderate">5</button>
+          <button class="rpe-cell" data-zone="moderate">6</button>
+          <button class="rpe-cell" data-zone="hard" aria-selected="true">7</button>
+          <button class="rpe-cell" data-zone="hard">8</button>
+          <button class="rpe-cell" data-zone="max">9</button>
+          <button class="rpe-cell" data-zone="max">10</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px; font-family: var(--font-mono); font-size: 9px; color: var(--mute); letter-spacing: 0.08em">
+          <span>0–3 가볍게</span>
+          <span>4–6 보통</span>
+          <span>7–8 힘듦</span>
+          <span>9–10 최대</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Schedule -->
+  <section class="preview-section">
+    <h2>08 · 7-day Schedule</h2>
+    <div class="preview-meta">.week-list · .week-row · .week-row.today · .week-item.{primary|accent|muted}</div>
+    <div class="card">
+      <div class="week-list">
+        <div class="week-row today">
+          <div class="week-date">Day 1<strong>월</strong></div>
+          <div class="week-content">
+            <h4>출력 · 파워</h4>
+            <div class="week-meta">
+              <span>고강도</span><span>·</span><span>5개 운동</span><span>·</span>
+              <span class="now-dot">오늘 진행 중</span>
+            </div>
+            <div class="week-items">
+              <span class="week-item primary"><span class="marker"></span>박스 점프 3×5</span>
+              <span class="week-item primary"><span class="marker"></span>메디신볼 슬램 3×8</span>
+              <span class="week-item"><span class="marker"></span>스쿼트 4×5 @75%</span>
+              <span class="week-item"><span class="marker"></span>푸시 프레스 3×5</span>
+              <span class="week-item"><span class="marker"></span>코어 안티-로테이션 3×8</span>
+            </div>
+          </div>
+        </div>
+        <div class="week-row">
+          <div class="week-date">Day 2<strong>화</strong></div>
+          <div class="week-content">
+            <h4>회복 · 가동성</h4>
+            <div class="week-meta"><span>저강도</span><span>·</span><span>4개 운동</span></div>
+            <div class="week-items">
+              <span class="week-item muted"><span class="marker"></span>어깨 가동성 루틴 10분</span>
+              <span class="week-item muted"><span class="marker"></span>90/90 호흡 3×8</span>
+              <span class="week-item muted"><span class="marker"></span>T-스파인 회전 3×8</span>
+              <span class="week-item muted"><span class="marker"></span>장요근 스트레치</span>
+            </div>
+          </div>
+        </div>
+        <div class="week-row">
+          <div class="week-date">Day 7<strong>일</strong></div>
+          <div class="week-content">
+            <h4>휴식</h4>
+            <div class="week-meta"><span>휴식</span><span>·</span><span>1개 운동</span></div>
+            <div class="week-items">
+              <span class="week-item muted"><span class="marker"></span>능동 회복 + 폼롤러 15분</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Doc inline boxes -->
+  <section class="preview-section">
+    <h2>09 · Doc · Inline note / warn / danger</h2>
+    <div class="preview-meta">.doc-note · .doc-warn · .doc-danger</div>
+    <div class="doc-note">
+      <div class="doc-note-icon">✦</div>
+      <div class="doc-note-text">
+        <strong>한 줄 요약.</strong> 점수가 낮은 항목 = 다음 주에 더 자주 다룰 항목. 통증이 있다면 즉시 입력하고 전문가 상담을 권장합니다.
+      </div>
+    </div>
+    <div class="doc-warn">
+      <div class="doc-note-icon">⚠</div>
+      <div class="doc-note-text">
+        <strong>통증이 있는 상태에서는 측정을 진행하지 마세요.</strong> 통증 부위 측정은 결과를 왜곡시키며, 선수에게 추가 부담을 줍니다.
+      </div>
+    </div>
+    <div class="doc-danger">
+      <div class="doc-note-icon">!</div>
+      <div class="doc-note-text">
+        <strong>이 앱은 의료 도구가 아닙니다.</strong> 통증·부상 의심·심한 불편이 있다면 즉시 훈련을 중단하고 의사·물리치료사 등 전문가의 진료를 받으세요.
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Doc page sample -->
+  <section class="preview-section">
+    <h2>10 · Document page (max-width 720)</h2>
+    <div class="preview-meta">.doc-wrap · .doc-eyebrow · .doc-h1 · .doc-lead · .doc-meta · .doc-body</div>
+    <div style="background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r-lg); overflow: hidden">
+      <div class="doc-header">
+        <a class="doc-back">← 앱으로 돌아가기</a>
+        <div class="brand" style="gap: 10px">
+          <div class="brand-mark" style="width: 28px; height: 28px">B</div>
+          <div style="font-size: 13px; font-weight: 700; letter-spacing: -0.01em">Baseball Lab S&amp;C — Docs</div>
+        </div>
+        <nav style="display: flex; gap: 18px; font-size: 11.5px">
+          <a style="color: var(--mute)">서비스 소개</a>
+          <a style="color: var(--ink); font-weight: 600">활용 가이드</a>
+          <a style="color: var(--mute)">약관·고지</a>
+        </nav>
+      </div>
+      <main class="doc-wrap">
+        <div class="doc-eyebrow">DOC · 02 · 활용 가이드</div>
+        <h1 class="doc-h1">8종목 정밀 평가, 어떻게 활용하나요?</h1>
+        <p class="doc-lead">
+          정밀 평가는 선수의 신체 상태를 한 시점에 기록하는 도구입니다.
+          이 기록을 기준으로 7일 스케줄의 비중이 자동으로 조정됩니다.
+        </p>
+        <div class="doc-meta">
+          <span>최종 수정 <strong>2026년 5월 12일</strong></span>
+          <span>읽는 시간 <strong>약 6분</strong></span>
+        </div>
+        <div class="doc-body">
+          <h2><span class="h-num">01</span>평가의 목적</h2>
+          <p>
+            정밀 평가의 목적은 <strong>약점 영역을 찾아 다음 7일 동안 더 비중 있게 다루기 위함</strong>입니다.
+            점수 자체가 선수의 실력이나 부상 위험을 결정하는 척도는 아니며, 같은 점수라도 시즌 시점·구력·연령에 따라
+            해석은 달라집니다.
+          </p>
+          <h3>해석의 한계</h3>
+          <p>
+            정밀 평가는 측정 환경(워밍업 정도·시간대·컨디션)에 영향을 받습니다.
+            점수의 절댓값보다는 <strong>4주 단위 변화 추이</strong>를 보는 것이 더 의미가 있습니다.
+          </p>
+          <table class="doc-table">
+            <thead>
+              <tr><th>항목</th><th>측정 단위</th><th>해석의 초점</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>수직 점프</strong></td><td><span class="mono">cm</span></td><td>하지 출력</td></tr>
+              <tr><td><strong>1RM 스쿼트</strong></td><td><span class="mono">× 체중</span></td><td>하지 최대 근력</td></tr>
+              <tr><td><strong>T-스파인 회전</strong></td><td><span class="mono">°</span></td><td>흉추 회전 가동성</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="preview-rule" style="margin-top: 64px"></div>
+  <div style="display: flex; justify-content: space-between; gap: 20px; font-family: var(--font-mono); font-size: 11px; color: var(--mute); letter-spacing: 0.06em">
+    <span>BASEBALL LAB S&amp;C · CLINICAL TRUST · EXPORT v0.1.0</span>
+    <span>tokens.css · components.css · 10 snippets · 1 README</span>
+  </div>
+
+</div>
+
+</body>
+</html>

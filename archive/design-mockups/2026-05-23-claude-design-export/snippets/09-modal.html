@@ -1,0 +1,63 @@
+<!-- Modal (desktop) — M1 컨디션 (Live Wellness) example
+     Classes: .modal-scrim · .modal · .modal-head · .modal-title · .modal-sub
+              .modal-close · .modal-body · .modal-foot
+
+     For mobile, replace .modal with .sheet (see bottom). -->
+
+<div class="modal-scrim"></div>
+
+<div class="modal" style="width: 600px">
+  <div class="modal-head">
+    <div>
+      <div class="eyebrow">LIVE WELLNESS · 김도현</div>
+      <h3 class="modal-title" style="margin-top: 6px">오늘의 컨디션</h3>
+      <p class="modal-sub">훈련 전 입력 · 결과는 오늘 스케줄에 즉시 반영됩니다.</p>
+    </div>
+    <button class="modal-close" aria-label="닫기">×</button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Range example -->
+    <div class="field">
+      <div style="display: flex; justify-content: space-between">
+        <label class="label">수면 시간</label>
+        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute)">권장 7h 이상</span>
+      </div>
+      <div class="range">
+        <div class="range-track">
+          <div class="range-fill" style="width: 44%"></div>
+          <div class="range-thumb" style="left: 44%"></div>
+        </div>
+        <span class="range-val">7.5h</span>
+      </div>
+    </div>
+
+    <!-- Note (advisory) -->
+    <div class="doc-note">
+      <div class="doc-note-icon">!</div>
+      <div class="doc-note-text">
+        <strong>오늘 컨디션 양호 — 스케줄 그대로 진행.</strong><br />
+        통증 보고 시 대체 운동으로 자동 전환됩니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-foot" style="display: flex; gap: 10px">
+    <button class="btn btn-outline" style="flex: 1; justify-content: center">취소</button>
+    <button class="btn btn-navy" style="flex: 2; justify-content: center">
+      저장 후 스케줄 갱신 →
+    </button>
+  </div>
+</div>
+
+
+<!-- Mobile bottom sheet variant — same structure inside, swap wrapper class -->
+<!--
+<div class="modal-scrim"></div>
+<div class="sheet">
+  <div class="sheet-handle"></div>
+  <div class="modal-head"> ... </div>
+  <div class="modal-body"> ... </div>
+  <div class="modal-foot" style="position: sticky; bottom: 0"> ... </div>
+</div>
+-->

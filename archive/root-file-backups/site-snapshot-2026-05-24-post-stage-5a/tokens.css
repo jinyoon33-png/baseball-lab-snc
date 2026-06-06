@@ -1,0 +1,184 @@
+/* ============================================================================
+   Baseball Lab S&C — Clinical Trust · Design Tokens (site copy)
+   tokens.css · v0.1.0-site · 2026-05-24
+   ----------------------------------------------------------------------------
+   원본: archive/design-mockups/2026-05-23-claude-design-export/tokens.css
+   본 사본의 차이점:
+     1) 외부 CDN @import 2건 제거 (CSP `font-src 'self'` 정책 충족).
+        - 원본의 Pretendard CDN, JetBrains Mono Google Fonts @import 둘 다 미사용.
+        - Pretendard는 site/style.css의 기존 @font-face(vendor/fonts/) 정의로 로드됨.
+        - 모노 폰트는 사용자 폰트 결정 전까지 system mono 폴백 사용.
+     2) --font-sans, --font-mono 토큰을 system 폴백 우선으로 재정의.
+        - 사용자 폰트 결정 후 별도 티켓에서 본 두 토큰만 교체.
+     3) 그 외 토큰은 원본과 동일.
+   ============================================================================ */
+
+:root {
+  /* ---- Surface & ink (light) ---- */
+  --bg:          #F5F6F8;
+  --surface:     #FFFFFF;
+  --surface-2:   #FAFBFC;
+  --tint:        #F0F4FA;
+
+  --ink:         #0F172A;
+  --ink-2:       #1E293B;
+  --mute:        #64748B;
+  --mute-2:      #94A3B8;
+
+  --rule:        #E2E8F0;
+  --rule-2:      #CBD5E1;
+  --rule-soft:   rgba(15, 23, 42, 0.06);
+
+  /* ---- Accent ---- */
+  --navy:        #1F4585;
+  --navy-2:      #1A3A72;
+  --navy-bg:     #E7EDF7;
+
+  /* ---- Signal trio: 정상 · 주의 · 초과 (+ muted for low load) ---- */
+  --safe:        #2F7A5F;
+  --safe-bg:     #D8EBE1;
+  --watch:       #A67635;
+  --watch-bg:    #F4E7CF;
+  --risk:        #B85C52;
+  --risk-bg:     #F4D6D1;
+
+  /* ---- Chart series ---- */
+  --chart-1:     #1F4585;
+  --chart-2:     #2F7A5F;
+  --chart-3:     #A67635;
+  --chart-4:     #B85C52;
+  --chart-5:     #64748B;
+  --chart-grid:  #E2E8F0;
+
+  /* ---- Type families (2026-05-24 사용자 결정: 기존 Pretendard 유지) ---- */
+  --font-sans:   'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR',
+                 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:   ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                 "Liberation Mono", monospace;
+
+  /* ---- Type scale (sizes, weights, tracking) ---- */
+  --t-display-size:     44px;  --t-display-weight: 700; --t-display-tracking: -0.025em;
+  --t-h1-page-size:     36px;  --t-h1-page-weight: 700; --t-h1-page-tracking: -0.025em;
+  --t-h2-card-size:     20px;  --t-h2-card-weight: 700; --t-h2-card-tracking: -0.02em;
+  --t-h3-size:          15.5px;--t-h3-weight:      700; --t-h3-tracking:     -0.01em;
+  --t-body-size:        13.5px;--t-body-weight:    500; --t-body-tracking:   -0.005em;
+  --t-caption-size:     11.5px;--t-caption-weight: 500;
+  --t-mono-stat-size:   36px;  --t-mono-stat-weight: 600; --t-mono-stat-tracking: -0.03em;
+  --t-mono-num-size:    14px;  --t-mono-num-weight:  600;
+  --t-eyebrow-size:     10px;  --t-eyebrow-weight:   600; --t-eyebrow-tracking: 0.18em;
+
+  /* ---- Spacing scale ---- */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-12: 48px;
+
+  /* ---- Radius ---- */
+  --r-sm:   3px;
+  --r-md:   4px;
+  --r-lg:   6px;
+  --r-xl:   8px;
+  --r-2xl:  14px;
+  --r-pill: 999px;
+
+  /* ---- Shadow ---- */
+  --shadow-card:  0 1px 0 rgba(15, 23, 42, 0.04);
+  --shadow-modal: 0 30px 90px rgba(15, 23, 42, 0.25);
+  --shadow-sheet: 0 -20px 60px rgba(15, 23, 42, 0.2);
+  --shadow-focus: 0 0 0 3px var(--rule-soft);
+
+  /* ---- Doc page master ---- */
+  --doc-max-w:        720px;
+  --doc-body-size:    16px;
+  --doc-body-leading: 1.7;
+  --doc-h1-size:      40px;
+  --doc-h2-size:      22px;
+  --doc-h3-size:      15.5px;
+  --doc-section-gap:  40px;
+  --doc-p-gap:        14px;
+
+  /* ---- Layout dims ---- */
+  --topbar-h:    72px;
+  --tabbar-h:    72px;
+  --container-page-pad: 36px;
+
+  /* ============================================================
+     Legacy variable alias — Stage 1a (2026-05-24)
+     ------------------------------------------------------------
+     기존 site/style.css·docs.css가 사용하던 변수 이름을 신규
+     Clinical Trust 토큰으로 매핑한다. 본 alias는 :root 안에서
+     앞쪽 신규 토큰을 참조한다.
+     ============================================================ */
+  --primary:           var(--navy);
+  --primary-dark:      var(--navy-2);
+  --text-main:         var(--ink);
+  --text-muted:        var(--mute);
+  --bg-color:          var(--bg);
+  --card-bg:           var(--surface);
+  --border:            var(--rule);
+  --input-bg:          var(--surface-2);
+
+  --success:           var(--safe);
+  --success-light:     var(--safe-bg);
+  --warning:           var(--watch);
+  --warning-light:     var(--watch-bg);
+  --danger:            var(--risk);
+  --danger-light:      var(--risk-bg);
+
+  --chart-green:       var(--chart-2);
+  --chart-amber:       var(--chart-3);
+  --chart-red:         var(--chart-4);
+}
+
+/* Dark theme tokens — 보존하되 본 마이그레이션에서는 활성화하지 않음.
+   <html data-theme="dark">를 붙이면 자동 활성화. (Stage 별도 작업에서 적용.) */
+[data-theme="dark"] {
+  --bg:          #0F1419;
+  --surface:     #1A1F26;
+  --surface-2:   #171B22;
+  --tint:        #1F2530;
+
+  --ink:         #E8ECF4;
+  --ink-2:       #C8CED9;
+  --mute:        #8A95A4;
+  --mute-2:      #5A6470;
+
+  --rule:        #2A2F38;
+  --rule-2:      #3A4150;
+  --rule-soft:   rgba(232, 236, 244, 0.08);
+
+  --navy:        #6B9DE8;
+  --navy-2:      #8FB8EE;
+  --navy-bg:     rgba(107, 157, 232, 0.14);
+
+  --safe:        #6BAF8A;
+  --safe-bg:     rgba(107, 175, 138, 0.16);
+  --watch:       #D9A75C;
+  --watch-bg:    rgba(217, 167, 92, 0.16);
+  --risk:        #E88B7E;
+  --risk-bg:     rgba(232, 139, 126, 0.18);
+
+  --chart-1:     #6B9DE8;
+  --chart-2:     #6BAF8A;
+  --chart-3:     #D9A75C;
+  --chart-4:     #E88B7E;
+  --chart-5:     #8A95A4;
+  --chart-grid:  #2A2F38;
+
+  --shadow-card:  0 1px 0 rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.6);
+  --shadow-sheet: 0 -20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

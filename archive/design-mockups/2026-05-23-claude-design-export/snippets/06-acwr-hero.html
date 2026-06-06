@@ -1,0 +1,59 @@
+<!-- ACWR / Workload Hero — used at top of S3 결과·스케줄
+     Classes: .hero-data · .hero-num · .stat-label
+     Tokens: --ink (bg), --safe/watch/risk (signal) -->
+
+<div class="hero-data">
+  <div>
+    <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; opacity: 0.55">
+      ACWR · WORKLOAD STATUS
+    </div>
+    <div style="display: flex; align-items: baseline; gap: 14px; margin-top: 6px">
+      <span class="hero-num">1.12</span>
+      <span style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500">정상 · 적정 부하 유지 중</span>
+    </div>
+    <div style="display: flex; gap: 28px; margin-top: 16px">
+      <!-- Mini-stat blocks -->
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">급성 (7d)</div>
+        <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">
+          412<span style="font-size: 10px; margin-left: 4px; opacity: 0.5">AU</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">만성 (28d)</div>
+        <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">
+          368<span style="font-size: 10px; margin-left: 4px; opacity: 0.5">AU</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; opacity: 0.55; text-transform: uppercase">주간 변동</div>
+        <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 500; margin-top: 3px">+8%</div>
+      </div>
+    </div>
+  </div>
+  <!-- Right column: cycle progress -->
+  <div style="position: relative; z-index: 1; min-width: 220px">
+    <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; opacity: 0.5; margin-bottom: 10px">
+      CYCLE · 4-WEEK BLOCK
+    </div>
+    <div style="display: flex; gap: 4px">
+      <!-- Replace classes / data attrs for week states in production -->
+      <div style="flex: 1; padding: 6px 6px 5px; border-radius: 4px; background: rgba(255,255,255,.18); text-align: center; font-family: var(--font-mono)">
+        <div style="font-size: 9px; opacity: 0.5; letter-spacing: 0.1em">W1</div>
+        <div style="font-size: 11px; font-weight: 600">✓</div>
+      </div>
+      <div style="flex: 1; padding: 6px 6px 5px; border-radius: 4px; background: rgba(255,255,255,.18); text-align: center; font-family: var(--font-mono)">
+        <div style="font-size: 9px; opacity: 0.5; letter-spacing: 0.1em">W2</div>
+        <div style="font-size: 11px; font-weight: 600">✓</div>
+      </div>
+      <div style="flex: 1; padding: 6px 6px 5px; border-radius: 4px; background: #fff; color: var(--ink); text-align: center; font-family: var(--font-mono)">
+        <div style="font-size: 9px; opacity: 0.55; letter-spacing: 0.1em">W3</div>
+        <div style="font-size: 11px; font-weight: 600">NOW</div>
+      </div>
+      <div style="flex: 1; padding: 6px 6px 5px; border-radius: 4px; background: rgba(255,255,255,.05); text-align: center; font-family: var(--font-mono)">
+        <div style="font-size: 9px; opacity: 0.5; letter-spacing: 0.1em">W4</div>
+        <div style="font-size: 11px; font-weight: 600">—</div>
+      </div>
+    </div>
+  </div>
+</div>

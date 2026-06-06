@@ -1,0 +1,140 @@
+<!-- Document page master — shared by 7 docs:
+     about · assessment-guide · recovery-guide · workload-guide
+     · contact · privacy · terms
+
+     Structure:
+       .doc-header  (top: 앱으로 돌아가기 + brand + cross-doc nav)
+       .doc-wrap    (single column, max-width: var(--doc-max-w) = 720px)
+         .doc-eyebrow
+         h1.doc-h1
+         p.doc-lead
+         .doc-meta
+         .doc-body
+           h2 with .h-num
+           p, ul, ol
+           .doc-note · .doc-warn · .doc-danger
+           .doc-table
+           .doc-postscript (in-page CTA)
+           .doc-foot      (prev / next inter-doc nav)
+-->
+
+<div class="doc-header">
+  <a href="/" class="doc-back">← 앱으로 돌아가기</a>
+  <div class="brand" style="gap: 10px">
+    <div class="brand-mark" style="width: 28px; height: 28px">B</div>
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: -0.01em">
+      Baseball Lab S&amp;C — Docs
+    </div>
+  </div>
+  <nav style="display: flex; gap: 18px; font-size: 11.5px">
+    <a href="/about.html" style="color: var(--mute)">서비스 소개</a>
+    <a href="/assessment-guide.html" style="color: var(--ink); font-weight: 600">활용 가이드</a>
+    <a href="/terms.html" style="color: var(--mute)">약관·고지</a>
+  </nav>
+</div>
+
+<main class="doc-wrap">
+  <div class="doc-eyebrow">DOC · 02 · 활용 가이드</div>
+  <h1 class="doc-h1">8종목 정밀 평가, 어떻게 활용하나요?</h1>
+  <p class="doc-lead">
+    정밀 평가는 선수의 신체 상태를 한 시점에 기록하는 도구입니다.
+    이 기록을 기준으로 7일 스케줄의 비중이 자동으로 조정됩니다. 진단·예측을 위한 도구는 아닙니다.
+  </p>
+
+  <div class="doc-meta">
+    <span>최종 수정 <strong>2026년 5월 12일</strong></span>
+    <span>읽는 시간 <strong>약 6분</strong></span>
+    <span>관련 화면 <strong>S2 · S3</strong></span>
+  </div>
+
+  <div class="doc-body">
+    <h2><span class="h-num">01</span>평가의 목적</h2>
+    <p>
+      정밀 평가의 목적은 <strong>약점 영역을 찾아 다음 7일 동안 더 비중 있게 다루기 위함</strong>입니다.
+      점수 자체가 선수의 실력이나 부상 위험을 결정하는 척도는 아니며, 같은 점수라도 시즌 시점·구력·연령에 따라
+      해석은 달라집니다.
+    </p>
+
+    <div class="doc-note">
+      <div class="doc-note-icon">✦</div>
+      <div class="doc-note-text">
+        <strong>한 줄 요약.</strong> 점수가 낮은 항목 = 다음 주에 더 자주 다룰 항목.
+        통증이 있다면 즉시 입력하고 전문가 상담을 권장합니다.
+      </div>
+    </div>
+
+    <h2><span class="h-num">02</span>8개 항목과 의미</h2>
+    <p>각 항목은 한국 아마추어 야구 환경에서 자주 발생하는 약점 영역을 커버하도록 선정했습니다.</p>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th style="width: 32%">항목</th>
+          <th style="width: 20%">측정 단위</th>
+          <th>해석의 초점</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>수직 점프</strong></td>
+          <td><span class="mono">cm</span></td>
+          <td>하지 출력 — 투구·스윙 폭발력의 토대</td>
+        </tr>
+        <tr>
+          <td><strong>1RM 스쿼트</strong></td>
+          <td><span class="mono">× 체중</span></td>
+          <td>하지 최대 근력</td>
+        </tr>
+        <tr>
+          <td><strong>T-스파인 회전</strong></td>
+          <td><span class="mono">°</span></td>
+          <td>흉추 회전 가동성 — 투구·스윙 효율</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>해석의 한계</h3>
+    <p>
+      정밀 평가는 측정 환경(워밍업·시간대·컨디션)에 영향을 받습니다.
+      점수의 절댓값보다는 <strong>4주 단위 변화 추이</strong>를 보는 것이 더 의미가 있습니다.
+    </p>
+
+    <div class="doc-warn">
+      <div class="doc-note-icon">⚠</div>
+      <div class="doc-note-text">
+        <strong>통증이 있는 상태에서는 측정을 진행하지 마세요.</strong> 통증 부위 측정은 결과를 왜곡시킵니다.
+      </div>
+    </div>
+
+    <div class="doc-danger">
+      <div class="doc-note-icon">!</div>
+      <div class="doc-note-text">
+        <strong>이 앱은 의료 도구가 아닙니다.</strong> 통증·부상 의심·심한 불편이 있다면 즉시 훈련을 중단하고
+        의사·물리치료사 등 전문가의 진료를 받으세요.
+      </div>
+    </div>
+
+    <!-- In-doc CTA -->
+    <div class="doc-postscript">
+      <div>
+        <div class="doc-postscript-h">이제 측정해 봅니다.</div>
+        <div class="doc-postscript-p">
+          선수 카드에서 "초기 평가하기"를 눌러 8개 항목을 차례로 측정하세요.
+        </div>
+      </div>
+      <a href="/" class="btn">평가 시작 →</a>
+    </div>
+
+    <!-- Inter-doc nav -->
+    <div class="doc-foot">
+      <a class="doc-foot-link" href="/about.html">
+        <span class="doc-foot-link-dir">← 이전 글 · DOC 01</span>
+        <span class="doc-foot-link-title">Baseball Lab S&amp;C란 무엇인가요?</span>
+      </a>
+      <a class="doc-foot-link right" href="/recovery-guide.html">
+        <span class="doc-foot-link-dir">다음 글 · DOC 03 →</span>
+        <span class="doc-foot-link-title">등판 후 회복 기록 가이드</span>
+      </a>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Baseball Lab S&C는 투수·타자 모두를 위한 야구 훈련·회복·워크로드 관리 웹 도구입니다. 정밀평가, 7일 스케줄, ACWR 추적, 백업/복원을 한곳에서 제공합니다.">
+    <meta name="robots" content="index, follow">
+    <title>Baseball Lab S&C — 투수·타자 모두를 위한 야구 훈련·회복·워크로드 관리</title>
+    <script src="./vendor/chart.umd.min.js"></script>
+    <script src="./vendor/html2canvas.min.js"></script>
+    <script src="./vendor/lucide.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="hero-topline">
+                <div class="hero-identity">
+                    <span class="hero-mark"><i data-lucide="activity"></i></span>
+                    <span class="hero-identity-copy">
+                        <span class="hero-eyebrow">Baseball Lab S&amp;C</span>
+                        <span class="hero-identity-sub">Amateur Baseball Performance</span>
+                    </span>
+                </div>
+                <div class="header-btn-row">
+                    <button class="header-dashboard-btn" data-header-action="team-dashboard">
+                        <i data-lucide="users" class="ui-icon-16"></i>
+                        팀 대시보드
+                    </button>
+                    <button class="header-guide-cta" data-header-action="guide">
+                        <i data-lucide="book-open" class="ui-icon-18 ui-icon-fixed"></i>
+                        <span class="header-guide-label">
+                            <span class="header-guide-main">처음 사용 가이드</span>
+                            <span class="header-guide-kicker">3분 빠른 시작</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="hero-content">
+                <div class="header-brand-bar">
+                    <span class="header-brand-dot"></span>
+                    <span class="header-brand-label">Assessment-Based Training</span>
+                </div>
+                <h1>Baseball Lab S&amp;C</h1>
+                <p class="subtitle">투수·타자 모두를 위한 야구 훈련·회복·워크로드 관리</p>
+                <div class="hero-metric-row" aria-label="핵심 기능 요약">
+                    <span class="hero-metric"><strong>8종목</strong> 정밀평가</span>
+                    <span class="hero-metric"><strong>7일</strong> 맞춤 스케줄</span>
+                    <span class="hero-metric"><strong>ACWR</strong> 부하 관리</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Screen 1: Player List & Registration -->
+        <div id="s1" class="screen active">
+            <div class="s1-layout">
+            <div class="card">
+                <h2>신규 선수 등록</h2>
+                <div class="form-group">
+                    <label class="form-label">이름</label>
+                    <input type="text" id="pName" class="form-control" placeholder="예: 김선수">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">투타 구분</label>
+                    <div class="type-toggle">
+                        <button type="button" class="type-btn active" id="addTypePitcher"
+                            data-player-type-action="select" data-player-type="투수" data-player-form-type="add">투수</button>
+                        <button type="button" class="type-btn" id="addTypeBatter"
+                            data-player-type-action="select" data-player-type="타자" data-player-form-type="add">타자</button>
+                    </div>
+                    <input type="hidden" id="pType" value="투수">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">선수 유형</label>
+                    <select id="pUserType" class="form-control">
+                        <option value="">선택 안 함</option>
+                        <option value="youth_student">유소년·학생 선수</option>
+                        <option value="adult_amateur">사회인 야구인</option>
+                        <option value="recreational">취미·건강 목적</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">사용 관점</label>
+                    <select id="pUsagePerspective" class="form-control">
+                        <option value="">선택 안 함</option>
+                        <option value="self">선수 본인</option>
+                        <option value="coach">코치·지도자</option>
+                        <option value="guardian">보호자</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">훈련 운영 방향</label>
+                    <select id="pTrainingFocus" class="form-control">
+                        <option value="">선택 안 함</option>
+                        <option value="performance">근력·파워 개발</option>
+                        <option value="conditioning">체력·컨디션 유지</option>
+                        <option value="recovery">회복 관리</option>
+                        <option value="mobility">가동성 관리</option>
+                        <option value="game_ready">경기 전 준비</option>
+                        <option value="general_fitness">건강·취미 운동</option>
+                    </select>
+                    <div class="form-help-text">근력·파워 개발은 출력 계열, 경기 전 준비는 경기 직전 활성화 계열 운동 우선순위에 반영됩니다.</div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">나이 (만 나이)</label>
+                        <input type="number" id="pAge" class="form-control" placeholder="예: 15"
+                            data-add-player-validate="input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">구력 (야구 경력, 년)</label>
+                        <input type="number" id="pExp" class="form-control" placeholder="예: 3"
+                            data-add-player-validate="input">
+                    </div>
+                </div>
+                <div id="addExpError" class="form-error-message">
+                    구력이 나이보다 높을 수 없습니다.</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">키 (cm)</label>
+                        <input type="number" id="pHeight" class="form-control" placeholder="예: 180">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">체중 (kg)</label>
+                        <input type="number" id="pWeight" class="form-control" placeholder="예: 80">
+                    </div>
+                </div>
+                <!-- 투수 전용 필드 -->
+                <div id="addPitcherFields">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">보직</label>
+                            <select id="pRole" class="form-control">
+                                <option value="선발">선발 투수</option>
+                                <option value="구원">구원 투수</option>
+                                <option value="마무리">마무리 투수</option>
+                                <option value="구분 없음">구분 없음</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">시즌 상태</label>
+                            <select id="pSeason" class="form-control">
+                                <option value="비시즌">비시즌 (Off-season)</option>
+                                <option value="시즌중">시즌 중 (In-season)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">포지션별 핵심 목표</label>
+                            <select id="pGoal" class="form-control">
+                                <option value="구속 향상">구속 향상 (파워/스트렝스)</option>
+                                <option value="제구 안정">제구 안정 (코어/밸런스)</option>
+                                <option value="부상 방지">회복·가동성 관리 (기존 부상 방지)</option>
+                            </select>
+                            <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">개인 훈련 할애 시간</label>
+                            <select id="pTime" class="form-control">
+                                <option value="30">30분 (핵심 위주)</option>
+                                <option value="60" selected>60분 (표준 프로그램)</option>
+                                <option value="90">90분 (심화 프로그램)</option>
+                                <option value="120">120분 (엘리트 코스)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">현재 최고 구속 (km/h)</label>
+                            <input type="number" id="pMaxVelo" class="form-control" placeholder="예: 135"
+                                data-add-player-validate="input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">현재 평균 구속 (km/h)</label>
+                            <input type="number" id="pAvgVelo" class="form-control" placeholder="예: 130"
+                                data-add-player-validate="input">
+                        </div>
+                    </div>
+                    <div id="addVeloError" class="form-error-message">
+                        평균구속이 최고구속보다 높을 수 없습니다.</div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">현재 RPM (회전수)</label>
+                            <input type="number" id="pRPM" class="form-control" placeholder="예: 2200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">다음 등판 예정일</label>
+                            <input type="date" id="pPitchDate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <!-- 타자 전용 필드 (기본 숨김) -->
+                <div id="addBatterFields" class="is-initially-hidden">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">포지션</label>
+                            <select id="pBatterPos" class="form-control">
+                                <option value="내야수">내야수</option>
+                                <option value="외야수">외야수</option>
+                                <option value="포수">포수</option>
+                                <option value="지명타자">지명타자</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">시즌 상태</label>
+                            <select id="pBatterSeason" class="form-control">
+                                <option value="비시즌">비시즌 (Off-season)</option>
+                                <option value="시즌중">시즌 중 (In-season)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">포지션별 핵심 목표</label>
+                            <select id="pBatterGoal" class="form-control">
+                                <option value="타구속도 향상">타구속도 향상 (파워/스트렝스)</option>
+                                <option value="컨택 능력">컨택 능력 (코어/밸런스)</option>
+                                <option value="부상 방지">회복·가동성 관리 (기존 부상 방지)</option>
+                            </select>
+                            <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">개인 훈련 할애 시간</label>
+                            <select id="pBatterTime" class="form-control">
+                                <option value="30">30분 (핵심 위주)</option>
+                                <option value="60" selected>60분 (표준 프로그램)</option>
+                                <option value="90">90분 (심화 프로그램)</option>
+                                <option value="120">120분 (엘리트 코스)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">타구속도 (Exit Velo, km/h)</label>
+                            <input type="number" id="pExitVelo" class="form-control" placeholder="예: 145">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">배트스피드 (km/h)</label>
+                            <input type="number" id="pBatSpeed" class="form-control" placeholder="예: 110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- V5.1 추가: 초기 통증 및 회복 수준 -->
+                <div class="initial-condition-section">
+                    <h3 class="initial-condition-title">초기 컨디션 설정</h3>
+                    <div class="form-group">
+                        <label class="form-label">초기 통증 부위 (다중 선택 가능)</label>
+                        <div class="checkbox-group checkbox-group--row"
+                            data-add-player-pain-group="pPain">
+                            <label><input type="checkbox" name="pPain" value="어깨"> 어깨</label>
+                            <label><input type="checkbox" name="pPain" value="팔꿈치"> 팔꿈치</label>
+                            <label><input type="checkbox" name="pPain" value="허리"> 허리</label>
+                            <label><input type="checkbox" name="pPain" value="무릎"> 무릎</label>
+                            <label><input type="checkbox" name="pPain" value="손목"> 손목</label>
+                            <label><input type="checkbox" name="pPain" value="고관절"> 고관절</label>
+                            <label><input type="checkbox" name="pPain" value="발목"> 발목</label>
+                            <label><input type="checkbox" name="pPain" value="없음" checked> 없음</label>
+                        </div>
+                    </div>
+                    <div class="form-group is-initially-hidden" id="initialRecoveryGroup">
+                        <!-- 동적 슬라이더가 여기에 생성됩니다 -->
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="addPlayerBtn" data-add-player-action="submit">선수 등록 및 정밀 평가
+                    시작</button>
+            </div>
+
+            <div class="card">
+                <h2>관리 중인 선수 목록</h2>
+                <div id="playerList"></div>
+
+                <div id="backupSection" class="backup-section">
+                    <div class="backup-section-title"><i data-lucide="shield"></i> 데이터 관리</div>
+                    <div class="backup-caution-box">
+                        <p class="backup-section-help"><strong>백업 다운로드</strong>는 현재 선수 데이터를 JSON 파일로 저장합니다. <strong>백업 복원</strong>은 현재 저장된 모든 데이터를 선택한 백업 파일 내용으로 <strong>완전히 교체</strong>합니다. <strong>오래된 기록 정리</strong>는 180일 이전 훈련·워크로드 기록만 삭제하며 선수 정보와 퍼포먼스 기록은 유지합니다. 복원이나 정리 전에는 반드시 먼저 백업 다운로드를 실행하고, 공용 PC나 공용 저장소에는 백업 파일을 업로드하지 마세요.</p>
+                    </div>
+                    <p id="backupStorageStatus" class="backup-section-help backup-storage-status">저장 상태를 계산 중입니다.</p>
+                    <div class="backup-actions">
+                        <button id="backupDownloadBtn" class="btn btn-outline" data-backup-action="download">
+                            <i data-lucide="download"></i> 백업 다운로드
+                        </button>
+                        <button id="backupRestoreBtn" class="btn btn-outline" data-backup-action="restore">
+                            <i data-lucide="upload"></i> 백업 복원
+                        </button>
+                        <button id="backupCleanupBtn" class="btn btn-outline" data-backup-action="cleanup-old-records">
+                            <i data-lucide="trash-2"></i> 오래된 기록 정리
+                        </button>
+                    </div>
+                    <input type="file" id="backupRestoreInput" class="is-initially-hidden" accept=".json,application/json" data-backup-file-input="restore">
+                    <div class="backup-danger-zone">
+                        <div class="backup-danger-zone-title"><i data-lucide="alert-octagon"></i> 위험 작업</div>
+                        <p class="backup-danger-zone-help">앱 내 전체 선수·기록·워크로드 데이터를 한 번에 삭제합니다. <strong>복구하려면 미리 받아 둔 백업 파일이 필요</strong>합니다. 초기화 전에 백업 다운로드를 먼저 실행하세요.</p>
+                        <button id="backupResetBtn" class="btn btn-danger" data-backup-action="reset-all">
+                            <i data-lucide="trash-2"></i> 전체 데이터 초기화
+                        </button>
+                    </div>
+                    <div class="policy-links">
+                        <a href="about.html" target="_blank" rel="noopener noreferrer">서비스 소개</a>
+                        <span class="policy-sep">·</span>
+                        <a href="contact.html" target="_blank" rel="noopener noreferrer">문의/지원</a>
+                        <span class="policy-sep">·</span>
+                        <a href="privacy.html" target="_blank" rel="noopener noreferrer">개인정보처리방침</a>
+                        <span class="policy-sep">·</span>
+                        <a href="terms.html" target="_blank" rel="noopener noreferrer">이용약관 및 안전 고지</a>
+                    </div>
+                </div>
+            </div>
+            </div><!-- /s1-layout -->
+        </div>
+
+        <!-- Screen 2: 8-Event Assessment -->
+        <div id="s2" class="screen">
+            <div class="card">
+                <div class="section-header">
+                    <h2>신체 정밀 평가 (8종목)</h2>
+                    <span id="assessPlayerName" class="assess-player-name"></span>
+                </div>
+                <p class="assess-caution-note">* 선수의 연령대에 맞춰 기준 수치가 자동 변경되었습니다.</p>
+
+                <div id="assessmentForm"></div>
+
+                <div class="assess-action-row">
+                    <button class="btn btn-outline u-flex-1" data-assessment-action="skip">나중에
+                        하기</button>
+                    <button class="btn btn-primary u-flex-2" data-assessment-action="save">평가 완료 (결과로 이동)</button>
+                </div>
+                <p class="assess-tail-note">평가를 완료해야 스케줄이 자동 생성됩니다. 나중에 하기를 선택하면 목록에서 다시 진행할 수 있습니다.</p>
+            </div>
+        </div>
+
+        <!-- Screen 3: Result & Schedule -->
+        <div id="s3" class="screen">
+            <div class="card" id="captureArea">
+                <div class="result-layout">
+                <div class="result-overview-col">
+                <div class="section-header section-header--tight">
+                    <h2 id="resName">선수 결과</h2>
+                    <span id="resWeek" class="badge badge-success res-week-badge">1주차</span>
+                </div>
+
+                <!-- View Toggle -->
+                <div class="view-toggle-container">
+                    <div class="view-toggle">
+                        <button id="viewCardBtn" class="active" data-view-mode="card">카드형</button>
+                        <button id="viewCalendarBtn" data-view-mode="calendar">주간</button>
+                        <button id="viewMonthlyBtn" data-view-mode="monthly">월간</button>
+                    </div>
+                </div>
+
+                <div id="wellnessBadges" class="badge-container"></div>
+                <div class="chart-container"><canvas id="radarChart"></canvas></div>
+
+                <!-- ACWR Dashboard -->
+                <div id="acwrDashboard" class="acwr-card">
+                    <h3 class="acwr-card-title">
+                        <i data-lucide="activity" class="ui-icon-18"></i> 부상 위험도 예측 (ACWR)
+                    </h3>
+                    <div class="acwr-metrics-row">
+                        <div>
+                            <div class="acwr-metric-label">급성 부하 (최근 7일)</div>
+                            <div id="acuteLoad" class="acwr-metric-value">0</div>
+                        </div>
+                        <div>
+                            <div class="acwr-metric-label">만성 부하 (최근 28일)</div>
+                            <div id="chronicLoad" class="acwr-metric-value">0</div>
+                        </div>
+                        <div class="acwr-metric--right">
+                            <div class="acwr-metric-label">ACWR 비율</div>
+                            <div id="acwrRatio" class="acwr-metric-value--ratio">0.00</div>
+                        </div>
+                    </div>
+                    <div id="acwrStatus" class="acwr-status">
+                        데이터 부족</div>
+                </div>
+
+                <!-- Performance Trend Chart -->
+                <div id="performanceTrendContainer" class="acwr-card acwr-card--trend">
+                    <h3 class="acwr-card-title">
+                        <i data-lucide="trending-up" class="ui-icon-18"></i> 퍼포먼스 성장 추이
+                    </h3>
+                    <div class="chart-container chart-container--compact"><canvas id="trendChart"></canvas></div>
+                </div>
+
+                <div id="todaySummarySection" class="today-summary-section is-initially-hidden"></div>
+                </div><!-- /result-overview-col -->
+                <div class="result-detail-col">
+                <h3 id="scheduleTitle" class="schedule-title">맞춤형 1주일(7일) 스케줄
+                </h3>
+
+                <div id="scheduleViewArea">
+                    <p id="scheduleGuideText" class="schedule-guide-text">운동 항목을 클릭하면 상세 가이드를 볼 수 있습니다.</p>
+                    <div id="scheduleContainer"></div>
+                    <div id="calendarContainer" class="is-initially-hidden"></div>
+                    <div id="monthlyCalendarContainer" class="is-initially-hidden"></div>
+                </div><!-- /scheduleViewArea -->
+                </div><!-- /result-detail-col -->
+                </div><!-- /result-layout -->
+            </div>
+
+
+            <div class="capture-wrap">
+                <button id="captureScheduleBtn" class="btn btn-secondary btn-block"><i
+                        data-lucide="camera"></i> 이 스케줄 이미지로 저장하기</button>
+                <p class="capture-note">현재 화면(카드/주간/월간)이 이미지로 저장됩니다.</p>
+                <button id="resultBackToListBtn" class="btn btn-outline btn-block"
+                    data-static-nav-action="player-list-refresh"><i
+                        data-lucide="list"></i> 목록으로 돌아가기</button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Coach Team Dashboard -->
+        <div id="s4" class="screen">
+            <div class="card">
+                <div class="section-header">
+                    <h2><i data-lucide="layout-dashboard" class="ui-icon-20 ui-icon-inline"></i>코치용 팀 대시보드</h2>
+                    <button id="dashboardHomeBtn" class="btn btn-sm btn-outline" data-static-nav-action="home"><i data-lucide="home"></i>
+                        홈으로</button>
+                </div>
+
+                <div id="dashboardFilterBar" class="dashboard-filter-bar">
+                    <!-- JS에서 필터 칩 삽입 -->
+                </div>
+
+                <div id="teamStatsGrid" class="dashboard-stats-grid">
+                    <!-- JS에서 통계 위젯 삽입 -->
+                </div>
+
+                <div class="dashboard-section">
+                    <h3 class="action-queue-heading"><i data-lucide="alert-triangle" class="ui-icon-16 text-danger"></i>오늘 액션 큐 (집중 관리 대상)</h3>
+                    <div id="actionQueueList" class="action-queue-list">
+                        <!-- 액션 큐 선수 목록 -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Wellness Modal -->
+    <div id="wellnessModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">오늘의 컨디션 (Live Wellness)</h3>
+                <button class="modal-close" data-wellness-modal-action="close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">수면 시간 (시간)</label>
+                <div class="range-wrap">
+                    <input type="range" id="wSleep" min="4" max="12" step="0.5" value="7"
+                        data-wellness-slider="sleep" data-wellness-slider-target="wSleepVal">
+                    <span class="range-val" id="wSleepVal">7</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">전반적 피로도 (1:최상 ~ 5:탈진)</label>
+                <div class="range-wrap">
+                    <input type="range" id="wFatigue" min="1" max="5" step="1" value="3"
+                        data-wellness-slider="fatigue" data-wellness-slider-target="wFatigueVal">
+                    <span class="range-val" id="wFatigueVal">3</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">근육통 (1:없음 ~ 5:심함)</label>
+                <div class="range-wrap">
+                    <input type="range" id="wSoreness" min="1" max="5" step="1" value="2"
+                        data-wellness-slider="soreness" data-wellness-slider-target="wSorenessVal">
+                    <span class="range-val" id="wSorenessVal">2</span>
+                </div>
+            </div>
+            <div class="form-group is-initially-hidden" id="wellnessRecoveryGroup">
+                <!-- 동적 슬라이더가 여기에 생성됩니다 -->
+            </div>
+            <div class="form-group">
+                <label class="form-label">돌발 통증 부위 (다중 선택 가능)</label>
+                <div class="checkbox-group checkbox-group--row"
+                    data-wellness-pain-group="wPain">
+                    <label><input type="checkbox" name="wPain" value="어깨">
+                        어깨</label>
+                    <label><input type="checkbox" name="wPain" value="팔꿈치">
+                        팔꿈치</label>
+                    <label><input type="checkbox" name="wPain" value="허리">
+                        허리</label>
+                    <label><input type="checkbox" name="wPain" value="무릎">
+                        무릎</label>
+                    <label><input type="checkbox" name="wPain" value="손목">
+                        손목</label>
+                    <label><input type="checkbox" name="wPain" value="고관절">
+                        고관절</label>
+                    <label><input type="checkbox" name="wPain" value="발목">
+                        발목</label>
+                    <label><input type="checkbox" name="wPain" value="없음" checked> 없음</label>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" id="wellnessSaveBtn" data-wellness-action="save">컨디션 저장 및 스케줄 갱신</button>
+        </div>
+    </div>
+
+    <!-- Performance Modal -->
+    <div id="perfModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i data-lucide="trending-up" class="ui-icon-18 ui-icon-inline"></i>퍼포먼스 재측정</h3>
+                <button class="modal-close" data-perf-modal-action="close">&times;</button>
+            </div>
+            <!-- 퍼포먼스: 투수 전용 필드 -->
+            <div id="perfPitcherFields">
+                <div class="form-group">
+                    <label class="form-label">새로운 최고 구속 (km/h)</label>
+                    <input type="number" id="newMaxVelo" class="form-control" placeholder="예: 138"
+                        data-perf-validate="input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">새로운 평균 구속 (km/h)</label>
+                    <input type="number" id="newAvgVelo" class="form-control" placeholder="예: 133"
+                        data-perf-validate="input">
+                </div>
+                <div id="perfVeloError" class="form-error-message">
+                    평균구속이 최고구속보다 높을 수 없습니다.</div>
+                <div class="form-group">
+                    <label class="form-label">새로운 RPM</label>
+                    <input type="number" id="newRPM" class="form-control" placeholder="예: 2300">
+                </div>
+            </div>
+            <!-- 퍼포먼스: 타자 전용 필드 (기본 숨김) -->
+            <div id="perfBatterFields" class="is-initially-hidden">
+                <div class="form-group">
+                    <label class="form-label">새로운 타구속도 (Exit Velo, km/h)</label>
+                    <input type="number" id="newExitVelo" class="form-control" placeholder="예: 150">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">새로운 배트스피드 (km/h)</label>
+                    <input type="number" id="newBatSpeed" class="form-control" placeholder="예: 115">
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block perf-save-btn" id="perfSaveBtn"
+                data-perf-action="save">결과 저장 및 분석</button>
+        </div>
+    </div>
+
+    <!-- Exercise Guide Modal -->
+    <div id="guideModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="gTitle">운동 이름</h3>
+                <button class="modal-close" data-guide-modal-action="close">&times;</button>
+            </div>
+
+            <div id="guideMediaCard" class="guide-media-card is-initially-hidden">
+                <div class="guide-media-frame">
+                    <img id="guideMediaImage" class="guide-media-image" alt="" loading="lazy">
+                </div>
+                <div id="guideMediaCaption" class="guide-media-caption"></div>
+                <div id="guideMediaCredit" class="guide-media-credit"></div>
+            </div>
+
+            <!-- YouTube CTA (참고 영상 보기) -->
+            <div id="guideYoutubeCtaWrap" class="guide-youtube-cta-wrap is-initially-hidden">
+                <a id="guideYoutubeLink" href="#" target="_blank" rel="noopener noreferrer" class="guide-youtube-cta">
+                    <i data-lucide="youtube" class="ui-icon-16 ui-icon-fixed"></i>
+                    <span id="guideYoutubeLabelText">참고 영상 보기</span>
+                    <span id="guideYoutubeChannelText" class="guide-youtube-channel"></span>
+                </a>
+            </div>
+
+            <div class="guide-section">
+                <div class="guide-label">정확한 자세와 방법</div>
+                <div class="guide-text" id="gDesc">설명</div>
+            </div>
+            <div class="guide-section is-initially-hidden" id="gSetup">
+                <div class="guide-label">시작 자세</div>
+                <div class="guide-text" id="gSetupText"></div>
+            </div>
+            <div class="guide-section is-initially-hidden" id="gSteps">
+                <div class="guide-label">동작 단계</div>
+                <ol class="guide-steps-list" id="gStepsList"></ol>
+            </div>
+            <div class="guide-section is-initially-hidden" id="gCues">
+                <div class="guide-label guide-label--warning">코칭 큐</div>
+                <ul class="guide-mistakes-list" id="gCuesList"></ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-label guide-label--warning">주의 및 집중 포인트</div>
+                <div class="guide-text guide-focus" id="gFocus">주의사항</div>
+            </div>
+            <div class="guide-section guide-warning-box is-initially-hidden" id="gAvoid">
+                <!-- 주의 부위가 여기에 표시됩니다 -->
+            </div>
+            <div class="guide-section is-initially-hidden" id="gPurpose">
+                <div class="guide-label">훈련 운영 방향</div>
+                <div class="guide-text" id="gPurposeText"></div>
+            </div>
+            <div class="guide-section is-initially-hidden" id="gMistakes">
+                <div class="guide-label guide-label--danger">흔한 실수</div>
+                <ul class="guide-mistakes-list" id="gMistakesList"></ul>
+            </div>
+            <div id="gSource" class="guide-source-panel is-initially-hidden">
+                <span id="gEvidenceBadge" class="evidence-badge"></span>
+                <span id="gSourceText" class="gsource-text"></span>
+                <a id="gSourceUrl" href="#" target="_blank" rel="noopener noreferrer" class="guide-source-link is-initially-hidden">참고 기관 바로가기 ↗</a>
+            </div>
+            <button class="btn btn-outline btn-block" data-guide-modal-action="close">닫기</button>
+        </div>
+    </div>
+
+    <!-- Exercise Swap Modal -->
+    <div id="swapModal" class="modal-overlay modal-z-1800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🔄 운동 대체하기</h3>
+                <button class="modal-close" data-swap-modal-action="close">&times;</button>
+            </div>
+            <div class="swap-original-info" id="swapOriginalInfo">
+                <!-- 원본 운동 정보 표시 -->
+            </div>
+            <p class="swap-intro-text">장비가 없거나 다른 운동으로 바꾸고 싶을 때 아래에서 대체 운동을
+                선택하세요.</p>
+            <div id="swapOptionsList">
+                <!-- 대체 운동 목록 -->
+            </div>
+            <div class="swap-action-row">
+                <button class="btn btn-outline u-flex-1" data-swap-modal-action="close">취소</button>
+                <button class="btn btn-primary u-flex-2 u-opacity-disabled" id="swapConfirmBtn" data-swap-modal-action="confirm" disabled>대체 운동 적용</button>
+            </div>
+            <button class="btn btn-danger btn-sm btn-block swap-reset-btn" id="swapResetBtn"
+                data-swap-modal-action="reset">↩️ 원래 운동으로 복원</button>
+        </div>
+    </div>
+
+    <!-- App Guide Modal -->
+    <div id="appGuideModal" class="modal-overlay modal-z-2000">
+        <div class="modal-content modal-content--app-guide">
+            <div class="modal-header">
+                <h3 class="modal-title">Baseball Lab S&C 사용 가이드</h3>
+                <button class="modal-close" data-app-guide-modal-action="close">&times;</button>
+            </div>
+            <div class="app-guide-body">
+
+                <!-- 상단 요약 박스 -->
+                <div class="app-guide-intro">
+                    <p>이 앱은 야구 선수·코치·보호자가 훈련, 회복, 워크로드를 함께 확인하는 참고 도구입니다.</p>
+                    <p><strong>첫 사용 순서:</strong> 선수 등록 → 초기 평가하기 → 결과/스케줄 확인 → 매일 컨디션/워크로드 입력 → 주간 운영</p>
+                    <p>정밀 재평가는 4주차 이후에 진행합니다. 백업 복원은 현재 데이터를 덮어쓰므로, 복원 전 먼저 백업을 받으세요.</p>
+                </div>
+
+                <!-- 빠른 시작 -->
+                <div class="app-guide-section">
+                    <h4>빠른 시작 — 3단계</h4>
+                    <ol class="app-guide-steps">
+                        <li><strong>선수 등록</strong> — 화면 상단 폼에 선수 정보를 입력하고 등록합니다.</li>
+                        <li><strong>정밀평가 진행</strong> — 선수 카드의 <strong>초기 평가하기</strong> 버튼을 눌러 8종목을 평가합니다.</li>
+                        <li><strong>오늘 할 운동 확인</strong> — 선수 카드의 <strong>결과/스케줄</strong>을 눌러 오늘 스케줄을 확인합니다.</li>
+                    </ol>
+                </div>
+
+                <!-- 상세 사용 흐름 -->
+                <div class="app-guide-section">
+                    <h4>선수 등록</h4>
+                    <p>나이·구력·포지션·목표·훈련 할애 시간을 입력합니다. 이 데이터가 스케줄 강도와 볼륨을 결정합니다. 등록 후 수정은 선수 카드 하단 편집 버튼을 사용합니다.</p>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>정밀평가</h4>
+                    <p>8종목 평가 결과가 훈련 우선순위에 반영됩니다. 점수가 낮은 항목일수록 스케줄에서 더 높은 비중을 차지합니다. 평가 완료 후 스케줄이 자동 생성됩니다.</p>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>매일 해야 할 일</h4>
+                    <ul>
+                        <li><strong>훈련 전 — 컨디션 입력:</strong> 선수 카드의 <strong>컨디션</strong> 버튼을 눌러 피로도·수면·통증 부위를 입력합니다. 통증 부위에 따라 대체 운동이 자동 배정됩니다.</li>
+                        <li><strong>훈련 후 — 워크로드 입력:</strong> 스케줄 카드의 <strong>오늘 훈련 완료하기</strong> 버튼을 눌러 RPE와 투구 수를 입력해야 완료 처리됩니다.</li>
+                        <li><strong>하루 1일차씩 열리는 구조:</strong> 스케줄은 생성일을 Day 1로 하루에 하나씩 오픈됩니다. 미래 훈련은 미리 완료할 수 없습니다.</li>
+                    </ul>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>주간 운영</h4>
+                    <ul>
+                        <li><strong>+1주 버튼:</strong> 매주 주차를 올릴 때 사용합니다.</li>
+                        <li><strong>퍼포먼스 재측정:</strong> 짝수 주차마다 구속·RPM 등 퍼포먼스 수치를 업데이트합니다.</li>
+                        <li><strong>정밀 재평가:</strong> 4주차 완료 시 8종목을 다시 평가해 스케줄을 업그레이드합니다.</li>
+                    </ul>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>운동 가이드</h4>
+                    <p>스케줄 화면에서 운동 이름을 누르면 가이드 모달이 열립니다. 자세 설명, 세트/반복 기준, YouTube 영상 링크를 확인할 수 있습니다. 가이드는 읽기 전용이며 스케줄 데이터에 영향을 주지 않습니다.</p>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>팀 대시보드</h4>
+                    <p>화면 상단의 <strong>팀 대시보드</strong> 버튼을 눌러 전체 선수의 위험도·미완료 상태를 한눈에 볼 수 있습니다. 필터 칩으로 위험도·부상 여부별로 선수를 걸러 볼 수 있으며, 액션 큐에서 바로 결과 조회 또는 컨디션 입력으로 이동할 수 있습니다.</p>
+                </div>
+
+                <div class="app-guide-section">
+                    <h4>백업/복원</h4>
+                    <p>브라우저나 기기를 바꾸기 전에 반드시 <strong>JSON 백업</strong>을 받으세요. 복원은 현재 데이터를 백업 파일로 교체하는 방식입니다. 복원 전 기존 데이터는 덮어씌워집니다.</p>
+                </div>
+
+                <!-- FAQ -->
+                <div class="app-guide-section">
+                    <h4>자주 묻는 질문</h4>
+                    <div class="app-guide-faq">
+                        <div class="app-guide-faq-item">
+                            <p class="app-guide-faq-q">무엇부터 해야 하나요?</p>
+                            <p>선수 등록 → 정밀평가 순서로 진행하면 됩니다. 정밀평가까지 마쳐야 스케줄이 생성됩니다.</p>
+                        </div>
+                        <div class="app-guide-faq-item">
+                            <p class="app-guide-faq-q">오늘 훈련은 어디서 완료하나요?</p>
+                            <p>선수 카드의 <strong>결과/스케줄</strong>을 누른 뒤, 스케줄 화면에서 <strong>오늘 훈련 완료하기</strong> 버튼을 누릅니다.</p>
+                        </div>
+                        <div class="app-guide-faq-item">
+                            <p class="app-guide-faq-q">이전 날짜 훈련도 입력할 수 있나요?</p>
+                            <p>가능합니다. 과거 훈련은 해당 일차 카드에서 뒤늦게 완료할 수 있습니다.</p>
+                        </div>
+                        <div class="app-guide-faq-item">
+                            <p class="app-guide-faq-q">정밀 재평가는 언제 하나요?</p>
+                            <p>4주차가 끝난 뒤 <strong>정밀 재평가</strong> 버튼이 활성화됩니다. 이때 8종목을 다시 평가하면 새 스케줄이 생성됩니다. 4주차 이전에는 재평가를 진행하지 않습니다.</p>
+                        </div>
+                        <div class="app-guide-faq-item">
+                            <p class="app-guide-faq-q">백업 복원을 하면 기존 데이터는 어떻게 되나요?</p>
+                            <p>복원은 현재 저장된 데이터를 백업 파일로 <strong>완전히 교체</strong>합니다. 복원 전 반드시 현재 데이터를 먼저 백업 다운로드하세요.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 운영 고지 -->
+                <div class="app-guide-section app-guide-disclaimer">
+                    <h4>이용 전 확인 사항</h4>
+                    <ul class="app-guide-disclaimer-list">
+                        <li>이 앱은 <strong>훈련 관리 도구</strong>입니다. 의료 진단·치료 목적으로 사용할 수 없습니다.</li>
+                        <li>통증, 부상 의심, 심한 불편이 있으면 즉시 훈련을 중단하고 전문가(의사·물리치료사)에게 확인하세요.</li>
+                        <li>워크로드 지표(ACWR·RPE)와 가이드 정보는 <strong>참고 지표</strong>입니다. 최종 훈련 판단은 코치와 선수 본인의 책임입니다.</li>
+                    </ul>
+                </div>
+
+                <div class="app-guide-note">
+                    본 운동 프로그램은 NSCA·ASMI·Driveline Baseball 전문 프로토콜을 아마추어 환경에 맞게 재구성한 것입니다.
+                </div>
+
+            </div>
+            <div class="policy-links policy-links--in-modal">
+                <a href="about.html" target="_blank" rel="noopener noreferrer">서비스 소개</a>
+                <span class="policy-sep">·</span>
+                <a href="contact.html" target="_blank" rel="noopener noreferrer">문의/지원</a>
+                <span class="policy-sep">·</span>
+                <a href="privacy.html" target="_blank" rel="noopener noreferrer">개인정보처리방침</a>
+                <span class="policy-sep">·</span>
+                <a href="terms.html" target="_blank" rel="noopener noreferrer">이용약관 및 안전 고지</a>
+            </div>
+            <button class="btn btn-primary btn-block app-guide-confirm-btn"
+                data-app-guide-modal-action="close">확인</button>
+        </div>
+    </div>
+
+    <!-- Workload Modal -->
+    <div id="workloadModal" class="modal-overlay modal-z-1500">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="wlModalTitle" class="modal-title">사후 워크로드 입력 (Post-Training)</h3>
+                <button class="modal-close" data-workload-modal-action="close">&times;</button>
+            </div>
+            <p id="wlModalSubtitle" class="workload-modal-subtitle is-initially-hidden"></p>
+            <div class="form-group">
+                <div class="wl-main-label-row">
+                    <label id="wlMainLabel" class="form-label wl-main-label">오늘의 투구 워크로드 (RPE x 투구
+                        수)</label>
+                    <button id="wlNoBtn" type="button" class="btn btn-outline wl-no-btn"
+                        data-workload-action="rest-today">🚫
+                        오늘
+                        투구하지 않음</button>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <label class="form-label wl-sub-label">RPE (운동 자각도 0-10)</label>
+                        <input type="number" id="wlRPE" class="form-control" placeholder="예: 7" min="0" max="10" step="1"
+                            data-workload-live-calc="input">
+                    </div>
+                    <div>
+                        <label id="wlCountLabel" class="form-label wl-sub-label">총
+                            투구 수</label>
+                        <input type="number" id="wlPitchCount" class="form-control" placeholder="예: 45" min="0" step="1"
+                            data-workload-live-calc="input">
+                    </div>
+                </div>
+
+                <!-- 실시간 워크로드 표시 영역 -->
+                <div id="liveWorkloadDisplay" class="live-workload-display is-initially-hidden">
+                    <!-- JS에서 내용 채움 -->
+                </div>
+
+                <div id="wlExerciseChecklistWrap" class="wl-exercise-checklist-wrap is-initially-hidden">
+                    <div class="wl-exercise-checklist-title">오늘 수행한 운동</div>
+                    <p class="wl-exercise-checklist-hint">하지 않은 운동은 체크를 해제하세요. 체크 해제된 운동은 미수행으로 기록됩니다.</p>
+                    <ul id="wlExerciseChecklist" class="wl-exercise-checklist"></ul>
+                </div>
+
+                <div id="wlRpeGuide" class="wl-rpe-guide">
+                    <strong class="wl-rpe-guide-title">RPE(운동 자각도)란?</strong>
+                    선수 본인이 느끼는 세션 전체의 힘든 정도를 0~10으로 기록합니다.<br>
+                    • <strong>0~3:</strong> 가볍게 (캐치볼·웜업 수준)<br>
+                    • <strong>4~6:</strong> 보통 (일반적인 불펜·티 배팅 수준)<br>
+                    • <strong>7~8:</strong> 힘듦 (실전 등판·라이브 배팅 수준)<br>
+                    • <strong>9~10:</strong> 매우 힘듦 ~ 최대 노력 (전력 투구·전력 타격 수준)<br>
+                    유소년·학생 선수는 숫자보다 가볍게 / 보통 / 힘듦 같은 느낌 설명을 먼저 참고하고, 필요하면 0~10 기록을 함께 확인할 수 있습니다.
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" id="workloadSaveBtn" data-workload-action="save">훈련 완료 및 저장</button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal" class="modal-overlay modal-z-2000">
+        <div class="modal-content alert-modal-content">
+            <h3 class="modal-title alert-modal-title" id="alertMsg">알림 메시지</h3>
+            <button id="alertConfirmBtn" class="btn btn-primary btn-block">확인</button>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal-overlay modal-z-2000">
+        <div class="modal-content alert-modal-content">
+            <h3 class="modal-title alert-modal-title" id="confirmMsg">확인 메시지</h3>
+            <div class="confirm-modal-actions">
+                <button id="confirmCancelBtn" class="btn btn-outline u-flex-1">취소</button>
+                <button class="btn btn-danger u-flex-1" id="confirmBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset All Data Modal -->
+    <div id="resetAllModal" class="modal-overlay modal-z-2100">
+        <div class="modal-content reset-all-modal-content">
+            <h3 class="reset-all-title">전체 데이터 초기화</h3>
+            <p class="reset-all-summary" id="resetAllSummary">현재 저장된 데이터를 계산 중입니다.</p>
+            <p class="reset-all-warn">초기화 후에는 복구할 수 없습니다. 복구하려면 미리 받아 둔 백업 파일이 필요합니다. 초기화 전에 백업 다운로드를 실행하세요.</p>
+            <label class="reset-all-label" for="resetAllInput">계속하려면 아래 입력란에 <strong>초기화</strong>를 정확히 입력하세요.</label>
+            <input type="text" id="resetAllInput" class="reset-all-input" autocomplete="off" inputmode="text" spellcheck="false">
+            <div class="reset-all-buttons">
+                <button id="resetAllCancelBtn" class="btn btn-outline">취소</button>
+                <button id="resetAllConfirmBtn" class="btn btn-danger" disabled>초기화 실행</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Player Modal -->
+    <div id="editPlayerModal" class="modal-overlay modal-z-1500">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">선수 정보 수정</h3>
+                <button class="modal-close" data-edit-player-modal-action="close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">이름</label>
+                <input type="text" id="eName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">투타 구분</label>
+                <div class="type-toggle">
+                    <button type="button" class="type-btn active" id="editTypePitcher"
+                        data-player-type-action="select" data-player-type="투수" data-player-form-type="edit">투수</button>
+                    <button type="button" class="type-btn" id="editTypeBatter"
+                        data-player-type-action="select" data-player-type="타자" data-player-form-type="edit">타자</button>
+                </div>
+                <input type="hidden" id="eType" value="투수">
+            </div>
+            <div class="form-group">
+                <label class="form-label">선수 유형</label>
+                <select id="eUserType" class="form-control">
+                    <option value="">선택 안 함</option>
+                    <option value="youth_student">유소년·학생 선수</option>
+                    <option value="adult_amateur">사회인 야구인</option>
+                    <option value="recreational">취미·건강 목적</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">사용 관점</label>
+                <select id="eUsagePerspective" class="form-control">
+                    <option value="">선택 안 함</option>
+                    <option value="self">선수 본인</option>
+                    <option value="coach">코치·지도자</option>
+                    <option value="guardian">보호자</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">훈련 운영 방향</label>
+                <select id="eTrainingFocus" class="form-control">
+                    <option value="">선택 안 함</option>
+                    <option value="performance">근력·파워 개발</option>
+                    <option value="conditioning">체력·컨디션 유지</option>
+                    <option value="recovery">회복 관리</option>
+                    <option value="mobility">가동성 관리</option>
+                    <option value="game_ready">경기 전 준비</option>
+                    <option value="general_fitness">건강·취미 운동</option>
+                </select>
+                <div class="form-help-text">근력·파워 개발은 출력 계열, 경기 전 준비는 경기 직전 활성화 계열 운동 우선순위에 반영됩니다.</div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">나이 (만 나이)</label>
+                    <input type="number" id="eAge" class="form-control" data-edit-player-validate="input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">구력 (야구 경력, 년)</label>
+                    <input type="number" id="eExp" class="form-control" data-edit-player-validate="input">
+                </div>
+            </div>
+            <div id="editExpError" class="form-error-message">
+                구력이 나이보다 높을 수 없습니다.</div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">키 (cm)</label>
+                    <input type="number" id="eHeight" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">체중 (kg)</label>
+                    <input type="number" id="eWeight" class="form-control">
+                </div>
+            </div>
+            <!-- 편집: 투수 전용 필드 -->
+            <div id="editPitcherFields">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">보직</label>
+                        <select id="eRole" class="form-control">
+                            <option value="선발">선발 투수</option>
+                            <option value="구원">구원 투수</option>
+                            <option value="마무리">마무리 투수</option>
+                            <option value="구분 없음">구분 없음</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">시즌 상태</label>
+                        <select id="eSeason" class="form-control">
+                            <option value="비시즌">비시즌 (Off-season)</option>
+                            <option value="시즌중">시즌 중 (In-season)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">포지션별 핵심 목표</label>
+                        <select id="eGoal" class="form-control">
+                            <option value="구속 향상">구속 향상 (파워/스트렝스)</option>
+                            <option value="제구 안정">제구 안정 (코어/밸런스)</option>
+                            <option value="부상 방지">회복·가동성 관리 (기존 부상 방지)</option>
+                        </select>
+                        <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">개인 훈련 할애 시간</label>
+                        <select id="eTime" class="form-control">
+                            <option value="30">30분 (핵심 위주)</option>
+                            <option value="60">60분 (표준 프로그램)</option>
+                            <option value="90">90분 (심화 프로그램)</option>
+                            <option value="120">120분 (엘리트 코스)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">현재 최고 구속 (km/h)</label>
+                        <input type="number" id="eMaxVelo" class="form-control" data-edit-player-validate="input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">현재 평균 구속 (km/h)</label>
+                        <input type="number" id="eAvgVelo" class="form-control" data-edit-player-validate="input">
+                    </div>
+                </div>
+                <div id="editVeloError" class="form-error-message">
+                    평균구속이 최고구속보다 높을 수 없습니다.</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">현재 RPM (회전수)</label>
+                        <input type="number" id="eRPM" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">다음 등판 예정일</label>
+                        <input type="date" id="ePitchDate" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <!-- 편집: 타자 전용 필드 (기본 숨김) -->
+            <div id="editBatterFields" class="is-initially-hidden">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">포지션</label>
+                        <select id="eBatterPos" class="form-control">
+                            <option value="내야수">내야수</option>
+                            <option value="외야수">외야수</option>
+                            <option value="포수">포수</option>
+                            <option value="지명타자">지명타자</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">시즌 상태</label>
+                        <select id="eBatterSeason" class="form-control">
+                            <option value="비시즌">비시즌 (Off-season)</option>
+                            <option value="시즌중">시즌 중 (In-season)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">포지션별 핵심 목표</label>
+                        <select id="eBatterGoal" class="form-control">
+                            <option value="타구속도 향상">타구속도 향상 (파워/스트렝스)</option>
+                            <option value="컨택 능력">컨택 능력 (코어/밸런스)</option>
+                            <option value="부상 방지">회복·가동성 관리 (기존 부상 방지)</option>
+                        </select>
+                        <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">개인 훈련 할애 시간</label>
+                        <select id="eBatterTime" class="form-control">
+                            <option value="30">30분 (핵심 위주)</option>
+                            <option value="60">60분 (표준 프로그램)</option>
+                            <option value="90">90분 (심화 프로그램)</option>
+                            <option value="120">120분 (엘리트 코스)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">타구속도 (Exit Velo, km/h)</label>
+                        <input type="number" id="eExitVelo" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">배트스피드 (km/h)</label>
+                        <input type="number" id="eBatSpeed" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" id="editPlayerBtn" data-edit-player-action="save">수정 완료</button>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script></script>
+</body>
+
+</html>

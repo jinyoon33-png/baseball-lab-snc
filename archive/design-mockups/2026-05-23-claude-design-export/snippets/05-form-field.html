@@ -1,0 +1,48 @@
+<!-- Form fields — .field, .label, .input, .select, .toggle, .fields-2, .range
+     Used in S1 신규 등록 form. -->
+
+<div class="field">
+  <label class="label" for="pname">이름</label>
+  <input class="input" id="pname" placeholder="예: 김도현" />
+</div>
+
+<div class="fields-2">
+  <div class="field">
+    <label class="label">투타 구분</label>
+    <div class="toggle" role="radiogroup">
+      <button type="button" aria-pressed="true">투수</button>
+      <button type="button">타자</button>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label" for="season">시즌 상태</label>
+    <select class="select" id="season">
+      <option>시즌 중 (In-season)</option>
+      <option>비시즌 (Off-season)</option>
+    </select>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label" for="velo-max">최고 구속 (km/h)</label>
+  <input class="input num" id="velo-max" value="138" />
+  <span class="help">학생 선수의 경우 보호자가 함께 측정하기를 권장합니다.</span>
+</div>
+
+<!-- Range slider (controlled) -->
+<div class="field">
+  <div style="display: flex; justify-content: space-between">
+    <label class="label">수면 시간</label>
+    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute)">권장 7h 이상</span>
+  </div>
+  <div class="range">
+    <div class="range-track">
+      <div class="range-fill" style="width: 44%"></div>
+      <div class="range-thumb" style="left: 44%"></div>
+    </div>
+    <span class="range-val">7.5h</span>
+  </div>
+  <div class="range-scale">
+    <span>4h</span><span>6h</span><span>8h</span><span>10h</span><span>12h</span>
+  </div>
+</div>

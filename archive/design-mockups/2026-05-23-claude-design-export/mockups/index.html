@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockups · Baseball Lab S&C · Clinical Trust</title>
+  <link rel="stylesheet" href="../tokens.css" />
+  <link rel="stylesheet" href="../components.css" />
+  <style>
+    body {
+      padding: 56px 36px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .head h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin-top: 14px;
+    }
+    .head p {
+      font-size: 14px;
+      color: var(--mute);
+      line-height: 1.6;
+      margin-top: 10px;
+      max-width: 60ch;
+    }
+    .rule { height: 1px; background: var(--rule); margin: 40px 0 32px; }
+    .section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin: 0 0 4px;
+    }
+    .section .section-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mute);
+      margin-bottom: 18px;
+    }
+    .grid {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+    .grid.dt { grid-template-columns: repeat(2, 1fr); }
+    .grid.mb { grid-template-columns: repeat(4, 1fr); }
+    .grid.doc { grid-template-columns: repeat(2, 1fr); }
+    .grid.tok { grid-template-columns: repeat(2, 1fr); }
+
+    .card-shot {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.12s, transform 0.12s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card-shot:hover {
+      border-color: var(--ink);
+      transform: translateY(-2px);
+    }
+    .card-shot img {
+      width: 100%;
+      display: block;
+      background: var(--tint);
+    }
+    .card-shot .label {
+      padding: 14px 16px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-shot .label .id {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--mute);
+    }
+    .card-shot .label .name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      flex: 1;
+      margin-left: 8px;
+    }
+    .card-shot .label .dim {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--mute);
+      letter-spacing: 0.06em;
+    }
+    .toc-bar {
+      display: flex; flex-wrap: wrap;
+      gap: 6px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-lg);
+      margin-bottom: 36px;
+    }
+    .toc-bar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--r-pill);
+      background: var(--tint);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-2);
+      text-decoration: none;
+    }
+    .toc-bar a:hover { background: var(--ink); color: var(--surface); }
+    .toc-bar .count {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--mute);
+      letter-spacing: 0.08em;
+    }
+    .toc-bar a:hover .count { color: rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+
+<div class="head">
+  <div class="eyebrow">CLAUDE DESIGN · MOCKUPS · 21 SCREENS · 2026-05-23</div>
+  <h1>베이스볼 랩 · Clinical Trust 시안 21종</h1>
+  <p>
+    Claude Code가 작업 중에 참고할 수 있는 풀해상도 시안 모음. 각 PNG는 데스크톱 1280×900 또는 모바일 390×844 또는 문서 1024×1280 원본 크기로 캡처돼 있어요. 클릭하면 원본 PNG가 새 탭으로 열립니다.
+  </p>
+</div>
+
+<div class="toc-bar">
+  <a href="#tok"><span class="count">2</span>Foundations</a>
+  <a href="#hero"><span class="count">2</span>Hero</a>
+  <a href="#dt"><span class="count">4</span>App · Desktop</a>
+  <a href="#mb"><span class="count">4</span>App · Mobile</a>
+  <a href="#modals"><span class="count">7</span>Modals</a>
+  <a href="#docs"><span class="count">2</span>Docs</a>
+</div>
+
+<section class="section" id="tok">
+  <h2>Foundations · 토큰 · 컴포넌트 시스템</h2>
+  <div class="section-meta">1440 × 900 · 디자인 시스템 정의</div>
+  <div class="grid tok">
+    <a class="card-shot" href="01-tokens.png" target="_blank">
+      <img src="01-tokens.png" alt="토큰 시트" />
+      <div class="label"><span class="id">01</span><span class="name">토큰 시트</span><span class="dim">1440×900</span></div>
+    </a>
+    <a class="card-shot" href="02-components.png" target="_blank">
+      <img src="02-components.png" alt="컴포넌트 시스템" />
+      <div class="label"><span class="id">02</span><span class="name">컴포넌트 시스템</span><span class="dim">1440×900</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section class="section" id="hero">
+  <h2>Hero · Index 진입 화면</h2>
+  <div class="section-meta">데스크톱 1280 / 모바일 390</div>
+  <div class="grid dt">
+    <a class="card-shot" href="03-hero-dt.png" target="_blank">
+      <img src="03-hero-dt.png" alt="Hero 데스크톱" />
+      <div class="label"><span class="id">03</span><span class="name">Hero · 데스크톱</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="04-hero-mb.png" target="_blank">
+      <img src="04-hero-mb.png" alt="Hero 모바일" style="max-width: 360px; margin: 0 auto" />
+      <div class="label"><span class="id">04</span><span class="name">Hero · 모바일</span><span class="dim">390×844</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section class="section" id="dt">
+  <h2>App · Core Flow · 데스크톱</h2>
+  <div class="section-meta">S1 등록·목록 → S2 정밀평가 → S3 결과·스케줄 → S4 코치 대시보드</div>
+  <div class="grid dt">
+    <a class="card-shot" href="05-s1-dt-roster-and-new-player.png" target="_blank">
+      <img src="05-s1-dt-roster-and-new-player.png" alt="S1 데스크톱" />
+      <div class="label"><span class="id">05</span><span class="name">S1 · 선수 등록·목록</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="06-s2-dt-8-event-assessment.png" target="_blank">
+      <img src="06-s2-dt-8-event-assessment.png" alt="S2 데스크톱" />
+      <div class="label"><span class="id">06</span><span class="name">S2 · 8종목 정밀평가</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="07-s3-dt-result-schedule.png" target="_blank">
+      <img src="07-s3-dt-result-schedule.png" alt="S3 데스크톱" />
+      <div class="label"><span class="id">07</span><span class="name">S3 · 결과·스케줄</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="08-s4-dt-coach-dashboard.png" target="_blank">
+      <img src="08-s4-dt-coach-dashboard.png" alt="S4 데스크톱" />
+      <div class="label"><span class="id">08</span><span class="name">S4 · 코치 대시보드</span><span class="dim">1280×900</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section class="section" id="mb">
+  <h2>App · Core Flow · 모바일</h2>
+  <div class="section-meta">iPhone 15 · 390×844 · 한 손 조작 · 한 번에 하나의 결정</div>
+  <div class="grid mb">
+    <a class="card-shot" href="09-s1-mb.png" target="_blank">
+      <img src="09-s1-mb.png" alt="S1 모바일" />
+      <div class="label"><span class="id">09</span><span class="name">S1</span><span class="dim">390</span></div>
+    </a>
+    <a class="card-shot" href="10-s2-mb-stepper.png" target="_blank">
+      <img src="10-s2-mb-stepper.png" alt="S2 모바일" />
+      <div class="label"><span class="id">10</span><span class="name">S2 · 스테퍼</span><span class="dim">390</span></div>
+    </a>
+    <a class="card-shot" href="11-s3-mb.png" target="_blank">
+      <img src="11-s3-mb.png" alt="S3 모바일" />
+      <div class="label"><span class="id">11</span><span class="name">S3</span><span class="dim">390</span></div>
+    </a>
+    <a class="card-shot" href="12-s4-mb.png" target="_blank">
+      <img src="12-s4-mb.png" alt="S4 모바일" />
+      <div class="label"><span class="id">12</span><span class="name">S4</span><span class="dim">390</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section class="section" id="modals">
+  <h2>Modals · 7종</h2>
+  <div class="section-meta">M1 컨디션 · M2 워크로드 (DT+모바일) · M3 운동 가이드 · M4 운동 대체 · M5 앱 가이드</div>
+  <div class="grid dt">
+    <a class="card-shot" href="13-m1-dt-wellness.png" target="_blank">
+      <img src="13-m1-dt-wellness.png" alt="M1 데스크톱" />
+      <div class="label"><span class="id">13</span><span class="name">M1 · 컨디션 (DT)</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="14-m1-mb-sheet.png" target="_blank">
+      <img src="14-m1-mb-sheet.png" alt="M1 모바일" style="max-width: 360px; margin: 0 auto" />
+      <div class="label"><span class="id">14</span><span class="name">M1 · 바텀시트 (MB)</span><span class="dim">390×844</span></div>
+    </a>
+    <a class="card-shot" href="15-m2-dt-workload.png" target="_blank">
+      <img src="15-m2-dt-workload.png" alt="M2 데스크톱" />
+      <div class="label"><span class="id">15</span><span class="name">M2 · 워크로드 (DT)</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="16-m2-mb-sheet.png" target="_blank">
+      <img src="16-m2-mb-sheet.png" alt="M2 모바일" style="max-width: 360px; margin: 0 auto" />
+      <div class="label"><span class="id">16</span><span class="name">M2 · 바텀시트 (MB)</span><span class="dim">390×844</span></div>
+    </a>
+    <a class="card-shot" href="17-m3-dt-exercise-guide.png" target="_blank">
+      <img src="17-m3-dt-exercise-guide.png" alt="M3" />
+      <div class="label"><span class="id">17</span><span class="name">M3 · 운동 가이드</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="18-m4-dt-exercise-swap.png" target="_blank">
+      <img src="18-m4-dt-exercise-swap.png" alt="M4" />
+      <div class="label"><span class="id">18</span><span class="name">M4 · 운동 대체</span><span class="dim">1280×900</span></div>
+    </a>
+    <a class="card-shot" href="19-m5-dt-app-guide.png" target="_blank">
+      <img src="19-m5-dt-app-guide.png" alt="M5" />
+      <div class="label"><span class="id">19</span><span class="name">M5 · 앱 사용 가이드</span><span class="dim">1280×900</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<section class="section" id="docs">
+  <h2>Docs · 문서 페이지 (마스터)</h2>
+  <div class="section-meta">7종 문서가 공유하는 .doc-wrap 마스터 — 2종 샘플로 검증</div>
+  <div class="grid doc">
+    <a class="card-shot" href="20-doc-assessment-guide.png" target="_blank">
+      <img src="20-doc-assessment-guide.png" alt="활용 가이드" />
+      <div class="label"><span class="id">20</span><span class="name">활용 가이드 (assessment-guide)</span><span class="dim">1024×1280</span></div>
+    </a>
+    <a class="card-shot" href="21-doc-terms.png" target="_blank">
+      <img src="21-doc-terms.png" alt="이용약관" />
+      <div class="label"><span class="id">21</span><span class="name">이용약관 (terms)</span><span class="dim">1024×1280</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<p style="font-family: var(--font-mono); font-size: 11px; color: var(--mute); letter-spacing: 0.06em; text-align: center;">
+  BASEBALL LAB S&amp;C · CLINICAL TRUST · 21 SCREENS · EXPORT 2026-05-23
+</p>
+
+</body>
+</html>

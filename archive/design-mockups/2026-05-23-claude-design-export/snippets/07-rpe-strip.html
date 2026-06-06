@@ -1,0 +1,34 @@
+<!-- RPE strip — 0-10 selector used in M2 워크로드 입력
+     Classes: .rpe-bar · .rpe-cell[data-zone="easy|moderate|hard|max"]
+              .rpe-cell[aria-selected="true"] -->
+
+<div class="field">
+  <div style="display: flex; justify-content: space-between">
+    <label class="label">RPE · 운동 자각도 (0–10)</label>
+    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--navy); font-weight: 600">
+      선택: 7 = 힘듦
+    </span>
+  </div>
+
+  <div class="rpe-bar">
+    <button class="rpe-cell" data-zone="easy">0</button>
+    <button class="rpe-cell" data-zone="easy">1</button>
+    <button class="rpe-cell" data-zone="easy">2</button>
+    <button class="rpe-cell" data-zone="easy">3</button>
+    <button class="rpe-cell" data-zone="moderate">4</button>
+    <button class="rpe-cell" data-zone="moderate">5</button>
+    <button class="rpe-cell" data-zone="moderate">6</button>
+    <button class="rpe-cell" data-zone="hard" aria-selected="true">7</button>
+    <button class="rpe-cell" data-zone="hard">8</button>
+    <button class="rpe-cell" data-zone="max">9</button>
+    <button class="rpe-cell" data-zone="max">10</button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px;
+              font-family: var(--font-mono); font-size: 9px; color: var(--mute); letter-spacing: 0.08em">
+    <span>0–3 가볍게</span>
+    <span>4–6 보통</span>
+    <span>7–8 힘듦</span>
+    <span>9–10 최대</span>
+  </div>
+</div>

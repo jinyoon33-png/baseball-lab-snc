@@ -1,0 +1,23 @@
+<!-- Badges (signal trio) + Chips + Eyebrows
+     Classes: .badge.{safe|watch|risk|muted}
+              .chip · .chip[aria-pressed="true"] · .chip.danger
+              .eyebrow · .now-dot -->
+
+<!-- Signal trio: 정상 · 주의 · 초과 (ACWR semantics) -->
+<span class="badge safe">  <span class="dot"></span>정상 · ACWR 0.8–1.3</span>
+<span class="badge watch"> <span class="dot"></span>주의 · 1.3–1.5</span>
+<span class="badge risk">  <span class="dot"></span>초과 · 1.5+</span>
+<span class="badge muted"> <span class="dot"></span>여유 · 0.4–0.8</span>
+
+<!-- Now indicator (pulse) -->
+<span class="now-dot">오늘 진행 중</span>
+
+<!-- Eyebrow (mono + rule) -->
+<span class="eyebrow">ACTION QUEUE · 집중 관리</span>
+
+<!-- Chips — for pain regions / filters -->
+<button class="chip">어깨</button>
+<button class="chip">팔꿈치</button>
+<button class="chip">허리</button>
+<button class="chip" aria-pressed="true">없음</button>
+<button class="chip danger" aria-pressed="true">초과 1</button>
