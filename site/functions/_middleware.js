@@ -1,8 +1,7 @@
 // Cloudflare Pages Function — per-request CSP nonce injection.
 //
-// Google AdSense 공식 CSP 안내는 도메인 allowlist 대신 nonce 기반 strict CSP를 요구한다.
-// 정적 _headers 파일만으로는 요청별 nonce를 만들 수 없으므로, HTML 응답에서만
-// CSP 헤더와 모든 <script> 태그에 동일한 nonce를 주입한다.
+// This project is deployed with site/ as the Pages project root, so the
+// middleware lives under site/functions for Cloudflare to execute it.
 
 export async function onRequest(context) {
   const response = await context.next();
