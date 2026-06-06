@@ -1,5 +1,15 @@
 # Work Plan Archive
 
+## 2026-06-07 — AdSense 사이트 연결 스크립트 배포 확인 1차
+- Result: Step 2 완료. AdSense 사이트 연결 스크립트 공개 반영 확인 후 사용자가 AdSense 신청 완료.
+- Owner: 총괄 Codex 직접 수행.
+- Git: `main...origin/main` 동기화 완료.
+- Public: `https://www.baseballlabsnc.com/`에서 `pagead2.googlesyndication.com` 및 `ca-pub-2911719487887723` 확인.
+- CSP: 공개 응답에서 `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`, `frame-src https:`, `connect-src 'self' https:`, `img-src 'self' data: blob: https:` 확인.
+- Privacy: 공개 `privacy`에서 `Google AdSense`, `쿠키`, `광고 식별자`, `최종 수정: 2026년 6월` 확인.
+- User: AdSense 사이트 신청 완료, 승인 대기 중.
+- Next: `AdSense 승인 대기 중 사이트 품질 보강 1차`.
+
 ## 2026-06-07 — AdSense 사이트 연결 스크립트 삽입 1차
 - Result: Step 2 로컬 구현 완료. 배포 확인은 다음 티켓에서 진행.
 - Owner: 총괄 Codex 직접 수행.

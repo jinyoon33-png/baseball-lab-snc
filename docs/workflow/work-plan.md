@@ -1,41 +1,36 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 사이트 연결 스크립트 배포 확인 1차`
-- 현재 단계: `[Step 1. 사용자 Push origin 대기 — AdSense 사이트 연결 스크립트 배포 확인 1차]`
-- 담당: 총괄 Codex 직접 수행
-- 목적: Google AdSense가 제공한 사이트 연결 스크립트를 공개 HTML 전체에 삽입했으므로 GitHub/Cloudflare 공개 반영을 확인한다.
+- 활성 티켓: `AdSense 승인 대기 중 사이트 품질 보강 1차`
+- 현재 단계: `[Step 1. 사용자 결정 대기 — 승인 대기 중 품질 보강 범위 선택]`
+- 담당: 총괄 Codex
+- 목적: AdSense 신청은 완료됐고 승인 대기 상태이므로, 승인 기간 동안 사이트 품질·정책 안정성을 높일 보강 작업을 선택한다.
 
-2. 적용 내용
-- AdSense client: `ca-pub-2911719487887723`
-- 삽입 위치: 공개 HTML 13개 `<head>`의 `<title>` 직후.
-- 삽입 코드: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2911719487887723` + `crossorigin="anonymous"`.
-- 광고 단위 `<ins class="adsbygoogle">`는 아직 삽입하지 않음.
+2. 현재 완료 상태
+- AdSense 신청: 사용자 완료, 승인 대기 중.
+- 공개 스크립트: `https://www.baseballlabsnc.com/`에서 `pagead2.googlesyndication.com` 및 `ca-pub-2911719487887723` 확인.
+- 공개 CSP: AdSense script/frame/connect/img 로드 가능한 static fallback CSP 확인.
+- Privacy: `Google AdSense`, `쿠키`, `광고 식별자`, `최종 수정: 2026년 6월` 공개 반영 확인.
+- Git: `main...origin/main` 동기화 완료.
 
-3. 현재 검증 결과
-- `node --check site/app.js` PASS.
-- `node --check site/data.js` PASS.
-- AdSense script 13건, `crossorigin="anonymous"` 13건, 공개 HTML 13개와 1:1 일치.
-- CSP는 이미 `script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`라 AdSense script 로드 가능.
-- 이번 변경은 `site/*.html` 13개에 한정. `site/app.js`, `site/data.js`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/_headers`, assets/vendor/evidence/security 변경 0건.
+3. 승인 대기 중 권장 작업
+- A. 콘텐츠 보강: `assessment-guide`, `recovery-guide`, `workload-guide` 본문을 더 두껍게 보강한다.
+- B. 광고 슬롯 설계: 승인 후 넣을 광고 위치를 문서 하단·가이드 중간·앱 보조 영역 중심으로 설계한다. 아직 광고 단위 삽입은 하지 않는다.
+- C. apex → www 301 리디렉션 확인: `baseballlabsnc.com`을 `www.baseballlabsnc.com`으로 정리해 정준 URL 혼선을 줄인다.
 
-4. 배포 후 검증 명령
-- `git fetch origin main && git status --short --branch`
-- `curl -sL "https://www.baseballlabsnc.com/?codex_cache_bust=adsense-script-$(date +%s)" | rg -n 'pagead2.googlesyndication.com|ca-pub-2911719487887723|canonical'`
-- `curl -sI "https://www.baseballlabsnc.com/?codex_cache_bust=adsense-script-$(date +%s)" | rg -i 'content-security-policy|server|cf-cache-status'`
-- `curl -sL "https://www.baseballlabsnc.com/privacy?codex_cache_bust=adsense-script-$(date +%s)" | rg -n 'Google AdSense|쿠키|광고 식별자'`
+4. 우선순위 판단
+- 1순위: 콘텐츠 보강. 승인 심사에는 광고 위치보다 사이트 내용의 충분성·정책 안정성이 더 직접적이다.
+- 2순위: apex → www 301. SEO 정합성 보강.
+- 3순위: 광고 슬롯 설계. 승인 후 실제 광고 단위 삽입 전 준비.
 
-5. 완료 조건
-- 최신 커밋이 `origin/main`에 반영된다.
-- 공개 `www` 홈 HTML에서 AdSense script와 `ca-pub-2911719487887723`가 확인된다.
-- 공개 CSP가 `https:` script 로드를 허용한다.
-- privacy 능동 고지가 공개 상태로 유지된다.
+5. 보존 조건
+- 승인 전에는 광고 단위 `<ins class="adsbygoogle">`를 삽입하지 않는다.
+- 건강·훈련 관련 문구는 의료·진단·치료·부상 예방 보장·성과 보장 표현을 피한다.
+- 앱 핵심 입력 흐름과 스케줄 생성 흐름에는 광고를 넣지 않는다.
 
-6. 이슈 기준
-- BLOCKER: AdSense script 공개 미반영, CSP가 script 로드를 차단.
-- MAJOR: client ID 오타, script 중복/누락.
-- MINOR: 일부 문서 페이지 누락.
-- NIT: 줄바꿈·위치 기록 보강.
+6. 다음 선택지
+- 사용자가 품질 보강을 원하면 `공개 가이드 3종 콘텐츠 보강 설계 1차`로 진행한다.
+- 사용자가 URL 정리부터 원하면 `apex → www 301 리디렉션 확인 1차`로 진행한다.
+- 사용자가 광고 배치부터 원하면 `AdSense 승인 후 광고 슬롯 설계 1차`로 진행한다.
 
 7. 총괄 Codex 지침
-- 이번 티켓은 총괄 Codex가 직접 수행한다.
-- 사용자가 GitHub Desktop `Push origin`을 완료하면 공개 반영을 검증한다.
-- 검증 통과 후 AdSense 화면에서 "검토 요청" 또는 다음 단계 버튼을 진행하도록 안내한다.
+- 사용자가 `ㄱㄱ`라고 하면 1순위인 콘텐츠 보강 설계 티켓을 작성한다.
+- AdSense 승인 또는 보류/반려 메시지가 오면 그 내용을 우선 분석한다.
