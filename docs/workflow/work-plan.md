@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon` (T2, 백로그 §14, 상세 §16)
-- 현재 단계: `[T1·T2·T3(보안 GO)·T4 완료. 백로그 소진 — AdSense 승인/og:image 대기]`
+- 활성 티켓: `없음` (T1~T5 완료, 백로그 소진)
+- 현재 단계: `[T1·T2·T3·T4·T5 완료. T5(연속기록)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -125,6 +125,8 @@
 - T2 [완료]: 전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon 13페이지 추가 완료, 검증 OK. og:image는 추후 PNG. 상세 §16.
 - T3 [완료·GO]: 보안/QA 재점검 — 결론 GO, 이슈 0(NIT 1: CSP 광범위, 중장기). 상세 §17.
 - T4 [완료]: sitemap.xml lastmod 13건 2026-06-07 갱신, XML 유효, loc 13 유지, 금지파일 diff 0.
+- T5 [완료·GO]: 연속기록(streak) 배지 — 리텐션. 선수 카드에 "🔥 N일 연속 기록" 배지. 순수 read-only 계산(저장 schema 무변경). 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §18.
+- LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
 
@@ -164,3 +166,21 @@
 - 검증 명령: 메모리 기본 명령 + `node --check`, `rg -n "og:|twitter:|application/ld\\+json|canonical|adsbygoogle"`, `rg -n "<script" site/favicon.svg`, `git diff -- site/_headers site/app.js site/data.js site/*.css`.
 - 보고 형식: 메모리 정의(BLOCKER/MAJOR/MINOR/NIT + [근거] 파일:라인 인용 + [결론] GO/조건부GO/STOP).
 - 결과(2026-06-07, 보안/QA 담당 Sonnet 4.6): **결론 GO**. BLOCKER/MAJOR/MINOR 0. NIT 1 — _headers CSP `unsafe-inline`/`unsafe-eval` https: 광범위 허용(기존 정책·자동광고 불가피·이번 변경 아님, 중장기 개선 여지). 근거: JSON-LD 9개 유효, favicon.svg 순수 정적(script/on*/use/image 0), T1 링크 rel=noopener+target=_blank 6건, _headers·app.js·data.js diff 0, inline handler 0, 금지표현 신규 0, og:image 의도적 0. → 총괄 수용: NIT는 §14 중장기(LATER)로 이관, 즉시 조치 불필요.
+
+18. T5 티켓 상세 — 연속기록(streak) 배지 (리텐션, 2026-06-07 설계: 총괄 Claude)
+- 배경: 리텐션 분석 결과, 기능은 충실하나 "재방문 동기" 부재. 사용자 선택 = 연속기록(streak). 온보딩은 이미 구현(첫방문 appGuideModal 자동 L536 + 헤더 data-header-action=guide → openGuideModal L1644)이라 이번 범위 제외(사용자 "연속기록만" 확정).
+- 정의: 선수별 "기록한 날"의 연속 일수. 기록일 = 그날 completionHistory(날짜키 객체, L4995~) 또는 workloadHistory(배열 [{date,...}], L4999~)에 항목 존재. ※ wellness는 오늘 1건만 덮어쓰는 단일 객체(이력 없음, saveWellness L3022~)라 기준 제외 — 확인 완료.
+- 계산(순수 read-only, 저장 schema·localStorage 무변경 → 데이터 손상 위험 0):
+  - 활동 날짜 Set = Object.keys(completionHistory) ∪ workloadHistory[].date.
+  - 기준일: 오늘(getTodayStr) 기록 있으면 오늘부터, 없으면 어제부터 역방향. 어제도 없으면 0.
+  - while(Set.has(커서날짜)) count++; 커서 하루 감소. 기존 헬퍼 getTodayStr/getLocalDateStr/parseLocalDate 재사용.
+  - 경계: 0건=0, 오늘만=1, 오늘+어제=2, 중간 끊김=끊긴 지점까지, 오늘 미기록+어제까지 연속=연속 유지(동기 부여).
+- 표시: 선수 카드 헤더 player-row-info(L2344~2348, 접힌 카드에서도 보임) season 태그 뒤에 `<span class="player-streak-badge"><i data-lucide="flame"></i>N일</span>`. N≥2일 때만 노출(1 이하 노이즈). 숫자만 삽입 → XSS 안전(사용자 데이터 직접 삽입 없음). lucide.createIcons는 renderPlayerList 말미(L2371)에서 이미 호출.
+- 수정 파일: site/app.js(getRecordStreak 함수 추가 + renderPlayerList 헤더 배지 주입), site/style.css(.player-streak-badge 스타일, amber/flame 톤·기존 player-*-badge 패턴 일치). work-plan은 총괄이 기록(Sonnet 미수정).
+- 수정 금지: site/data.js, site/index.html, site/tokens.css, site/docs.css, site/_headers, site/ads.txt, site/sitemap.xml, site/robots.txt, 기타 가이드/정책 HTML, site/vendor/**, docs/evidence/**, docs/security/**.
+- 표현: "N일 연속 기록"만. 금지표현(향상·예방·보장·최적·진단·처방) 0. inline onclick 금지(CSP) — 배지는 표시 전용(클릭 동작 없음).
+- 검증(총괄 재실행): node --check app.js·data.js / rg "getRecordStreak|player-streak-badge" / streak 경계 로직 검토 / 금지표현 0 / git diff --stat = app.js+style.css만(+work-plan 총괄). 
+- 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude(Opus) / 보안/QA: 별도 담당(read-only 계산 위주 저위험 → Sonnet 4.6 권장).
+- 결과(구현 Sonnet 4.6 → 총괄 Opus 독립 검증, 2026-06-07): **총괄 검증 GO**. getRecordStreak(app.js L5002~5037) 순수 read-only(players 무수정), 헬퍼 getTodayStr/parseLocalDate/getLocalDateStr 재사용, 경계(0/1/2/중간끊김/오늘미기록+어제연속유지) 로직 정확. 배지 주입 renderPlayerList player-row-info season-tag 뒤(app.js L2350), N≥2만 노출, 숫자만 삽입(XSS 안전). .player-streak-badge(style.css L2676~2694) var(--warning)#d97706+var(--warning-light)#fef3c7(토큰 실재 L50-51). node --check app.js/data.js 2 PASS. 신규 금지표현 0(기존 목표라벨 "구속 향상" 등은 무관 잔존). inline handler 0(표시 전용). git diff --stat = site/app.js+site/style.css+work-plan(총괄)만, 금지파일 0. → 다음: 보안/QA 별도 담당 점검 후 사용자 Push origin.
+- 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 실행: node --check(2 PASS) / rg getRecordStreak·player-streak-badge(app.js L2225~2226·L5002~5037, style.css L2676·L2689) / git diff --stat(app.js+style.css+work-plan 3파일만, 금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 확인: streak은 count++(순수 숫자), 사용자 데이터 비삽입. 경계 로직 독립 확인: 오늘기록=오늘부터, 미기록=어제부터(없으면 0), while(Set.has) 정확, 오늘미기록+어제연속=유지. → 사용자 Push origin 가능.
+- 배포(2026-06-07): T5 변경(site/app.js + site/style.css + work-plan) main 커밋 완료. 직전 origin = 8aebe6e. 사용자 GitHub Desktop Push origin 후 Cloudflare 자동 재배포 → 공개 도메인 반영.

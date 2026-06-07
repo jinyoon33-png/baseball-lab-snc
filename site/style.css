@@ -2673,6 +2673,25 @@ input[type=range] {
     border: 1px solid var(--border);
 }
 
+.player-streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 999px;
+    white-space: nowrap;
+    color: var(--warning);
+    background: var(--warning-light);
+}
+
+.player-streak-badge svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
 /* ============================================================
    Day 탭 바 (Day Tab Bar)
    ============================================================ */

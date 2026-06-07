@@ -2222,6 +2222,8 @@ function renderPlayerList() {
 
         const safePlayerIdAttr = escapeHTML(p.id);
         const safePlayerName = escapeHTML(p.name);
+        const streak = getRecordStreak(p);
+        const streakBadgeHtml = streak >= 2 ? `<span class="player-streak-badge"><i data-lucide="flame"></i>${streak}일</span>` : '';
         const safeHeightText = escapeHTML(p.height ? String(p.height) + 'cm' : '-');
         const safeWeightText = escapeHTML(p.weight ? String(p.weight) + 'kg' : '-');
         const safeExpText = escapeHTML(String(p.exp || 0));
@@ -2345,6 +2347,7 @@ function renderPlayerList() {
                     <span class="player-row-name">${safePlayerName}</span>
                     ${typeBadge}
                     <span class="player-season-tag">${p.season === '시즌중' ? '시즌중' : '비시즌'}</span>
+                    ${streakBadgeHtml}
                 </div>
                 <div class="player-row-status">
                     ${rowStatusIcon}
@@ -4994,6 +4997,43 @@ function isDateInCurrentWeek(player, dateStr) {
 
 function getCompletionEntryByDate(player, dateStr) {
     return (player.completionHistory && player.completionHistory[dateStr]) || null;
+}
+
+function getRecordStreak(player) {
+    if (!player) return 0;
+
+    // 활동 날짜 Set 구성 (read-only — 데이터 수정 없음)
+    const activeDates = new Set();
+    if (player.completionHistory && !Array.isArray(player.completionHistory)) {
+        Object.keys(player.completionHistory).forEach(d => activeDates.add(d));
+    }
+    if (Array.isArray(player.workloadHistory)) {
+        player.workloadHistory.forEach(entry => {
+            if (entry && entry.date) activeDates.add(entry.date);
+        });
+    }
+
+    if (activeDates.size === 0) return 0;
+
+    const today = getTodayStr();
+    let cursor;
+    if (activeDates.has(today)) {
+        cursor = parseLocalDate(today);
+    } else {
+        // 오늘 기록 없으면 어제부터 시도
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = getLocalDateStr(yesterday);
+        if (!activeDates.has(yesterdayStr)) return 0;
+        cursor = parseLocalDate(yesterdayStr);
+    }
+
+    let count = 0;
+    while (activeDates.has(getLocalDateStr(cursor))) {
+        count++;
+        cursor.setDate(cursor.getDate() - 1);
+    }
+    return count;
 }
 
 function getWorkloadEntryByDate(player, dateStr) {
