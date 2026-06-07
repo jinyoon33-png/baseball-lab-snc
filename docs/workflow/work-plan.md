@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `없음` (T1~T5 완료, 백로그 소진)
-- 현재 단계: `[T1·T2·T3·T4·T5 완료. T5(연속기록)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
+- 활성 티켓: `없음` (T1~T6 완료, 백로그 소진)
+- 현재 단계: `[T1~T6 완료. T6(streak 확장)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -125,7 +125,8 @@
 - T2 [완료]: 전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon 13페이지 추가 완료, 검증 OK. og:image는 추후 PNG. 상세 §16.
 - T3 [완료·GO]: 보안/QA 재점검 — 결론 GO, 이슈 0(NIT 1: CSP 광범위, 중장기). 상세 §17.
 - T4 [완료]: sitemap.xml lastmod 13건 2026-06-07 갱신, XML 유효, loc 13 유지, 금지파일 diff 0.
-- T5 [완료·GO]: 연속기록(streak) 배지 — 리텐션. 선수 카드에 "🔥 N일 연속 기록" 배지. 순수 read-only 계산(저장 schema 무변경). 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §18.
+- T5 [완료·GO·배포]: 연속기록(streak) 배지 — 리텐션. 선수 카드에 "🔥 N일 연속 기록" 배지. 순수 read-only 계산(저장 schema 무변경). 구현+총괄검증+보안 3중 GO. 사용자 Push 완료, 실사용 노출 확인. 상세 §18.
+- T6 [완료·GO]: 연속기록(streak) 확장 — 결과화면(s3)+팀 대시보드(s4). resName에 streak 배지 노출 + 대시보드 "오늘 기록 N명" stat-card. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §19.
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
@@ -183,4 +184,20 @@
 - 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude(Opus) / 보안/QA: 별도 담당(read-only 계산 위주 저위험 → Sonnet 4.6 권장).
 - 결과(구현 Sonnet 4.6 → 총괄 Opus 독립 검증, 2026-06-07): **총괄 검증 GO**. getRecordStreak(app.js L5002~5037) 순수 read-only(players 무수정), 헬퍼 getTodayStr/parseLocalDate/getLocalDateStr 재사용, 경계(0/1/2/중간끊김/오늘미기록+어제연속유지) 로직 정확. 배지 주입 renderPlayerList player-row-info season-tag 뒤(app.js L2350), N≥2만 노출, 숫자만 삽입(XSS 안전). .player-streak-badge(style.css L2676~2694) var(--warning)#d97706+var(--warning-light)#fef3c7(토큰 실재 L50-51). node --check app.js/data.js 2 PASS. 신규 금지표현 0(기존 목표라벨 "구속 향상" 등은 무관 잔존). inline handler 0(표시 전용). git diff --stat = site/app.js+site/style.css+work-plan(총괄)만, 금지파일 0. → 다음: 보안/QA 별도 담당 점검 후 사용자 Push origin.
 - 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 실행: node --check(2 PASS) / rg getRecordStreak·player-streak-badge(app.js L2225~2226·L5002~5037, style.css L2676·L2689) / git diff --stat(app.js+style.css+work-plan 3파일만, 금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 확인: streak은 count++(순수 숫자), 사용자 데이터 비삽입. 경계 로직 독립 확인: 오늘기록=오늘부터, 미기록=어제부터(없으면 0), while(Set.has) 정확, 오늘미기록+어제연속=유지. → 사용자 Push origin 가능.
-- 배포(2026-06-07): T5 변경(site/app.js + site/style.css + work-plan) main 커밋 완료. 직전 origin = 8aebe6e. 사용자 GitHub Desktop Push origin 후 Cloudflare 자동 재배포 → 공개 도메인 반영.
+- 배포(2026-06-07): T5 변경(site/app.js + site/style.css + work-plan) main 커밋(004f814). 직전 origin = 8aebe6e. 사용자 GitHub Desktop Push origin 완료 → Cloudflare 재배포 → **공개 도메인 실사용 노출 확인(배지 정상)**.
+
+19. T6 티켓 상세 — 연속기록(streak) 확장 (리텐션, 2026-06-07 설계: 총괄 Claude)
+- 배경: T5로 선수 목록 카드에 streak 배지 도입·실사용 확인. 노출 확장 선택(사용자 "연속기록 확장" 확정). getRecordStreak(app.js L5002~)는 T5에서 추가됨, 재사용.
+- 범위 A — 선수 결과화면(s3): renderResult(app.js L3163~)에서 resName에 streak 배지 노출.
+  - 현재 `document.getElementById('resName').innerText = \`${escapeHTML(p.name)} 선수 리포트\`;`. → innerText를 innerHTML로 변경(이름 escapeHTML 이미 적용 = 안전) 후 getRecordStreak(p)≥2면 뒤에 `<span class="player-streak-badge"><i data-lucide="flame"></i>N일</span>` 추가. lucide.createIcons는 renderResult 말미(L3178)에서 호출됨. index.html 미변경(정적 요소 추가 없이 innerHTML 주입).
+- 범위 B — 팀 대시보드(s4): renderTeamDashboard(app.js L3890~) 전역 통계 섹션(stat-section-global, "전체 선수"/"평가 완료" stat-card 옆)에 "오늘 기록" stat-card 1개 추가.
+  - 값 = 오늘(getTodayStr) completion 또는 workload 기록한 선수 수. 계산: `players.filter(p => getCompletionEntryByDate(p, todayStr) || getWorkloadEntryByDate(p, todayStr)).length` (기존 헬퍼 L4995/L4999 재사용, todayStr는 함수 내 기존 변수 재사용). 표기 "N". 값은 escapeHTML(String(count)) 적용(기존 stat-card 패턴 일치). count>0이면 success 톤 클래스 부여 가능(기존 danger/warning 패턴처럼, 없으면 무톤).
+- 안전: 전부 read-only 계산(players·localStorage·저장 schema 무변경). 삽입 값 = 정수(escapeHTML) + escapeHTML 적용 이름만 → XSS 안전. inline handler 신규 0.
+- 수정 파일: site/app.js(renderResult 배지 주입 + renderTeamDashboard 통계 카드). site/style.css는 .player-streak-badge(T5) 재사용으로 원칙상 불요 — 결과 헤더에서 크기/정렬 조정 필요할 때만 소폭 추가 허용.
+- 수정 금지: site/index.html, site/data.js, site/tokens.css, site/docs.css, site/_headers, site/ads.txt, site/sitemap.xml, site/robots.txt, 가이드/정책 HTML, site/vendor/**, docs/evidence/**, docs/security/**.
+- 표현: "N일"·"오늘 기록"만. 금지표현(향상·예방·보장·최적·진단·처방) 0.
+- 검증: node --check app.js/data.js / rg getRecordStreak(결과화면 주입 확인) / rg "오늘 기록"(stat-card 존재) / 금지표현 0 / git diff --stat = site/app.js(+style.css 선택)만, 금지파일 0.
+- 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude(증거 검토) + 보안담당 터미널(독립 재점검) / 사용자 Push origin.
+- 결과(구현 Sonnet 4.6 → 총괄 Opus 증거 검토, 2026-06-07): **총괄 검증 GO(증거 검토)**. A) renderResult resName innerText→innerHTML, escapeHTML(p.name) 유지, 배지=정수 _resStreak만(L3165~3167). B) renderTeamDashboard recordedTodayCount=players.filter(getCompletionEntryByDate‖getWorkloadEntryByDate)(L3916), escapeHTML(String) 적용(L3937), 전역 통계 "오늘 기록" stat-card(L3958). .stat-card.success 미존재 확인→임의 CSS 신설 안 함(plain stat-card), style.css 무수정. node --check 2 PASS(Sonnet 보고), git diff = site/app.js만(+work-plan 총괄), 금지파일 0, inline handler 0, 금지표현 0. → 다음: 보안담당 터미널 독립 재점검 후 총괄 커밋 + 사용자 Push.
+- 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 실행: node --check(2 PASS) / git diff --stat(app.js+work-plan 2파일만, style.css·금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 독립 확인: A) resName innerHTML 삽입값 = escapeHTML(p.name)+"선수 리포트"+배지. 배지 내 삽입값=_resStreak(순수 정수), 사용자 데이터 직접 삽입 없음. B) safeRecordedTodayCount=escapeHTML(String(정수)), XSS 안전. read-only 확인: players·localStorage·저장schema 수정 없음(filter 조회만). getRecordStreak·getCompletionEntryByDate·getWorkloadEntryByDate 기존 헬퍼 재사용. stat-card plain(CSS 신설 없음). → 커밋 + 사용자 Push origin 가능.
+- 배포(2026-06-07): T6 변경(site/app.js + work-plan) main 커밋(f10402e). 직전 origin = 004f814(T5). 사용자 GitHub Desktop Push origin 후 Cloudflare 재배포 → 공개 도메인 반영.

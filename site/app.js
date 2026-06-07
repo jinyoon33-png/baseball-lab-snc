@@ -3162,7 +3162,9 @@ function savePerformance() {
 
 function renderResult() {
     const p = players.find(p => String(p.id) === String(currentId));
-    document.getElementById('resName').innerText = `${escapeHTML(p.name)} 선수 리포트`;
+    const _resStreak = getRecordStreak(p);
+    const _resStreakBadge = _resStreak >= 2 ? `<span class="player-streak-badge"><i data-lucide="flame"></i>${_resStreak}일</span>` : '';
+    document.getElementById('resName').innerHTML = `${escapeHTML(p.name)} 선수 리포트 ${_resStreakBadge}`;
     document.getElementById('resWeek').innerText = `${p.week}주차`;
     drawRadarChart(p);
     renderACWR(p);
@@ -3911,6 +3913,7 @@ function renderTeamDashboard() {
     const filteredCount = filtered.length;
 
     const todayStr = getTodayStr();
+    const recordedTodayCount = players.filter(p => getCompletionEntryByDate(p, todayStr) || getWorkloadEntryByDate(p, todayStr)).length;
     const wellnessMissingCount = filtered.filter(p => p.scores && (!p.wellness || p.wellness.date !== todayStr)).length;
 
     const todayNotCompletedCount = filtered.filter(p => {
@@ -3931,6 +3934,7 @@ function renderTeamDashboard() {
     const safeCurrentDashboardFilter = escapeHTML(currentDashboardFilter);
     const safeTotal = escapeHTML(String(total ?? ''));
     const safeAssessed = escapeHTML(String(assessed ?? ''));
+    const safeRecordedTodayCount = escapeHTML(String(recordedTodayCount ?? ''));
     const safeFilteredCount = escapeHTML(String(filteredCount ?? ''));
     const safePainCount = escapeHTML(String(painCount ?? ''));
     const safeAcwrRiskCount = escapeHTML(String(acwrRiskCount ?? ''));
@@ -3949,6 +3953,10 @@ function renderTeamDashboard() {
             <div class="stat-card">
                 <div class="label">평가 완료</div>
                 <div class="value">${safeAssessed}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">오늘 기록</div>
+                <div class="value">${safeRecordedTodayCount}</div>
             </div>
         </div>
         <div class="stat-section-label">현재 필터 기준 <span class="stat-filter-badge">${safeCurrentDashboardFilter} · ${safeFilteredCount}명</span></div>
