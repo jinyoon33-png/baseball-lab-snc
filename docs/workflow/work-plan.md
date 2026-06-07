@@ -1,6 +1,6 @@
 1. 요청 요약
 - 활성 티켓: `전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon` (T2, 백로그 §14, 상세 §16)
-- 현재 단계: `[Step 2. 완료 — T2 검증 OK. 다음: T3(보안QA) 대기]`
+- 현재 단계: `[T1·T2 완료. T3(보안/QA)는 보안담당 위임 — §17, 권장 모델 Sonnet 4.6]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -123,7 +123,7 @@
 14. 후속 티켓 백로그 (2026-06-07, 총괄 Claude)
 - T1 [완료]: 공개 메인(index) 가이드 내부 링크 누락 보정 — workload/recovery/assessment 3개 링크를 index 2개 블록에 추가. 검증 OK. (상세 §15)
 - T2 [완료]: 전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon 13페이지 추가 완료, 검증 OK. og:image는 추후 PNG. 상세 §16.
-- T3 [대기]: 보안/QA 재점검 — 자동광고 연결 후 CSP·외부 스크립트·localStorage·입력 검증.
+- T3 [담당 위임 대기]: 보안/QA 재점검 — 보안/QA 정밀점검 담당 수행(독립 검수, 읽기 전용). 권장 모델 Sonnet 4.6. 상세 §17.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
 
 15. T1 티켓 상세 — 공개 메인 가이드 내부 링크 누락 보정 1차
@@ -148,3 +148,16 @@
 - og:image: 이번 제외(추후 PNG 1200x630 준비 시 og:image+twitter:image 일괄 추가).
 - 검증: node --check, 전 페이지 og:title·twitter:card 존재, favicon link 13, JSON-LD(index 2종/가이드 Article), 금지 표현 0, 금지 파일 diff 0.
 - 결과(완료 2026-06-07): Sonnet 구현 → 총괄 검증. favicon.svg(305B, 야구공 솔기) 생성. 13페이지 전부 og:title·twitter:card·favicon link 각 1건. JSON-LD = index(WebSite+Organization @graph) + 가이드 8 Article = 9개 파일, 전부 JSON 파싱 유효. 금지 표현 0, 금지 파일 diff 0. description은 실제 ~72자(앞선 205는 UTF-8 바이트 오측)로 적정 → 축약 불필요. og:image/twitter:image는 미적용(추후 PNG 1200x630 준비 시 일괄). 변경: site/favicon.svg(신규) + 13개 HTML.
+
+17. T3 티켓 — 보안/QA 재점검 (담당: 보안/QA 정밀점검 담당 / 독립 검수)
+- 권장 모델: **Sonnet 4.6**. 근거: 이번 세션 변경은 정적 HTML(메타·내부링크·콘텐츠)로 사용자 입력이 닿지 않는 저위험. 체크리스트 정적 점검(rg/node + 패턴 확인)으로 충분. → 향후 광고 단위 `<ins>` 실삽입·CSP(`_headers`) 변경 티켓의 보안 점검은 **Opus 권장**(실제 스크립트·보안 경계 변경, 정밀 추론 필요).
+- 권한(메모리 security-qa-role 준수): 읽기/조회만. 코드·문서·git 수정 금지. 보고서만 작성. 다음 티켓은 총괄이 결정.
+- 점검 대상: 이번 세션 커밋 범위 — 가이드 3종 보강, 약관 광고고지 정합, T1 내부링크(index), T2 OG/Twitter/JSON-LD/favicon(13p+favicon.svg). 커밋 a14b46b~06aef60.
+- 집중 점검:
+  1. JSON-LD/OG/Twitter 메타: 사용자 데이터 직접 삽입 없는 정적값인지, JSON 유효성, 금지 표현 0.
+  2. favicon.svg: `<script>`·외부 참조·이벤트 핸들러 없는 순수 정적 SVG인지(SVG XSS 경로 점검).
+  3. T1 신규 링크: `target="_blank"` + `rel="noopener noreferrer"` 일관성.
+  4. 자동광고 연결 후 CSP(`_headers`): 광고 도메인 허용이 과도/와일드카드 남용 아닌지(자동광고는 콘솔 설정이라 코드 무변경이어야 함 — diff 0 확인).
+  5. inline handler(onclick/oninput/onchange) 재도입 0, 계산/저장 schema·localStorage 경로 무변경.
+- 검증 명령: 메모리 기본 명령 + `node --check`, `rg -n "og:|twitter:|application/ld\\+json|canonical|adsbygoogle"`, `rg -n "<script" site/favicon.svg`, `git diff -- site/_headers site/app.js site/data.js site/*.css`.
+- 보고 형식: 메모리 정의(BLOCKER/MAJOR/MINOR/NIT + [근거] 파일:라인 인용 + [결론] GO/조건부GO/STOP).
