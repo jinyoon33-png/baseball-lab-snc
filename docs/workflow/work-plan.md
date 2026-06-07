@@ -57,10 +57,18 @@
 
 8. 총괄 운영 체계 메모 (Codex 복귀 인수인계)
 - Codex 사용 한도 소진 → 총괄 역할을 Claude(Opus 4.8)가 위임 인계.
-- 역할 분담: 총괄 Claude(티켓 작성·선정, 위임, 재검증, work-plan 관리, 배포 확인) / Sonnet 4.6 하위 에이전트(코드·콘텐츠 구현) / 사용자(GitHub Push, AdSense 콘솔).
-- Codex 복귀 시 본 메모 + work-plan + git 이력으로 그대로 이어받음.
-- 직전 완료 티켓: `키 필수 표시·검증 GitHub push·Cloudflare 재배포 확인 1차` — 공개 도메인 반영 전부 확인(HEAD 1969c76), 이슈 0건.
-- 인프라 스냅샷: CSP 정적 fallback(`script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`), nonce 미들웨어 폐기(`4218f3e`). 광고 연결 스크립트 13개 HTML head 삽입 완료, 광고 단위(`ins.adsbygoogle`) 미게재(자동광고/승인 후 단계), ads.txt 게시 완료.
+- 역할 분담(현행 2026-06-07):
+  - 총괄 Claude(Opus): 티켓 설계·선정, 하위 에이전트 위임, 증거 검토식 검증, work-plan 관리, 배포 커밋, 의사결정·보고. ※ 사용자 지시("코드 작업은 난이도에 맞는 하위 에이전트, 총괄은 총괄 업무만")로 직접 코드 구현·명령 재실행은 하지 않고 하위 에이전트에 위임. 총괄 검증 = 하위 에이전트 보고 증거(명령 출력·스니펫)를 설계 대비 검토.
+  - Sonnet 4.6 하위 에이전트: 코드·콘텐츠 구현 + 자체 정적검증(node --check/rg/git diff) 결과 보고. 커밋·푸시는 안 함.
+  - 보안/QA: 사용자가 운용하는 **별도 Claude 터미널**(독립 read-only 검수, memory security-qa-role 형식). 총괄이 §티켓에 점검 항목을 남기면 거기서 독립 점검 → GO/STOP 보고를 work-plan 해당 §에 기입.
+  - 사용자: GitHub Desktop Push origin, AdSense 콘솔, 보안 터미널 운용.
+- 워크플로우: 총괄 설계(티켓 §기록) → Sonnet 구현 → 총괄 증거검토 GO → 보안 터미널 독립 GO → 총괄 커밋(main) → 사용자 Push → Cloudflare 자동 재배포. (ㄱㄱ=작업 시작 신호, 매번 work-plan 먼저 읽기)
+- Codex 복귀 시 본 메모 + work-plan(§14 백로그, §15~20 티켓 상세) + git 이력으로 그대로 이어받음.
+- 직전 완료(2026-06-07, 전부 보안 GO): T1 index 가이드 내부링크(§15) / T2 SEO 메타·favicon 13p(§16) / T3 보안 재점검 GO(§17) / T4 sitemap lastmod(§14) / T5 연속기록 streak 배지(§18, 커밋 004f814, 배포·실사용 확인) / T6 streak 결과화면+대시보드 확장(§19, 커밋 e62f158, push 완료) / T7 대시보드 필터 버그 수정(§20, 커밋 7eee6b2, push 대기).
+- 현재 git(2026-06-07): origin/main=e62f158(T6), 로컬 HEAD=7eee6b2(T7) ahead 1 → 사용자 Push 대기.
+- 백로그(LATER, §14): PWA 홈화면(manifest=가벼움/지금가능, service worker=무거움/앱출시 시점·AdSense·CSP 검토) / _headers CSP 강화(AdSense 안정화 후) / og:image PNG(에셋 준비 시 13p 일괄). 미착수 후보: 데이터 안전장치(백업 리마인더), SEO 콘텐츠 확장. 온보딩은 이미 구현(첫방문 appGuideModal + 헤더 가이드 버튼).
+- 외부 대기: AdSense 승인(§9~13). 승인 후 §13 게재 확인.
+- 인프라 스냅샷: CSP 정적 fallback(`script-src 'self' 'unsafe-inline' 'unsafe-eval' https:`), nonce 미들웨어 폐기(`4218f3e`). 광고 연결 스크립트 13개 HTML head 삽입 완료, 광고 단위(`ins.adsbygoogle`) 미게재(자동광고/승인 후 단계), ads.txt 게시 완료. 데이터=localStorage 전용(백엔드 없음, 기기/캐시 삭제 시 손실 위험 → 데이터 안전장치 후보 근거). streak는 순수 read-only 계산(getRecordStreak app.js, completionHistory∪workloadHistory 기준).
 
 9. 구현·검증 결과 (Step 2 완료 — 2026-06-07)
 - 구현: Sonnet 4.6 하위 에이전트. 검증: 총괄 Claude(Opus) §5 명령 독립 재실행.
