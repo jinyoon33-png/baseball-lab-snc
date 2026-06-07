@@ -1,5 +1,23 @@
 # Work Plan Archive
 
+## 2026-06-07 — 신규 선수 등록 키 필수 표시·검증 브라우저 실사용 확인 1차
+- Result: Step 2 브라우저 실사용 확인 완료. BLOCKER/MAJOR/MINOR/NIT 0건.
+- Owner: 총괄 Codex 직접 수행.
+- Static: `node --check site/app.js`·`site/data.js` PASS. 키 필수 배지 2건, `키를 입력하세요.` 2건, `heightInput !== 0|eHeightInput !== 0` 0건, 수정 금지 경로 diff 0건.
+- Browser: 로컬 `127.0.0.1:8777` 별도 origin에서 신규 등록 키 `필수` 배지 확인. 키 빈 값은 `키를 입력하세요.`, 키 `0`은 `키는 100~230cm 범위만 허용됩니다.`로 차단.
+- Browser: 구력 `0` + 키 `180` + 체중 `70` 정상 등록 후 평가 화면 `s2` 진입 확인. 테스트 선수 `키검증테스트`가 목록에 생성됨.
+- Browser: 선수 정보 수정 모달 키 `필수` 배지 확인. 편집 키 빈 값/`0` 값 차단 확인, 정상 키 값 저장 가능 확인.
+- Note: 테스트는 별도 로컬 포트 origin에서 수행해 사용자의 기존 공개/실사용 데이터와 분리.
+- Next: `신규 선수 등록 키 필수 표시·검증 GitHub push·Cloudflare 재배포 확인 1차`.
+
+## 2026-06-07 — 신규 선수 등록 키 필수 표시·검증 보정 1차
+- Result: Step 2 구현 완료 후 총괄 정밀검토 PASS. 다음 티켓은 브라우저 실사용 확인.
+- Owner: 코드 담당 Claude 구현, 총괄 Codex 정밀검토.
+- Scope: `site/index.html` 등록/수정 키 라벨에 `필수` 배지 추가. `site/app.js` 등록/수정 키 빈 값 차단 추가 및 `heightInput !== 0` 예외 제거.
+- Static: `node --check site/app.js`·`site/data.js` PASS. 키 필수 배지 2건, `키를 입력하세요.` 2건, `heightInput !== 0|eHeightInput !== 0` 0건.
+- Regression: 구력 0 허용, 체중 필수·범위 검증, 이름·나이 필수 검증 유지. 수정 금지 경로 diff 0건.
+- Next: `신규 선수 등록 키 필수 표시·검증 브라우저 실사용 확인 1차`.
+
 ## 2026-06-07 — 공개 가이드 3종 콘텐츠 보강 설계 1차 대기 보류
 - Result: 활성 전환 보류. 사용자 입력 정확성 이슈가 먼저 발견되어 다음 티켓을 키 필수 표시·검증 보정으로 변경.
 - Owner: 총괄 Codex.

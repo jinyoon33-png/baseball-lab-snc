@@ -1857,13 +1857,14 @@ function addPlayer() {
     }
     if (expInput > ageInput) return customAlert('구력이 나이보다 높을 수 없습니다.');
 
+    if (_pHeightRaw === '') return customAlert('키를 입력하세요.');
     let heightInput = 0;
     if (_pHeightRaw !== '') {
         const heightNum = Number(_pHeightRaw);
         if (!Number.isFinite(heightNum) || !Number.isInteger(heightNum)) return customAlert('키는 정수만 입력 가능합니다.');
         heightInput = heightNum;
     }
-    if (heightInput !== 0 && (heightInput < 100 || heightInput > 230)) return customAlert('키는 100~230cm 범위만 허용됩니다.');
+    if (heightInput < 100 || heightInput > 230) return customAlert('키는 100~230cm 범위만 허용됩니다.');
 
     if (_pWeightRaw === '') return customAlert('체중을 입력하세요.');
     let weightInput = 0;
@@ -2545,13 +2546,14 @@ function savePlayerEdit() {
     }
     if (expInput > ageInput) return customAlert('구력이 나이보다 높을 수 없습니다.');
 
+    if (_eHeightRaw === '') return customAlert('키를 입력하세요.');
     let eHeightInput = 0;
     if (_eHeightRaw !== '') {
         const heightNum = Number(_eHeightRaw);
         if (!Number.isFinite(heightNum) || !Number.isInteger(heightNum)) return customAlert('키는 정수만 입력 가능합니다.');
         eHeightInput = heightNum;
     }
-    if (eHeightInput !== 0 && (eHeightInput < 100 || eHeightInput > 230)) return customAlert('키는 100~230cm 범위만 허용됩니다.');
+    if (eHeightInput < 100 || eHeightInput > 230) return customAlert('키는 100~230cm 범위만 허용됩니다.');
 
     if (_eWeightRaw === '') return customAlert('체중을 입력하세요.');
     let eWeightInput = 0;
