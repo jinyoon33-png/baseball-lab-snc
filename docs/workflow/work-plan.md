@@ -1,7 +1,8 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 승인 대기 — 자동광고 콘솔 설정 완료`
-- 현재 단계: `[대기 — AdSense 승인 심사 중. 자동광고 콘솔 설정 완료. 추가 코드 작업 없음]`
-- 담당: 총괄 위임 Claude(Opus). 코드 구현 필요 시 Sonnet 4.6 하위 에이전트.
+- 활성 티켓: `공개 메인(index) 가이드 내부 링크 누락 보정 1차` (T1, 백로그 §14)
+- 현재 단계: `[Step 2. 완료 — T1 검증 OK. 다음: T2(SEO 점검)/T3(보안QA) 대기]`
+- 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
+- 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
 - 다음 트리거: 사용자가 "AdSense 승인 완료" 보고 시 → 게재 확인(§13) + 선택적 수동 광고 단위 정밀화.
 
@@ -118,3 +119,24 @@
   - 전제: AdSense 콘솔 "광고 → 광고 단위 기준"에서 디스플레이 광고 단위 생성 → `data-ad-slot` ID 발급.
   - 구현: 총괄이 가이드 HTML 설계 위치(마지막 섹션 끝~doc-note 사이 등)에 `<ins>` 삽입 또는 Sonnet 위임 → 정적 검증 → 커밋/푸시.
   - 주의: 자동광고와 수동 단위 병행 시 페이지당 광고 과밀 주의(권장 3~5개 이내). 수동 전환 시 자동광고 인페이지를 줄이는 것 고려.
+
+14. 후속 티켓 백로그 (2026-06-07, 총괄 Claude)
+- T1 [완료]: 공개 메인(index) 가이드 내부 링크 누락 보정 — workload/recovery/assessment 3개 링크를 index 2개 블록에 추가. 검증 OK. (상세 §15)
+- T2 [대기]: 전체 SEO/메타 점검 — description·OG·sitemap·structured data 정합성.
+- T3 [대기]: 보안/QA 재점검 — 자동광고 연결 후 CSP·외부 스크립트·localStorage·입력 검증.
+- 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
+
+15. T1 티켓 상세 — 공개 메인 가이드 내부 링크 누락 보정 1차
+- 대상(수정 허용): `site/index.html`, `docs/workflow/work-plan.md`.
+- 수정 금지: `site/app.js`, `site/data.js`, `site/*.css`, 가이드/정책 HTML, `site/_headers`, `site/ads.txt`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 작업: index.html 가이드 링크 2개 블록에 누락된 3개 링크 추가.
+  - 블록A: `.policy-links` (데이터 초기화 영역 하단, 들여쓰기 24칸).
+  - 블록B: `.policy-links--in-modal` (가이드 모달 하단, 들여쓰기 16칸).
+- 추가 링크 3개(각 `<a href target=_blank rel=noopener noreferrer>제목</a>` + `<span class="policy-sep">·</span>`):
+  - `/workload-guide` → "워크로드/ACWR 가이드"
+  - `/recovery-guide` → "회복 기록 가이드"
+  - `/assessment-guide` → "정밀평가 활용법"
+- 삽입 위치: 두 블록 모두 `acwr-guide` 링크 뒤에 위 3개를 순서대로 삽입(주제 흐름: RPE→ACWR→워크로드→회복→정밀평가→훈련프로그램).
+- 검증: `node --check app.js/data.js`, `rg -c`로 각 3개 링크 index.html 2건씩 확인, 금지 파일 diff 0.
+- 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude.
+- 결과(완료 2026-06-07): Sonnet 구현 → 총괄 §검증 재실행. 두 블록(.policy-links, .policy-links--in-modal) 모두 `acwr-guide` 뒤에 workload→recovery→assessment 삽입(각 2건), 기존 6개 링크 유지, `node --check` OK, 금지 파일 diff 0. 변경 파일: site/index.html. 최종 순서: about→rpe→acwr→workload→recovery→assessment→training→warmup→fielding→contact.
