@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `없음` (T1~T6 완료, 백로그 소진)
-- 현재 단계: `[T1~T6 완료. T6(streak 확장)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
+- 활성 티켓: `없음` (T1~T7 완료, 백로그 소진)
+- 현재 단계: `[T1~T7 완료. T7(대시보드 필터 버그)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -127,6 +127,7 @@
 - T4 [완료]: sitemap.xml lastmod 13건 2026-06-07 갱신, XML 유효, loc 13 유지, 금지파일 diff 0.
 - T5 [완료·GO·배포]: 연속기록(streak) 배지 — 리텐션. 선수 카드에 "🔥 N일 연속 기록" 배지. 순수 read-only 계산(저장 schema 무변경). 구현+총괄검증+보안 3중 GO. 사용자 Push 완료, 실사용 노출 확인. 상세 §18.
 - T6 [완료·GO]: 연속기록(streak) 확장 — 결과화면(s3)+팀 대시보드(s4). resName에 streak 배지 노출 + 대시보드 "오늘 기록 N명" stat-card. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §19.
+- T7 [완료·GO]: 팀 대시보드 필터 버그 수정 — 전체/투수/타자/시즌중/비시즌 필터에서도 액션 큐가 조치필요 선수만 표시되던 버그(무조건 needsAction 필터). 필터별 전체 선수 표시 + 동적 제목 + 빈상태 문구 필터인지 + 정상 범위 태그. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §20.
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
@@ -200,4 +201,22 @@
 - 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude(증거 검토) + 보안담당 터미널(독립 재점검) / 사용자 Push origin.
 - 결과(구현 Sonnet 4.6 → 총괄 Opus 증거 검토, 2026-06-07): **총괄 검증 GO(증거 검토)**. A) renderResult resName innerText→innerHTML, escapeHTML(p.name) 유지, 배지=정수 _resStreak만(L3165~3167). B) renderTeamDashboard recordedTodayCount=players.filter(getCompletionEntryByDate‖getWorkloadEntryByDate)(L3916), escapeHTML(String) 적용(L3937), 전역 통계 "오늘 기록" stat-card(L3958). .stat-card.success 미존재 확인→임의 CSS 신설 안 함(plain stat-card), style.css 무수정. node --check 2 PASS(Sonnet 보고), git diff = site/app.js만(+work-plan 총괄), 금지파일 0, inline handler 0, 금지표현 0. → 다음: 보안담당 터미널 독립 재점검 후 총괄 커밋 + 사용자 Push.
 - 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 실행: node --check(2 PASS) / git diff --stat(app.js+work-plan 2파일만, style.css·금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 독립 확인: A) resName innerHTML 삽입값 = escapeHTML(p.name)+"선수 리포트"+배지. 배지 내 삽입값=_resStreak(순수 정수), 사용자 데이터 직접 삽입 없음. B) safeRecordedTodayCount=escapeHTML(String(정수)), XSS 안전. read-only 확인: players·localStorage·저장schema 수정 없음(filter 조회만). getRecordStreak·getCompletionEntryByDate·getWorkloadEntryByDate 기존 헬퍼 재사용. stat-card plain(CSS 신설 없음). → 커밋 + 사용자 Push origin 가능.
-- 배포(2026-06-07): T6 변경(site/app.js + work-plan) main 커밋(f10402e). 직전 origin = 004f814(T5). 사용자 GitHub Desktop Push origin 후 Cloudflare 재배포 → 공개 도메인 반영.
+- 배포(2026-06-07): T6 변경(site/app.js + work-plan) main 커밋(f10402e→amend e62f158). 직전 origin = 004f814(T5). 사용자 GitHub Desktop Push origin 후 Cloudflare 재배포 → 공개 도메인 반영.
+
+20. T7 티켓 상세 — 팀 대시보드 필터 버그 수정 (2026-06-07 설계: 총괄 Claude, 사용자 실사용 버그 제보)
+- 제보: 팀 대시보드에서 전체/투수/타자/시즌중/비시즌 필터를 골라도 "조치 필요" 선수만 표시됨. 기대 = 해당 필터의 관리중 선수 전원 표시.
+- 원인: renderTeamDashboard(app.js)의 액션 큐가 `filtered`(getFilteredPlayers 결과) 위에 무조건 `.filter(({ risk }) => risk.needsAction)`(약 L3986)를 한 번 더 적용. getFilteredPlayers는 필터별 올바른 집합 반환(정상)이나, 이 재필터로 인해 어떤 필터든 needsAction만 남음. T6 이전부터 존재한 로직(T6 무관).
+- 설계(전부 renderTeamDashboard 내, read-only, app.js만):
+  1. 핵심: 무조건 needsAction 재필터 제거. queueItems = filtered.map(p=>({p,risk:getPlayerRiskInfo(p)})).sort(priority desc). '조치 필요' 필터는 getFilteredPlayers가 이미 needsAction만 반환하므로 동작 유지. 그 외 필터는 전원 표시(조치필요가 priority로 상단 정렬).
+  2. 동적 제목: index.html 고정 `.action-queue-heading`("오늘 액션 큐 (집중 관리 대상)", L468)을 querySelector로 갱신. filter='조치 필요' → `<i data-lucide="alert-triangle" class="ui-icon-16 text-danger"></i>오늘 액션 큐 (집중 관리 대상)`. 그 외 → `<i data-lucide="users" class="ui-icon-16"></i>{escapeHTML(filter)} 선수 ({filteredCount}명)`. index.html 미변경.
+  3. 빈 상태 문구 필터인지: filter='조치 필요' & 0 → 기존("현재 조치가 필요한 선수가 없습니다 / 모든 선수가 정상 범위 내에 있습니다"). 그 외 & 0 → "표시할 선수가 없습니다 / 이 조건에 해당하는 선수가 없습니다".
+  4. 정상 카드 태그: reasons 비면 `<span class="aq-tag aq-info">정상 범위</span>`(기존 클래스 재사용, 신규 CSS 0). 카드가 비어 보이지 않게.
+  5. lucide.createIcons(): 동적 제목 아이콘 렌더 위해 renderTeamDashboard 말미에 1회 호출 추가(현재 queue else 분기엔 없음, 빈상태 분기에만 있음).
+- 안전: read-only(players·localStorage·저장schema 무변경). 동적 제목 삽입값 = escapeHTML(filter)+정수만 → XSS 안전. inline handler 0. 신규 CSS 0, index.html 변경 0.
+- 수정 파일: site/app.js만. 수정 금지: site/index.html, site/data.js, *.css, _headers, ads.txt, sitemap.xml, robots.txt, 가이드/정책 HTML, vendor/**, docs/evidence|security/**.
+- 표현: 금지표현(향상·예방·보장·최적·진단·처방) 0.
+- 검증: node --check app.js/data.js / 동적 제목·필터별 전체 표시 로직 / 금지표현 0 / git diff = site/app.js만.
+- 구현: Sonnet 4.6 / 검증: 총괄(증거 검토) + 보안담당 터미널(독립) / 사용자 Push.
+- 결과(구현 Sonnet 4.6 → 총괄 Opus 증거 검토, 2026-06-07): **총괄 검증 GO(증거 검토)**. 1) queueItems에서 `.filter(({risk})=>risk.needsAction)` 1줄 삭제(L4001~4003), priority desc 정렬 유지 → 버그 제거. 2) 동적 제목 querySelector('.action-queue-heading')(L3992~3999), 삽입값=escapeHTML(filter)+filteredCount만. 3) 빈상태 필터 분기(L4005~4019): 조치필요=기존문구 / 그외="표시할 선수가 없습니다·이 조건에 해당하는 선수가 없습니다". 4) reasonsHtml 빈 경우 `<span class="aq-tag aq-info">정상 범위</span>`(L4029~4031, 기존 클래스). 5) 함수 말미 lucide.createIcons()(L4054). node --check 2 PASS, git diff=site/app.js만(+work-plan 총괄), index.html·CSS·금지파일 0, inline handler 0, 금지표현 0, read-only(getFilteredPlayers/getPlayerRiskInfo 조회만). → 다음: 보안담당 터미널 독립 재점검 후 총괄 커밋 + 사용자 Push.
+- 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR 0건. NIT 1 — empty-state 경로에서 lucide.createIcons() 2회 호출(기존 empty-state 내 1회 + 함수 말미 신규 1회). 기능 영향 없음(idempotent), 리팩터링 불필요. 실행: node --check(2 PASS) / git diff --stat(app.js+work-plan 2파일만, CSS·금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 독립 확인: 동적 제목 삽입값=escapeHTML(currentDashboardFilter)+filteredCount(정수), 사용자 자유입력 경로 없음. read-only 확인: needsAction 재필터 삭제(filter→map+sort), getFilteredPlayers/getPlayerRiskInfo 조회만, players·localStorage 무수정. → 커밋 + 사용자 Push origin 가능.
+- 배포(2026-06-07): T7 변경(site/app.js + work-plan) main 커밋(f571349). 직전 origin = e62f158(T6, push 완료). 사용자 GitHub Desktop Push origin 후 Cloudflare 재배포 → 공개 도메인 반영.

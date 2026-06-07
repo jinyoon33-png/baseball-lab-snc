@@ -3988,18 +3988,34 @@ function renderTeamDashboard() {
         </div>
     `;
 
-    // 액션 큐: 필터 대상 중 조치 필요 선수, 우선순위 정렬
+    // 액션 큐: 필터 대상 전원, 우선순위 정렬 (조치필요 필터는 getFilteredPlayers가 이미 처리)
+    const aqHeading = document.querySelector('.action-queue-heading');
+    if (aqHeading) {
+        if (currentDashboardFilter === '조치 필요') {
+            aqHeading.innerHTML = '<i data-lucide="alert-triangle" class="ui-icon-16 text-danger"></i>오늘 액션 큐 (집중 관리 대상)';
+        } else {
+            aqHeading.innerHTML = `<i data-lucide="users" class="ui-icon-16"></i>${escapeHTML(currentDashboardFilter)} 선수 (${filteredCount}명)`;
+        }
+    }
+
     const queueItems = filtered
         .map(p => ({ p, risk: getPlayerRiskInfo(p) }))
-        .filter(({ risk }) => risk.needsAction)
         .sort((a, b) => b.risk.priority - a.risk.priority);
 
     if (queueItems.length === 0) {
-        actionQueue.innerHTML = `<div class="empty-state">
-            <div class="empty-state-icon"><i data-lucide="check-circle" class="ui-icon-20"></i></div>
-            <div class="empty-state-title">현재 조치가 필요한 선수가 없습니다</div>
-            <div class="empty-state-desc">모든 선수가 정상 범위 내에 있습니다.</div>
-        </div>`;
+        if (currentDashboardFilter === '조치 필요') {
+            actionQueue.innerHTML = `<div class="empty-state">
+                <div class="empty-state-icon"><i data-lucide="check-circle" class="ui-icon-20"></i></div>
+                <div class="empty-state-title">현재 조치가 필요한 선수가 없습니다</div>
+                <div class="empty-state-desc">모든 선수가 정상 범위 내에 있습니다.</div>
+            </div>`;
+        } else {
+            actionQueue.innerHTML = `<div class="empty-state">
+                <div class="empty-state-icon"><i data-lucide="check-circle" class="ui-icon-20"></i></div>
+                <div class="empty-state-title">표시할 선수가 없습니다</div>
+                <div class="empty-state-desc">이 조건에 해당하는 선수가 없습니다.</div>
+            </div>`;
+        }
         lucide.createIcons();
     } else {
         actionQueue.innerHTML = queueItems.map(({ p, risk }) => {
@@ -4010,7 +4026,9 @@ function renderTeamDashboard() {
             if (risk.hasLowRecovery) reasons.push('<span class="aq-tag aq-warning">회복저하</span>');
             if (risk.wellnessMissing) reasons.push('<span class="aq-tag aq-info">웰니스 미입력</span>');
             if (risk.todayNotCompleted) reasons.push('<span class="aq-tag aq-info">오늘 미완료</span>');
-            const reasonsHtml = reasons.slice(0, 2).join('');
+            const reasonsHtml = reasons.length > 0
+                ? reasons.slice(0, 2).join('')
+                : '<span class="aq-tag aq-info">정상 범위</span>';
             const pType = p.type || '투수';
             const seasonText = p.season === '시즌중' ? '시즌중' : '비시즌';
             const safePlayerIdAttr = escapeHTML(p.id);
@@ -4033,6 +4051,7 @@ function renderTeamDashboard() {
             `;
         }).join('');
     }
+    lucide.createIcons();
 }
 
 function _formatScheduleText(value, fallback = '') {
