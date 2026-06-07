@@ -1,6 +1,6 @@
 1. 요청 요약
 - 활성 티켓: `전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon` (T2, 백로그 §14, 상세 §16)
-- 현재 단계: `[T1·T2 완료. T3(보안/QA)는 보안담당 위임 — §17, 권장 모델 Sonnet 4.6]`
+- 현재 단계: `[T1·T2·T3(보안 GO)·T4 완료. 백로그 소진 — AdSense 승인/og:image 대기]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -123,7 +123,9 @@
 14. 후속 티켓 백로그 (2026-06-07, 총괄 Claude)
 - T1 [완료]: 공개 메인(index) 가이드 내부 링크 누락 보정 — workload/recovery/assessment 3개 링크를 index 2개 블록에 추가. 검증 OK. (상세 §15)
 - T2 [완료]: 전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon 13페이지 추가 완료, 검증 OK. og:image는 추후 PNG. 상세 §16.
-- T3 [담당 위임 대기]: 보안/QA 재점검 — 보안/QA 정밀점검 담당 수행(독립 검수, 읽기 전용). 권장 모델 Sonnet 4.6. 상세 §17.
+- T3 [완료·GO]: 보안/QA 재점검 — 결론 GO, 이슈 0(NIT 1: CSP 광범위, 중장기). 상세 §17.
+- T4 [완료]: sitemap.xml lastmod 13건 2026-06-07 갱신, XML 유효, loc 13 유지, 금지파일 diff 0.
+- 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
 
 15. T1 티켓 상세 — 공개 메인 가이드 내부 링크 누락 보정 1차
@@ -161,3 +163,4 @@
   5. inline handler(onclick/oninput/onchange) 재도입 0, 계산/저장 schema·localStorage 경로 무변경.
 - 검증 명령: 메모리 기본 명령 + `node --check`, `rg -n "og:|twitter:|application/ld\\+json|canonical|adsbygoogle"`, `rg -n "<script" site/favicon.svg`, `git diff -- site/_headers site/app.js site/data.js site/*.css`.
 - 보고 형식: 메모리 정의(BLOCKER/MAJOR/MINOR/NIT + [근거] 파일:라인 인용 + [결론] GO/조건부GO/STOP).
+- 결과(2026-06-07, 보안/QA 담당 Sonnet 4.6): **결론 GO**. BLOCKER/MAJOR/MINOR 0. NIT 1 — _headers CSP `unsafe-inline`/`unsafe-eval` https: 광범위 허용(기존 정책·자동광고 불가피·이번 변경 아님, 중장기 개선 여지). 근거: JSON-LD 9개 유효, favicon.svg 순수 정적(script/on*/use/image 0), T1 링크 rel=noopener+target=_blank 6건, _headers·app.js·data.js diff 0, inline handler 0, 금지표현 신규 0, og:image 의도적 0. → 총괄 수용: NIT는 §14 중장기(LATER)로 이관, 즉시 조치 불필요.
