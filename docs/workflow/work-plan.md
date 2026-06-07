@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `공개 메인(index) 가이드 내부 링크 누락 보정 1차` (T1, 백로그 §14)
-- 현재 단계: `[Step 2. 완료 — T1 검증 OK. 다음: T2(SEO 점검)/T3(보안QA) 대기]`
+- 활성 티켓: `전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon` (T2, 백로그 §14, 상세 §16)
+- 현재 단계: `[Step 2. 완료 — T2 검증 OK. 다음: T3(보안QA) 대기]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -122,7 +122,7 @@
 
 14. 후속 티켓 백로그 (2026-06-07, 총괄 Claude)
 - T1 [완료]: 공개 메인(index) 가이드 내부 링크 누락 보정 — workload/recovery/assessment 3개 링크를 index 2개 블록에 추가. 검증 OK. (상세 §15)
-- T2 [대기]: 전체 SEO/메타 점검 — description·OG·sitemap·structured data 정합성.
+- T2 [완료]: 전체 SEO/메타 보강 — OG·Twitter·JSON-LD·favicon 13페이지 추가 완료, 검증 OK. og:image는 추후 PNG. 상세 §16.
 - T3 [대기]: 보안/QA 재점검 — 자동광고 연결 후 CSP·외부 스크립트·localStorage·입력 검증.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
 
@@ -140,3 +140,11 @@
 - 검증: `node --check app.js/data.js`, `rg -c`로 각 3개 링크 index.html 2건씩 확인, 금지 파일 diff 0.
 - 구현: Sonnet 4.6 하위 에이전트 / 검증: 총괄 Claude.
 - 결과(완료 2026-06-07): Sonnet 구현 → 총괄 §검증 재실행. 두 블록(.policy-links, .policy-links--in-modal) 모두 `acwr-guide` 뒤에 workload→recovery→assessment 삽입(각 2건), 기존 6개 링크 유지, `node --check` OK, 금지 파일 diff 0. 변경 파일: site/index.html. 최종 순서: about→rpe→acwr→workload→recovery→assessment→training→warmup→fielding→contact.
+
+16. T2 티켓 상세 — 전체 SEO/메타 보강
+- 대상(수정 허용): site/index.html, about/contact/privacy/terms.html, 가이드 9종 html, 신규 site/favicon.svg, docs/workflow/work-plan.md.
+- 수정 금지: app.js, data.js, *.css, _headers, ads.txt, sitemap.xml, robots.txt, vendor/**, evidence/**, security/**, 기존 title/description 텍스트(아래 3개 축약 외).
+- 작업: ① favicon.svg 생성 + 전 14페이지 head에 favicon link. ② 전 14페이지에 OG 6개+Twitter 3개(값은 각 파일 기존 title/description/canonical 재사용; og:type=website[index·about·contact·privacy·terms]/article[가이드 9], og:site_name="Baseball Lab S&C", og:locale="ko_KR", twitter:card=summary). ③ JSON-LD: index=WebSite+Organization, 가이드 9=Article, 정책·about·contact=생략. ④ description 3개 축약(~150자, 금지어 없이): index, rpe-guide, warmup-shoulder-guide.
+- og:image: 이번 제외(추후 PNG 1200x630 준비 시 og:image+twitter:image 일괄 추가).
+- 검증: node --check, 전 페이지 og:title·twitter:card 존재, favicon link 13, JSON-LD(index 2종/가이드 Article), 금지 표현 0, 금지 파일 diff 0.
+- 결과(완료 2026-06-07): Sonnet 구현 → 총괄 검증. favicon.svg(305B, 야구공 솔기) 생성. 13페이지 전부 og:title·twitter:card·favicon link 각 1건. JSON-LD = index(WebSite+Organization @graph) + 가이드 8 Article = 9개 파일, 전부 JSON 파싱 유효. 금지 표현 0, 금지 파일 diff 0. description은 실제 ~72자(앞선 205는 UTF-8 바이트 오측)로 적정 → 축약 불필요. og:image/twitter:image는 미적용(추후 PNG 1200x630 준비 시 일괄). 변경: site/favicon.svg(신규) + 13개 HTML.
