@@ -3071,6 +3071,10 @@ input[type=range] {
         align-items: start;
     }
 
+    .s1-layout > .backup-reminder-banner {
+        grid-column: 1 / -1;
+    }
+
     /* 선수 목록 카드: 최소 높이 확보 */
     .s1-layout .card:last-child {
         min-height: 200px;
@@ -4545,5 +4549,117 @@ select.cl-assess-input option {
     :root:not([data-theme="light"]) .day-tab-btn.active,
     :root:not([data-theme="light"]) .guide-youtube-cta:hover {
         color: var(--bg-color);
+    }
+}
+
+/* ============================================================
+   백업 리마인더 배너 (T8)
+   ============================================================ */
+.backup-reminder-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--warning-surface-soft);
+    border: 1px solid var(--warning-border-soft);
+    border-left: 3px solid var(--warning-accent);
+    border-radius: var(--radius-sm, 6px);
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.backup-reminder-banner.is-hidden {
+    display: none !important;
+}
+
+.backup-reminder-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    color: var(--warning-text-strong);
+    margin-top: 1px;
+}
+
+.backup-reminder-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.backup-reminder-text {
+    flex: 1;
+    font-size: 0.78rem;
+    color: var(--warning-text-deep);
+    line-height: 1.55;
+}
+
+.backup-reminder-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.backup-reminder-btn-now {
+    background: var(--warning-accent);
+    color: #fff;
+    border: none;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm, 4px);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.backup-reminder-btn-now:hover {
+    background: var(--warning-text-soft);
+}
+
+.backup-reminder-btn-snooze {
+    background: transparent;
+    color: var(--warning-text-soft);
+    border: 1px solid var(--warning-border);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm, 4px);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.backup-reminder-btn-snooze:hover {
+    background: var(--warning-light);
+}
+
+.backup-reminder-close {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--warning-text-soft);
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    margin-left: 2px;
+    border-radius: 3px;
+}
+
+.backup-reminder-close:hover {
+    color: var(--warning-text-deep);
+    background: var(--warning-light);
+}
+
+.backup-reminder-close svg {
+    width: 14px;
+    height: 14px;
+}
+
+@media (max-width: 480px) {
+    .backup-reminder-banner {
+        flex-wrap: wrap;
+    }
+    .backup-reminder-actions {
+        width: 100%;
+        margin-top: 6px;
     }
 }

@@ -74,6 +74,15 @@
         <!-- Screen 1: Player List & Registration -->
         <div id="s1" class="screen active">
             <div class="s1-layout">
+            <div id="backupReminderBanner" class="backup-reminder-banner is-hidden" role="alert" aria-live="polite">
+                <span class="backup-reminder-icon"><i data-lucide="shield-alert"></i></span>
+                <span id="backupReminderText" class="backup-reminder-text"></span>
+                <div class="backup-reminder-actions">
+                    <button class="btn btn-sm backup-reminder-btn-now" data-backup-reminder-action="backup-now">지금 백업</button>
+                    <button class="btn btn-sm backup-reminder-btn-snooze" data-backup-reminder-action="snooze">나중에</button>
+                </div>
+                <button class="backup-reminder-close" aria-label="닫기" data-backup-reminder-action="snooze"><i data-lucide="x"></i></button>
+            </div>
             <div class="card">
                 <h2>신규 선수 등록</h2>
                 <div class="form-group">

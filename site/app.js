@@ -522,6 +522,7 @@ window.onload = () => {
     _bindEditPlayerModalCloseClickHandler();
     _bindHeaderCtaClickHandler();
     _bindBackupControlHandlers();
+    _bindBackupReminderClickHandler();
     _bindResultViewToggleClickHandler();
     _bindAssessmentActionClickHandler();
     _bindAddPlayerSubmitClickHandler();
@@ -2209,6 +2210,7 @@ function renderPlayerList() {
             <div class="empty-state-desc">위 폼에서 선수 정보를 입력한 뒤<br>"선수 등록 및 정밀 평가 시작" 버튼을 눌러 시작하세요.</div>
         </div>`;
         lucide.createIcons();
+        renderBackupReminder();
         return;
     }
 
@@ -2372,6 +2374,7 @@ function renderPlayerList() {
         </div>
     `}).join('');
     lucide.createIcons();
+    renderBackupReminder();
 }
 
 function togglePlayerDetail(id) {
@@ -6457,6 +6460,93 @@ function getSwappedExercise(playerId, dayIndex, exName) {
 // 데이터 백업 / 복원
 // ───────────────────────────────────────
 
+// ── 백업 리마인더 ──────────────────────────────
+const _BACKUP_REMINDER_LAST_KEY   = 'pLDB_lastBackupAt';
+const _BACKUP_REMINDER_SNOOZE_KEY = 'pLDB_backupReminderSnoozeUntil';
+const _BACKUP_REMINDER_DAYS       = 14;
+const _BACKUP_REMINDER_SNOOZE_DAYS = 3;
+
+function shouldShowBackupReminder() {
+    if (!Array.isArray(players) || players.length < 1) return false;
+    const now = new Date();
+    const snoozeRaw = _safeLocalStorageGet(_BACKUP_REMINDER_SNOOZE_KEY);
+    if (snoozeRaw) {
+        const snoozeUntil = new Date(snoozeRaw);
+        if (!isNaN(snoozeUntil.getTime()) && now < snoozeUntil) return false;
+    }
+    const lastRaw = _safeLocalStorageGet(_BACKUP_REMINDER_LAST_KEY);
+    if (!lastRaw) return true;
+    const lastBackupAt = new Date(lastRaw);
+    if (isNaN(lastBackupAt.getTime())) return true;
+    const diffMs = now - lastBackupAt;
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    return diffDays >= _BACKUP_REMINDER_DAYS;
+}
+
+function markBackupDone() {
+    _safeLocalStorageSet(_BACKUP_REMINDER_LAST_KEY, new Date().toISOString());
+    renderBackupReminder();
+}
+
+function renderBackupReminder() {
+    const banner = document.getElementById('backupReminderBanner');
+    if (!banner) return;
+    if (!shouldShowBackupReminder()) {
+        banner.classList.add('is-hidden');
+        return;
+    }
+    const textEl = document.getElementById('backupReminderText');
+    if (textEl) {
+        const lastRaw = _safeLocalStorageGet(_BACKUP_REMINDER_LAST_KEY);
+        if (!lastRaw) {
+            textEl.textContent = '아직 데이터를 백업한 적이 없습니다. 기기 변경이나 브라우저 정리 시 기록이 사라질 수 있어 백업을 권장합니다.';
+        } else {
+            const lastBackupAt = new Date(lastRaw);
+            const diffDays = Math.floor((new Date() - lastBackupAt) / (1000 * 60 * 60 * 24));
+            textEl.textContent = `마지막 백업 후 ${diffDays}일이 지났습니다. 데이터 보호를 위해 백업 다운로드를 권장합니다.`;
+        }
+    }
+    banner.classList.remove('is-hidden');
+    try { lucide.createIcons(); } catch (_) {}
+}
+
+function _snoozeBackupReminder() {
+    const snoozeUntil = new Date();
+    snoozeUntil.setDate(snoozeUntil.getDate() + _BACKUP_REMINDER_SNOOZE_DAYS);
+    _safeLocalStorageSet(_BACKUP_REMINDER_SNOOZE_KEY, snoozeUntil.toISOString());
+    const banner = document.getElementById('backupReminderBanner');
+    if (banner) banner.classList.add('is-hidden');
+}
+
+let _backupReminderClickHandler = null;
+
+function _handleBackupReminderClick(e) {
+    const actionBtn = e.target.closest('[data-backup-reminder-action]');
+    if (!actionBtn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const action = actionBtn.dataset.backupReminderAction;
+    if (action === 'backup-now') {
+        downloadBackup();
+        return;
+    }
+    if (action === 'snooze') {
+        _snoozeBackupReminder();
+        return;
+    }
+}
+
+function _bindBackupReminderClickHandler() {
+    const banner = document.getElementById('backupReminderBanner');
+    if (!banner) return;
+    if (_backupReminderClickHandler) {
+        banner.removeEventListener('click', _backupReminderClickHandler);
+    }
+    _backupReminderClickHandler = _handleBackupReminderClick;
+    banner.addEventListener('click', _backupReminderClickHandler);
+}
+// ── /백업 리마인더 ─────────────────────────────
+
 function buildBackupPayload() {
     return {
         app: 'Baseball Lab S&C',
@@ -6498,6 +6588,7 @@ function downloadBackup() {
             URL.revokeObjectURL(url);
             isBackupDownloadInProgress = false;
         }, 1000);
+        markBackupDone();
         customAlert(`백업 다운로드를 시작했습니다.\n\n파일명: ${filename}\n파일 크기: 약 ${_formatStorageSize(blob.size)}\n선수 데이터: ${payload.playerCount}명\n\n브라우저 다운로드 폴더를 확인하세요.`);
     } catch (e) {
         console.error('Backup download failed:', e);
@@ -6708,6 +6799,7 @@ function finalizeRestorePlayers(restoredPlayers) {
     }
     showScreen('s1');
     renderPlayerList();
+    markBackupDone();
     customAlert(`백업 복원이 완료되었습니다. ${players.length}명의 선수 데이터를 불러왔습니다.`);
 }
 

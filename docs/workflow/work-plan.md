@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `없음` (T1~T7 완료, 백로그 소진)
-- 현재 단계: `[T1~T7 완료. T7(대시보드 필터 버그)=구현+총괄검증+보안 3중 GO, 배포 커밋 완료(main ahead 1) → 사용자 Push origin 대기. 병행 외부 대기: AdSense 승인/og:image]`
+- 활성 티켓: `T8 백업 리마인더 (데이터 안전장치)` — 구현+총괄 증거검토 GO 완료, 데스크탑 레이아웃 버그 수정 포함. 커밋(main) 후 Push 대기.
+- 현재 단계: `[T1~T7 완료·전부 보안 GO·push 완료(origin=b7bdde6). T8 구현(Sonnet)+레이아웃수정(Haiku)+총괄 증거검토 GO 완료 → 총괄 커밋(main) → 보안담당 터미널 Push 전 독립검토 → 사용자 Push origin → 실도메인 확인. 병행 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -136,6 +136,7 @@
 - T5 [완료·GO·배포]: 연속기록(streak) 배지 — 리텐션. 선수 카드에 "🔥 N일 연속 기록" 배지. 순수 read-only 계산(저장 schema 무변경). 구현+총괄검증+보안 3중 GO. 사용자 Push 완료, 실사용 노출 확인. 상세 §18.
 - T6 [완료·GO]: 연속기록(streak) 확장 — 결과화면(s3)+팀 대시보드(s4). resName에 streak 배지 노출 + 대시보드 "오늘 기록 N명" stat-card. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §19.
 - T7 [완료·GO]: 팀 대시보드 필터 버그 수정 — 전체/투수/타자/시즌중/비시즌 필터에서도 액션 큐가 조치필요 선수만 표시되던 버그(무조건 needsAction 필터). 필터별 전체 선수 표시 + 동적 제목 + 빈상태 문구 필터인지 + 정상 범위 태그. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §20.
+- T8 [진행중]: 백업 리마인더(데이터 안전장치) — localStorage 전용 손실 위험 대비 정기 백업 유도. 선수목록 s1 상단 닫기가능 배너 + 마지막백업 14일 경과/이력없음 시 표시 + 3일 snooze. 백업 기능 자체는 기존(downloadBackup). lastBackupAt/snooze localStorage 키 2개 추가(players schema 무변경). 설계 §21. 구현: Sonnet 4.6.
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
@@ -228,3 +229,28 @@
 - 결과(구현 Sonnet 4.6 → 총괄 Opus 증거 검토, 2026-06-07): **총괄 검증 GO(증거 검토)**. 1) queueItems에서 `.filter(({risk})=>risk.needsAction)` 1줄 삭제(L4001~4003), priority desc 정렬 유지 → 버그 제거. 2) 동적 제목 querySelector('.action-queue-heading')(L3992~3999), 삽입값=escapeHTML(filter)+filteredCount만. 3) 빈상태 필터 분기(L4005~4019): 조치필요=기존문구 / 그외="표시할 선수가 없습니다·이 조건에 해당하는 선수가 없습니다". 4) reasonsHtml 빈 경우 `<span class="aq-tag aq-info">정상 범위</span>`(L4029~4031, 기존 클래스). 5) 함수 말미 lucide.createIcons()(L4054). node --check 2 PASS, git diff=site/app.js만(+work-plan 총괄), index.html·CSS·금지파일 0, inline handler 0, 금지표현 0, read-only(getFilteredPlayers/getPlayerRiskInfo 조회만). → 다음: 보안담당 터미널 독립 재점검 후 총괄 커밋 + 사용자 Push.
 - 보안/QA 결과(2026-06-07, 보안담당 Sonnet 4.6): **GO**. BLOCKER/MAJOR/MINOR 0건. NIT 1 — empty-state 경로에서 lucide.createIcons() 2회 호출(기존 empty-state 내 1회 + 함수 말미 신규 1회). 기능 영향 없음(idempotent), 리팩터링 불필요. 실행: node --check(2 PASS) / git diff --stat(app.js+work-plan 2파일만, CSS·금지파일 0) / inline handler 0 / 금지표현 신규 0. XSS 독립 확인: 동적 제목 삽입값=escapeHTML(currentDashboardFilter)+filteredCount(정수), 사용자 자유입력 경로 없음. read-only 확인: needsAction 재필터 삭제(filter→map+sort), getFilteredPlayers/getPlayerRiskInfo 조회만, players·localStorage 무수정. → 커밋 + 사용자 Push origin 가능.
 - 배포(2026-06-07): T7 변경(site/app.js + work-plan) main 커밋(f571349). 직전 origin = e62f158(T6, push 완료). 사용자 GitHub Desktop Push origin 후 Cloudflare 재배포 → 공개 도메인 반영.
+
+21. T8 티켓 상세 — 백업 리마인더 (데이터 안전장치, 2026-06-08 설계: 총괄 Claude Opus)
+- 배경: 데이터=localStorage 전용(백엔드 없음) → 기기 교체·브라우저 캐시 삭제 시 선수 데이터 전손 위험. 백업 기능(다운로드/복원/오래된기록 정리/전체초기화 + 3MB/4MB 저장공간 경고)은 이미 구현됨(downloadBackup L6472, renderBackupStorageStatus L628, backupSection index.html L295). **빠진 조각 = 정기 백업 유도(리마인더)**. 사용자가 '데이터 관리' 섹션을 직접 안 열면 백업 계기가 없음. 리텐션 겸 데이터 안전장치.
+- 현재 부재 확인: `rg lastBackupAt|backupReminder` → 0건. 마지막 백업 시각 추적·리마인더 전무.
+- 사용자 결정(2026-06-08): ① 노출 = 선수목록(s1) 상단 **닫기 가능 배너** ② 권장 주기 = **14일**.
+- 설계(read 외 schema 무변경, players 데이터 불변):
+  1. 저장(players와 분리, 백업 payload 영향 0): localStorage 키 2개 신규 — `pLDB_lastBackupAt`(ISO, 백업 다운로드/복원 성공 시 기록), `pLDB_backupReminderSnoozeUntil`(ISO, 배너 '나중에'/닫기 시 now+3일). ※ buildBackupPayload/restore 검증(_isValidEnvelope, storageKey 'pLDB_v4_5')과 무관 — 별도 키라 백업/복원 정합 영향 0.
+  2. 표시 조건 shouldShowBackupReminder(): players.length>=1 AND (lastBackupAt 없음 OR now-lastBackupAt >= 14일) AND (snoozeUntil 없음 OR now>=snoozeUntil). 첫 방문(선수0)엔 미표시 → appGuideModal 온보딩과 충돌 0.
+  3. 배너 DOM(index.html, #s1 > .s1-layout 최상단, 신규 선수 등록 카드 앞): `<div id="backupReminderBanner" class="backup-reminder-banner is-hidden">` 기본 숨김, JS로 show/hide. 구성 = 아이콘(shield/alert-triangle) + 메시지 + [지금 백업][나중에] 버튼 + 닫기 X. inline onclick 금지 → data-* + addEventListener(기존 패턴). '지금 백업'은 기존 data-backup-action="download" 재사용 가능, 닫기/나중에는 신규 data-action.
+  4. 메시지 2종(정적 + N만 삽입): 백업 이력 0 → "아직 데이터를 백업한 적이 없습니다. 기기 변경이나 브라우저 정리 시 기록이 사라질 수 있어 백업을 권장합니다." / 14일+ 경과 → "마지막 백업 후 N일이 지났습니다. 데이터 보호를 위해 백업 다운로드를 권장합니다."
+  5. 버튼 동작: 지금 백업 → downloadBackup() 후 markBackupDone()(lastBackupAt=now) → 배너 숨김. 나중에/닫기 → snoozeUntil=now+3일 → 배너 숨김.
+  6. 통합 지점: downloadBackup() 성공부(L6500 부근) + restore 성공부(복원=백업파일 보유 시점)에서 markBackupDone() 호출. s1 렌더/진입 시(renderPlayerList 또는 화면 전환 함수)에서 renderBackupReminder() 호출 → 조건 평가 후 배너 갱신/표시/숨김 + lucide.createIcons().
+  7. CSS(style.css): .backup-reminder-banner — 기존 토큰 재사용(info/--warning 계열, 경고 톤). 닫기 X·버튼 레이아웃. .is-hidden 기존 패턴 확인 후 재사용(없으면 display:none 클래스 추가).
+- 안전/표현: 금지표현 0(향상·예방·보장·최적·진단·처방·치료 금지. "권장"·"보호"·"사라질 수 있음"은 허용 — "완벽 보호"·"손실 방지 보장" 같은 보장형은 금지). XSS: 메시지 정적 문자열 + 일수(정수)만, 사용자 자유입력 삽입 경로 0. read 외 schema: players(pLDB_v4_5) 무수정, 신규 키 2개만. 비침입: dismissible + 3일 snooze, 선수1명+ 조건. AdSense 자동광고와 별개(앱 콘텐츠 영역).
+- 적정 모델: Sonnet 4.6(중간 난이도 — 신규 함수 3~4개 + DOM 배너 + CSS, 기존 백업/이벤트위임/배지 패턴 재사용 多).
+- 수정 파일: site/app.js, site/index.html, site/style.css (+ docs/workflow/work-plan.md = 총괄 기록). 수정 금지: site/data.js, site/_headers, site/ads.txt, sitemap.xml, robots.txt, 가이드/정책 HTML, site/assets|vendor/**, docs/evidence|security/**.
+- 검증(하위 에이전트 자체 실행 + 증거 보고): `node --check site/app.js`, `node --check site/data.js`, `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상" site/app.js site/index.html`(신규 0), `rg -n "lastBackupAt|backupReminder|backup-reminder" site/app.js site/index.html`(추가 확인), `rg -n "onclick" site/index.html`(배너부 0), `git diff --stat`(= app.js + index.html + style.css + work-plan만).
+- 완료 조건: 조건부 배너 정상(선수0=미표시, 백업이력0=표시, 14일경과=표시, snooze중=미표시, 백업직후=숨김). markBackupDone이 다운로드·복원 양쪽 연결. 금지표현 0, inline handler 0, players schema 무변경, 수정 금지 경로 diff 0.
+- 워크플로우: 총괄 설계(본 §21) → Sonnet 구현 → 총괄 증거검토 GO → 보안담당 터미널 독립 GO → 총괄 커밋 → 사용자 Push.
+- 구현(Sonnet 4.6, 2026-06-08): 신규 함수 6개 — shouldShowBackupReminder()(3-AND 조건), markBackupDone()(lastBackupAt=now 후 재렌더), renderBackupReminder()(조건 평가→메시지 채움/표시·숨김+lucide), _snoozeBackupReminder()(now+3일), _handleBackupReminderClick()(data-backup-reminder-action 위임: backup-now→downloadBackup, snooze→snooze), _bindBackupReminderClickHandler()(중복제거 후 바인딩). 통합: downloadBackup 성공부 markBackupDone, finalizeRestorePlayers 성공부 markBackupDone, renderPlayerList 양분기(empty L2213/정상 말미 L2377) renderBackupReminder, window.onload 바인딩. 배너 DOM index.html #s1>.s1-layout 최상단(role=alert/aria-live). CSS .backup-reminder-banner(--warning 계열 토큰, .is-hidden display:none).
+- 총괄 증거검토 GO(2026-06-08, Opus 직접 코드 재확인): ① shouldShowBackupReminder 3-AND(players≥1 AND lastBackup없음·14일경과 AND snooze만료) 정확 ② renderBackupReminder 메시지=textContent+경과일수(정수)만 → XSS 안전 ③ backup-now 핸들러는 downloadBackup()만 호출, markBackupDone은 downloadBackup 내부에서 1회 → 중복 호출 없음 ④ renderPlayerList 양분기 모두 호출(빠지는 경로 0) ⑤ _safeLocalStorageGet/Set 안전 래퍼 사용 ⑥ players(pLDB_v4_5) 무수정, 신규키 2개만.
+- 데스크탑 레이아웃 버그 발견·수정(사용자 실사용 제보, Haiku 구현): 증상=데스크탑 전체화면에서 신규선수등록/선수목록 위치 어긋남. 원인=.s1-layout이 @media(min-width:1280px)에서 2열 grid(minmax 320px·1.2fr)인데 배너가 첫 grid item으로 1칸 차지→등록폼 둘째칸·목록 다음행. 수정=style.css 미디어쿼리 안 `.s1-layout > .backup-reminder-banner { grid-column: 1 / -1; }`(L3074~3076) 추가→배너 전체행, 등록폼+목록 정상 2열 복귀. 총괄 직접 확인(파일 L3059~3076). 모바일(1열)은 grid 미적용이라 영향 0.
+- 검증 증거: node --check app.js/data.js 2 PASS, 금지표현(치료·처방·진단·보장·최적·예방·향상) 신규 0(기존 부정형 안전고지만 잔존), inline onclick 0, git diff=site/app.js+index.html+style.css 3개(+work-plan 총괄). data.js/_headers/ads.txt/sitemap/robots/가이드·정책 HTML/vendor/assets/docs(evidence·security) diff 0.
+- 보안 검토 포인트(보안담당 터미널용, Push 전 커밋 diff 독립 검토): ① players schema 무변경(pLDB_v4_5 무수정, 신규키 pLDB_lastBackupAt·pLDB_backupReminderSnoozeUntil 2개만) ② 백업/복원 정합 영향 0(buildBackupPayload/_isValidEnvelope/storageKey 'pLDB_v4_5' 무수정) ③ XSS(배너 메시지 textContent+정수, 사용자 자유입력 삽입 경로 0) ④ inline handler 0(data-* 이벤트 위임) ⑤ 금지표현 0 ⑥ 부작용=localStorage 2키 쓰기만(read 외 schema 무변경) ⑦ 레이아웃 수정은 CSS 1블록(grid-column)만, JS·HTML 무관.
+- 배포: 사용자 결정으로 localhost 사전검증 생략, 커밋·배포 후 실도메인 확인 경로 선택. 총괄 커밋(main) → 사용자 Push origin → Cloudflare 재배포 → 실도메인(baseballlabsnc.com)에서 선수 1명+ 상태로 배너 확인.
