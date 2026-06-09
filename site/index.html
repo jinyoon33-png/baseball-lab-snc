@@ -74,7 +74,7 @@
         <!-- Screen 1: Player List & Registration -->
         <div id="s1" class="screen active">
             <div class="s1-layout">
-            <div id="backupReminderBanner" class="backup-reminder-banner is-hidden" role="alert" aria-live="polite">
+            <div id="backupReminderBanner" class="backup-reminder-banner is-hidden" aria-live="polite">
                 <span class="backup-reminder-icon"><i data-lucide="shield-alert"></i></span>
                 <span id="backupReminderText" class="backup-reminder-text"></span>
                 <div class="backup-reminder-actions">
@@ -86,7 +86,7 @@
             <div class="card">
                 <h2>신규 선수 등록</h2>
                 <div class="form-group">
-                    <label class="form-label">이름 <span class="form-required">필수</span></label>
+                    <label class="form-label" for="pName">이름 <span class="form-required">필수</span></label>
                     <input type="text" id="pName" class="form-control" placeholder="예: 김선수">
                 </div>
                 <div class="form-group">
@@ -100,7 +100,7 @@
                     <input type="hidden" id="pType" value="투수">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">선수 유형</label>
+                    <label class="form-label" for="pUserType">선수 유형</label>
                     <select id="pUserType" class="form-control">
                         <option value="">선택 안 함</option>
                         <option value="youth_student">유소년·학생 선수</option>
@@ -109,7 +109,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">사용 관점</label>
+                    <label class="form-label" for="pUsagePerspective">사용 관점</label>
                     <select id="pUsagePerspective" class="form-control">
                         <option value="">선택 안 함</option>
                         <option value="self">선수 본인</option>
@@ -118,7 +118,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">훈련 운영 방향</label>
+                    <label class="form-label" for="pTrainingFocus">훈련 운영 방향</label>
                     <select id="pTrainingFocus" class="form-control">
                         <option value="">선택 안 함</option>
                         <option value="performance">근력·파워 개발</option>
@@ -132,12 +132,12 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">나이 (만 나이) <span class="form-required">필수</span></label>
+                        <label class="form-label" for="pAge">나이 (만 나이) <span class="form-required">필수</span></label>
                         <input type="number" id="pAge" class="form-control" placeholder="예: 15"
                             data-add-player-validate="input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">구력 (야구 경력, 년) <span class="form-required">필수</span></label>
+                        <label class="form-label" for="pExp">구력 (야구 경력, 년) <span class="form-required">필수</span></label>
                         <input type="number" id="pExp" class="form-control" placeholder="예: 3"
                             data-add-player-validate="input">
                     </div>
@@ -146,11 +146,11 @@
                     구력이 나이보다 높을 수 없습니다.</div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">키 (cm) <span class="form-required">필수</span></label>
+                        <label class="form-label" for="pHeight">키 (cm) <span class="form-required">필수</span></label>
                         <input type="number" id="pHeight" class="form-control" placeholder="예: 180">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">체중 (kg) <span class="form-required">필수</span></label>
+                        <label class="form-label" for="pWeight">체중 (kg) <span class="form-required">필수</span></label>
                         <input type="number" id="pWeight" class="form-control" placeholder="예: 80">
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                 <div id="addPitcherFields">
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">보직</label>
+                            <label class="form-label" for="pRole">보직</label>
                             <select id="pRole" class="form-control">
                                 <option value="선발">선발 투수</option>
                                 <option value="구원">구원 투수</option>
@@ -167,7 +167,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">시즌 상태</label>
+                            <label class="form-label" for="pSeason">시즌 상태</label>
                             <select id="pSeason" class="form-control">
                                 <option value="비시즌">비시즌 (Off-season)</option>
                                 <option value="시즌중">시즌 중 (In-season)</option>
@@ -176,7 +176,7 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">포지션별 핵심 목표</label>
+                            <label class="form-label" for="pGoal">포지션별 핵심 목표</label>
                             <select id="pGoal" class="form-control">
                                 <option value="구속 향상">구속·파워 준비 (파워/스트렝스)</option>
                                 <option value="제구 안정">제구 안정 (코어/밸런스)</option>
@@ -185,7 +185,7 @@
                             <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">개인 훈련 할애 시간</label>
+                            <label class="form-label" for="pTime">개인 훈련 할애 시간</label>
                             <select id="pTime" class="form-control">
                                 <option value="30">30분 (핵심 위주)</option>
                                 <option value="60" selected>60분 (표준 프로그램)</option>
@@ -196,12 +196,12 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">현재 최고 구속 (km/h)</label>
+                            <label class="form-label" for="pMaxVelo">현재 최고 구속 (km/h)</label>
                             <input type="number" id="pMaxVelo" class="form-control" placeholder="예: 135"
                                 data-add-player-validate="input">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">현재 평균 구속 (km/h)</label>
+                            <label class="form-label" for="pAvgVelo">현재 평균 구속 (km/h)</label>
                             <input type="number" id="pAvgVelo" class="form-control" placeholder="예: 130"
                                 data-add-player-validate="input">
                         </div>
@@ -210,11 +210,11 @@
                         평균구속이 최고구속보다 높을 수 없습니다.</div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">현재 RPM (회전수)</label>
+                            <label class="form-label" for="pRPM">현재 RPM (회전수)</label>
                             <input type="number" id="pRPM" class="form-control" placeholder="예: 2200">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">다음 등판 예정일</label>
+                            <label class="form-label" for="pPitchDate">다음 등판 예정일</label>
                             <input type="date" id="pPitchDate" class="form-control">
                         </div>
                     </div>
@@ -223,7 +223,7 @@
                 <div id="addBatterFields" class="is-initially-hidden">
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">포지션</label>
+                            <label class="form-label" for="pBatterPos">포지션</label>
                             <select id="pBatterPos" class="form-control">
                                 <option value="내야수">내야수</option>
                                 <option value="외야수">외야수</option>
@@ -232,7 +232,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">시즌 상태</label>
+                            <label class="form-label" for="pBatterSeason">시즌 상태</label>
                             <select id="pBatterSeason" class="form-control">
                                 <option value="비시즌">비시즌 (Off-season)</option>
                                 <option value="시즌중">시즌 중 (In-season)</option>
@@ -241,7 +241,7 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">포지션별 핵심 목표</label>
+                            <label class="form-label" for="pBatterGoal">포지션별 핵심 목표</label>
                             <select id="pBatterGoal" class="form-control">
                                 <option value="타구속도 향상">타구 속도·파워 준비 (파워/스트렝스)</option>
                                 <option value="컨택 능력">컨택 능력 (코어/밸런스)</option>
@@ -250,7 +250,7 @@
                             <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">개인 훈련 할애 시간</label>
+                            <label class="form-label" for="pBatterTime">개인 훈련 할애 시간</label>
                             <select id="pBatterTime" class="form-control">
                                 <option value="30">30분 (핵심 위주)</option>
                                 <option value="60" selected>60분 (표준 프로그램)</option>
@@ -261,11 +261,11 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label class="form-label">타구속도 (Exit Velo, km/h)</label>
+                            <label class="form-label" for="pExitVelo">타구속도 (Exit Velo, km/h)</label>
                             <input type="number" id="pExitVelo" class="form-control" placeholder="예: 145">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">배트스피드 (km/h)</label>
+                            <label class="form-label" for="pBatSpeed">배트스피드 (km/h)</label>
                             <input type="number" id="pBatSpeed" class="form-control" placeholder="예: 110">
                         </div>
                     </div>
@@ -489,10 +489,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">오늘의 컨디션 (Live Wellness)</h3>
-                <button class="modal-close" data-wellness-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-wellness-modal-action="close">&times;</button>
             </div>
             <div class="form-group">
-                <label class="form-label">수면 시간 (시간)</label>
+                <label class="form-label" for="wSleep">수면 시간 (시간)</label>
                 <div class="range-wrap">
                     <input type="range" id="wSleep" min="4" max="12" step="0.5" value="7"
                         data-wellness-slider="sleep" data-wellness-slider-target="wSleepVal">
@@ -500,7 +500,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">전반적 피로도 (1:최상 ~ 5:탈진)</label>
+                <label class="form-label" for="wFatigue">전반적 피로도 (1:최상 ~ 5:탈진)</label>
                 <div class="range-wrap">
                     <input type="range" id="wFatigue" min="1" max="5" step="1" value="3"
                         data-wellness-slider="fatigue" data-wellness-slider-target="wFatigueVal">
@@ -508,7 +508,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">근육통 (1:없음 ~ 5:심함)</label>
+                <label class="form-label" for="wSoreness">근육통 (1:없음 ~ 5:심함)</label>
                 <div class="range-wrap">
                     <input type="range" id="wSoreness" min="1" max="5" step="1" value="2"
                         data-wellness-slider="soreness" data-wellness-slider-target="wSorenessVal">
@@ -548,35 +548,35 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><i data-lucide="trending-up" class="ui-icon-18 ui-icon-inline"></i>퍼포먼스 재측정</h3>
-                <button class="modal-close" data-perf-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-perf-modal-action="close">&times;</button>
             </div>
             <!-- 퍼포먼스: 투수 전용 필드 -->
             <div id="perfPitcherFields">
                 <div class="form-group">
-                    <label class="form-label">새로운 최고 구속 (km/h)</label>
+                    <label class="form-label" for="newMaxVelo">새로운 최고 구속 (km/h)</label>
                     <input type="number" id="newMaxVelo" class="form-control" placeholder="예: 138"
                         data-perf-validate="input">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">새로운 평균 구속 (km/h)</label>
+                    <label class="form-label" for="newAvgVelo">새로운 평균 구속 (km/h)</label>
                     <input type="number" id="newAvgVelo" class="form-control" placeholder="예: 133"
                         data-perf-validate="input">
                 </div>
                 <div id="perfVeloError" class="form-error-message">
                     평균구속이 최고구속보다 높을 수 없습니다.</div>
                 <div class="form-group">
-                    <label class="form-label">새로운 RPM</label>
+                    <label class="form-label" for="newRPM">새로운 RPM</label>
                     <input type="number" id="newRPM" class="form-control" placeholder="예: 2300">
                 </div>
             </div>
             <!-- 퍼포먼스: 타자 전용 필드 (기본 숨김) -->
             <div id="perfBatterFields" class="is-initially-hidden">
                 <div class="form-group">
-                    <label class="form-label">새로운 타구속도 (Exit Velo, km/h)</label>
+                    <label class="form-label" for="newExitVelo">새로운 타구속도 (Exit Velo, km/h)</label>
                     <input type="number" id="newExitVelo" class="form-control" placeholder="예: 150">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">새로운 배트스피드 (km/h)</label>
+                    <label class="form-label" for="newBatSpeed">새로운 배트스피드 (km/h)</label>
                     <input type="number" id="newBatSpeed" class="form-control" placeholder="예: 115">
                 </div>
             </div>
@@ -590,7 +590,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="gTitle">운동 이름</h3>
-                <button class="modal-close" data-guide-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-guide-modal-action="close">&times;</button>
             </div>
 
             <div id="guideMediaCard" class="guide-media-card cl-guide-media is-initially-hidden">
@@ -655,7 +655,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">🔄 운동 대체하기</h3>
-                <button class="modal-close" data-swap-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-swap-modal-action="close">&times;</button>
             </div>
             <div class="swap-original-info" id="swapOriginalInfo">
                 <!-- 원본 운동 정보 표시 -->
@@ -679,7 +679,7 @@
         <div class="modal-content modal-content--app-guide">
             <div class="modal-header">
                 <h3 class="modal-title">Baseball Lab S&C 사용 가이드</h3>
-                <button class="modal-close" data-app-guide-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-app-guide-modal-action="close">&times;</button>
             </div>
             <div class="app-guide-body">
 
@@ -821,7 +821,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="wlModalTitle" class="modal-title">사후 워크로드 입력 (Post-Training)</h3>
-                <button class="modal-close" data-workload-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-workload-modal-action="close">&times;</button>
             </div>
             <p id="wlModalSubtitle" class="workload-modal-subtitle is-initially-hidden"></p>
             <div class="form-group">
@@ -835,7 +835,7 @@
                 </div>
                 <div class="grid-2">
                     <div>
-                        <label id="wlRpeLabel" class="form-label wl-sub-label">RPE (운동 자각도 0-10)</label>
+                        <label id="wlRpeLabel" class="form-label wl-sub-label" for="wlRPE">RPE (운동 자각도 0-10)</label>
                         <input type="number" id="wlRPE" class="form-control wl-rpe-hidden-input" placeholder="예: 7" min="0" max="10" step="1"
                             data-workload-live-calc="input" tabindex="-1" aria-hidden="true">
                         <div id="wlRpeBar" class="rpe-bar" role="radiogroup" aria-labelledby="wlRpeLabel">
@@ -853,7 +853,7 @@
                         </div>
                     </div>
                     <div>
-                        <label id="wlCountLabel" class="form-label wl-sub-label">총
+                        <label id="wlCountLabel" class="form-label wl-sub-label" for="wlPitchCount">총
                             투구 수</label>
                         <input type="number" id="wlPitchCount" class="form-control" placeholder="예: 45" min="0" step="1"
                             data-workload-live-calc="input">
@@ -924,10 +924,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">선수 정보 수정</h3>
-                <button class="modal-close" data-edit-player-modal-action="close">&times;</button>
+                <button class="modal-close" aria-label="닫기" data-edit-player-modal-action="close">&times;</button>
             </div>
             <div class="form-group">
-                <label class="form-label">이름 <span class="form-required">필수</span></label>
+                <label class="form-label" for="eName">이름 <span class="form-required">필수</span></label>
                 <input type="text" id="eName" class="form-control">
             </div>
             <div class="form-group">
@@ -941,7 +941,7 @@
                 <input type="hidden" id="eType" value="투수">
             </div>
             <div class="form-group">
-                <label class="form-label">선수 유형</label>
+                <label class="form-label" for="eUserType">선수 유형</label>
                 <select id="eUserType" class="form-control">
                     <option value="">선택 안 함</option>
                     <option value="youth_student">유소년·학생 선수</option>
@@ -950,7 +950,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">사용 관점</label>
+                <label class="form-label" for="eUsagePerspective">사용 관점</label>
                 <select id="eUsagePerspective" class="form-control">
                     <option value="">선택 안 함</option>
                     <option value="self">선수 본인</option>
@@ -959,7 +959,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">훈련 운영 방향</label>
+                <label class="form-label" for="eTrainingFocus">훈련 운영 방향</label>
                 <select id="eTrainingFocus" class="form-control">
                     <option value="">선택 안 함</option>
                     <option value="performance">근력·파워 개발</option>
@@ -973,11 +973,11 @@
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label class="form-label">나이 (만 나이) <span class="form-required">필수</span></label>
+                    <label class="form-label" for="eAge">나이 (만 나이) <span class="form-required">필수</span></label>
                     <input type="number" id="eAge" class="form-control" data-edit-player-validate="input">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">구력 (야구 경력, 년) <span class="form-required">필수</span></label>
+                    <label class="form-label" for="eExp">구력 (야구 경력, 년) <span class="form-required">필수</span></label>
                     <input type="number" id="eExp" class="form-control" data-edit-player-validate="input">
                 </div>
             </div>
@@ -985,11 +985,11 @@
                 구력이 나이보다 높을 수 없습니다.</div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label class="form-label">키 (cm) <span class="form-required">필수</span></label>
+                    <label class="form-label" for="eHeight">키 (cm) <span class="form-required">필수</span></label>
                     <input type="number" id="eHeight" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">체중 (kg) <span class="form-required">필수</span></label>
+                    <label class="form-label" for="eWeight">체중 (kg) <span class="form-required">필수</span></label>
                     <input type="number" id="eWeight" class="form-control">
                 </div>
             </div>
@@ -997,7 +997,7 @@
             <div id="editPitcherFields">
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">보직</label>
+                        <label class="form-label" for="eRole">보직</label>
                         <select id="eRole" class="form-control">
                             <option value="선발">선발 투수</option>
                             <option value="구원">구원 투수</option>
@@ -1006,7 +1006,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">시즌 상태</label>
+                        <label class="form-label" for="eSeason">시즌 상태</label>
                         <select id="eSeason" class="form-control">
                             <option value="비시즌">비시즌 (Off-season)</option>
                             <option value="시즌중">시즌 중 (In-season)</option>
@@ -1015,7 +1015,7 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">포지션별 핵심 목표</label>
+                        <label class="form-label" for="eGoal">포지션별 핵심 목표</label>
                         <select id="eGoal" class="form-control">
                             <option value="구속 향상">구속·파워 준비 (파워/스트렝스)</option>
                             <option value="제구 안정">제구 안정 (코어/밸런스)</option>
@@ -1024,7 +1024,7 @@
                         <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">개인 훈련 할애 시간</label>
+                        <label class="form-label" for="eTime">개인 훈련 할애 시간</label>
                         <select id="eTime" class="form-control">
                             <option value="30">30분 (핵심 위주)</option>
                             <option value="60">60분 (표준 프로그램)</option>
@@ -1035,11 +1035,11 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">현재 최고 구속 (km/h)</label>
+                        <label class="form-label" for="eMaxVelo">현재 최고 구속 (km/h)</label>
                         <input type="number" id="eMaxVelo" class="form-control" data-edit-player-validate="input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">현재 평균 구속 (km/h)</label>
+                        <label class="form-label" for="eAvgVelo">현재 평균 구속 (km/h)</label>
                         <input type="number" id="eAvgVelo" class="form-control" data-edit-player-validate="input">
                     </div>
                 </div>
@@ -1047,11 +1047,11 @@
                     평균구속이 최고구속보다 높을 수 없습니다.</div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">현재 RPM (회전수)</label>
+                        <label class="form-label" for="eRPM">현재 RPM (회전수)</label>
                         <input type="number" id="eRPM" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">다음 등판 예정일</label>
+                        <label class="form-label" for="ePitchDate">다음 등판 예정일</label>
                         <input type="date" id="ePitchDate" class="form-control">
                     </div>
                 </div>
@@ -1060,7 +1060,7 @@
             <div id="editBatterFields" class="is-initially-hidden">
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">포지션</label>
+                        <label class="form-label" for="eBatterPos">포지션</label>
                         <select id="eBatterPos" class="form-control">
                             <option value="내야수">내야수</option>
                             <option value="외야수">외야수</option>
@@ -1069,7 +1069,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">시즌 상태</label>
+                        <label class="form-label" for="eBatterSeason">시즌 상태</label>
                         <select id="eBatterSeason" class="form-control">
                             <option value="비시즌">비시즌 (Off-season)</option>
                             <option value="시즌중">시즌 중 (In-season)</option>
@@ -1078,7 +1078,7 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">포지션별 핵심 목표</label>
+                        <label class="form-label" for="eBatterGoal">포지션별 핵심 목표</label>
                         <select id="eBatterGoal" class="form-control">
                             <option value="타구속도 향상">타구 속도·파워 준비 (파워/스트렝스)</option>
                             <option value="컨택 능력">컨택 능력 (코어/밸런스)</option>
@@ -1087,7 +1087,7 @@
                         <div class="form-help-text">7일 스케줄의 기본 방향을 정합니다.</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">개인 훈련 할애 시간</label>
+                        <label class="form-label" for="eBatterTime">개인 훈련 할애 시간</label>
                         <select id="eBatterTime" class="form-control">
                             <option value="30">30분 (핵심 위주)</option>
                             <option value="60">60분 (표준 프로그램)</option>
@@ -1098,11 +1098,11 @@
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">타구속도 (Exit Velo, km/h)</label>
+                        <label class="form-label" for="eExitVelo">타구속도 (Exit Velo, km/h)</label>
                         <input type="number" id="eExitVelo" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">배트스피드 (km/h)</label>
+                        <label class="form-label" for="eBatSpeed">배트스피드 (km/h)</label>
                         <input type="number" id="eBatSpeed" class="form-control">
                     </div>
                 </div>

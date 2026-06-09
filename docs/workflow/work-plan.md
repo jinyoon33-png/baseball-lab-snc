@@ -1,5 +1,5 @@
 1. 요청 요약
-- 활성 티켓: `없음` — 직전 T8 백업 리마인더(데이터 안전장치) 완료·배포·실도메인 정상 작동 확인 후 CLOSED. 다음 트리거 대기(AdSense 승인 보고 / 사용자 신규 지시).
+- 활성 티켓: `T9 a11y 접근성 폴리시` — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 전부 **GO(이슈 0건)**. 총괄 커밋(main) → **사용자 Push 대기**. 이어서 T10(SEO 콘텐츠 확장) 예정. 상세 §23. (직전 T8 CLOSED.)
 - 현재 단계: `[T1~T8 완료·전부 보안 GO·push·배포 완료(origin/main=12e4733). T8=백업 리마인더 구현(Sonnet)+데스크탑 레이아웃 수정(Haiku)+총괄 증거검토 GO+보안 독립 GO(NIT1)+총괄 정밀 재검증 GO → 커밋 9ad04a2 → push·Cloudflare 재배포 → 실도메인 배너 정상 작동 확인(사용자, 2026-06-08). 티켓 종료. 잔여 NIT1(배너 role/aria 혼용)=§14 LATER a11y. 병행 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
@@ -137,7 +137,7 @@
 - T6 [완료·GO]: 연속기록(streak) 확장 — 결과화면(s3)+팀 대시보드(s4). resName에 streak 배지 노출 + 대시보드 "오늘 기록 N명" stat-card. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §19.
 - T7 [완료·GO]: 팀 대시보드 필터 버그 수정 — 전체/투수/타자/시즌중/비시즌 필터에서도 액션 큐가 조치필요 선수만 표시되던 버그(무조건 needsAction 필터). 필터별 전체 선수 표시 + 동적 제목 + 빈상태 문구 필터인지 + 정상 범위 태그. read-only. 구현+총괄검증+보안 3중 GO. 배포 커밋(main, Push 대기). 상세 §20.
 - T8 [완료·GO·배포]: 백업 리마인더(데이터 안전장치) — localStorage 전용 손실 위험 대비 정기 백업 유도. 선수목록 s1 상단 닫기가능 배너 + 마지막백업 14일 경과/이력없음 시 표시 + 3일 snooze. 백업 기능 자체는 기존(downloadBackup). lastBackupAt/snooze localStorage 키 2개 추가(players schema 무변경). 구현 Sonnet 4.6 + 데스크탑 레이아웃 수정 Haiku. 구현+총괄검증+보안 3중 GO + 총괄 정밀 재검증 GO(보안 NIT1=배너 role/aria 혼용→§14 LATER). 커밋 9ad04a2, push·Cloudflare 배포·실도메인 정상 작동 확인 완료(2026-06-08). 상세 §21.
-- T9 [대기]: a11y 접근성 폴리시 — ① 백업 배너 role="alert"+aria-live="polite" 혼용→택1(index.html L77, §21 NIT1) ② 모달 닫기 버튼 7개 aria-label="닫기"(index.html L492·551·593·658·682·824·927, 현재 &times; 텍스트만) ③ 헤더/대시보드 아이콘 전용 버튼 2개 aria-label(L47·464, data-lucide users/home) ④ form <label>→for 속성으로 input id 연결(pName 등, 현재 proximity 의존). 순수 markup·사용자 변화 0·기능/보안 영향 0·CSP-safe(inline 없음). 수정 site/index.html만. 권장 Haiku. 효과 S. 지금 가능(외부 의존 0).
+- T9 [완료·GO]: a11y 접근성 폴리시 — 구현 Sonnet(Haiku 2회 시행착오)+총괄 증거검토 GO+보안 독립 GO(이슈 0건). 커밋(main)·Push 대기. 상세 §23. ▸원래범위: ① 백업 배너 role="alert"+aria-live="polite" 혼용→택1(index.html L77, §21 NIT1) ② 모달 닫기 버튼 7개 aria-label="닫기"(index.html L492·551·593·658·682·824·927, 현재 &times; 텍스트만) ③ 헤더/대시보드 아이콘 전용 버튼 2개 aria-label(L47·464, data-lucide users/home) ④ form <label>→for 속성으로 input id 연결(pName 등, 현재 proximity 의존). 순수 markup·사용자 변화 0·기능/보안 영향 0·CSP-safe(inline 없음). 수정 site/index.html만. 권장 Haiku. 효과 S. 지금 가능(외부 의존 0).
 - T10 [대기·설계필요]: SEO 콘텐츠 확장 — 얇은 페이지(about ~473w/contact ~416w) 콘텐츠 품질·분량 보강 + 정책/소개 페이지(about/contact/privacy/terms) JSON-LD 적용 검토. 오가닉 SEO·AdSense 승인 심사에 도움. 제약: evidence rules 엄수(근거 기반, 금지표현 0: 치료·처방·진단·보장·최적·예방·향상, 안전대안만 참고·확인·권장·"도움이 될 수 있음"). 워크플로우: ㄱㄱ 시 플랜모드 재진입→근거조사→설계→Sonnet 구현→3중 게이트. 효과 M. 지금은 스텁만(착수 아님).
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
@@ -271,3 +271,24 @@
   ⑥ [⏸️ 사용자 결정 보류] PWA manifest 홈화면 — "앱 출시" 시점에 진행(사용자 결정).
 - 총괄 권장: 외부 의존 없는 ②T9(즉시·저위험) → ③T10(AdSense·SEO 도움) 순. ①은 Google 승인 떨어지면 최우선 전환.
 - 본 로드맵은 문서 정리 전용(2026-06-09): 코드 변경 0. T9/T10 실제 착수는 Codex 복귀 또는 사용자 ㄱㄱ 신호 시. 3중 게이트(구현→총괄검증→보안) 워크플로우 동일 적용.
+
+23. T9 티켓 상세 — a11y 접근성 폴리시 (2026-06-09, 총괄 설계 / 사용자 ㄱㄱ로 착수)
+- 배경: Explore 정적 스캔에서 접근성 미세 갭 다수 확인. 단일 NIT(배너 role/aria)을 포함해 묶음 처리. 순수 마크업 → 사용자 화면·기능·보안 영향 0, 보조기술(스크린리더) 사용자에게만 개선.
+- 범위(4항목):
+  1) 백업 배너(#backupReminderBanner): `role="alert"` 제거, `aria-live="polite"` 유지(비침입 리마인더에 polite 적합) → 속성 충돌 해소.
+  2) 모달 닫기 버튼(.modal-close, 현재 `&times;` 텍스트만·aria-label 없음): 각 버튼에 `aria-label="닫기"` 추가.
+  3) 아이콘 전용 버튼(텍스트 없이 `<i data-lucide>`만, aria-label 없음): 버튼 실제 기능에서 도출한 한글 `aria-label` 추가.
+  4) form `<label>`: 대응 input의 **기존 id**로 `for` 속성 연결. ※ input id는 추가·변경·삭제 금지(JS getElementById 의존). id 없는 라벨은 스킵·보고.
+- 수정 파일: `site/index.html`만. data.js/app.js/css/_headers/기타 금지.
+- 제약: inline handler 신규 0, 금지표현 0, 화면 표시·레이아웃·기능 무변경, **id 무변경**.
+- 구현: Haiku(기계적 마크업) / 검증: 총괄 증거검토(전체 diff·id변경 0 확인) + 보안담당 터미널 독립.
+- 워크플로우: 총괄 설계(본 §23) → Haiku 구현 → 총괄 증거검토 GO → 보안담당 터미널 독립 GO → 총괄 커밋 → 사용자 Push.
+- 보안 검토 포인트(터미널용): ① 변경=마크업 속성만(role 제거/aria-label/for 추가) ② input id 무변경(getElementById 영향 0) ③ inline handler 신규 0 ④ 금지표현 0 ⑤ 수정파일 index.html 단일·금지파일 diff 0 ⑥ 화면/기능 회귀 0.
+- 구현(2026-06-09): 최종 Sonnet 4.6. ※시행착오 기록(교훈): Haiku 1차=4항목 구현했으나 텍스트 있는 헤더버튼에 aria-label 추가(스펙 이탈) / Haiku 2차=수정 지시했으나 git restore류로 파일 되돌려 role제거·for 54 소실(총괄 diff 검증서 발견) / Sonnet 3차=전체 재구현 정상. → 향후 하위에이전트 지시에 "git checkout/restore/reset/stash 금지, Edit만" 명시 필수.
+- 총괄 증거검토 GO(2026-06-09, Opus 직접 재검증): for= 54건 추가(전 타깃 실 id로 해소·미해소 0건 독립확인), role="alert" 제거 1건(배너 aria-live="polite" 유지, L77), aria-label="닫기" 7건(모달 닫기), 텍스트 버튼 aria-label 0건(header-dashboard-btn/dashboardHomeBtn/header-guide-cta 무라벨=스펙대로), input id 변경 0건(diff id= 매칭쌍 banner/wlRpeLabel/wlCountLabel 전부 -/+ 동일값, 입력 id 무수정), inline onclick 0, 수정파일 site/index.html 단일(+work-plan 총괄), diff 124행=62수정라인(54+7+1) 정합. 금지표현 무관(속성만 변경, 텍스트 무변경).
+- 보안/QA 결과(2026-06-09, 보안담당 Claude Opus 4.8 — 워킹트리 T9 diff 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 브라우저 실사용: 미수행(순수 마크업 속성 변경 — 화면·레이아웃·기능 무변경을 정규화 diff로 입증, 보조기술 전용 개선이라 정적 검증으로 충분).
+  - 실행: `git diff --numstat`(index.html 62/62 순수수정 + work-plan 17/1만) / 금지경로 `git diff --stat`(app.js·data.js·*.css·_headers·ads.txt·sitemap·robots·favicon·about·contact·privacy·terms·*-guide·assets·vendor·docs evidence·security) = **0** / `node --check` app.js·data.js 2 PASS(미변경 sanity).
+  - 독립 확인: ① **id 멀티셋 HEAD≡NEW 완전 일치**(`diff` 0 → getElementById 의존 무영향, input id 무변경 입증) ② **정규화 diff 0** — `for=`/`aria-label="닫기"`/`role="alert"` 3속성 제거 후 HEAD≡NEW(텍스트·구조·기타 속성 단 한 글자도 무변경 → 회귀 0 강증명) ③ `role="alert"` HEAD 1→NEW 0(배너 L77, `aria-live="polite"` 유지=비침입 리마인더에 적합·ARIA 충돌 해소) ④ `aria-label="닫기"` +7건(모달 close L492·551·593·658·682·824·927, `&times;` 텍스트·`data-*-action` 위임 유지) — 배너 close L84의 1건은 T8 기존(diff 무관, NEW 총 8=기존1+신규7) ⑤ `for=` +54건 전부 실 id로 해소(`comm` 미해소 0건), single-quote id/for 0(스캔 사각 없음) ⑥ inline handler(onclick/oninput/onchange/onsubmit) 0 — CSP-safe·신규 0 ⑦ added 라인 금지표현 0.
+  - 스펙 이행 교차검증: 헤더/대시보드 아이콘 후보 3버튼 — header-dashboard-btn(L46 '팀 대시보드')·header-guide-cta(L50 '처음 사용 가이드')·dashboardHomeBtn(L464 '홈으로') 전부 **가시 텍스트 보유** → aria-label 생략 정당(WAI-ARIA: 가시 텍스트 있으면 불필요, 추가 시 접근명 덮어씀), 미라벨 아이콘전용 버튼 잔존 0. 모달 close는 `&times;`(×=기호) 위 `aria-label="닫기"`가 접근명 우선 → 의도된 개선. §287 시행착오(Haiku 2차 for 54 소실)는 최종 워킹트리에서 54건 전수 존재로 회복 확인.
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
