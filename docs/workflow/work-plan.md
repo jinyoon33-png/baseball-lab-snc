@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `T10 SEO 콘텐츠 확장` — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 전부 **GO(이슈 0건)**. 총괄 커밋(main) → **사용자 Push 대기**. 커밋 후 활성 티켓 없음(다음 트리거: AdSense 승인 보고 / 신규 지시). 상세 §24. (T9 a11y=GO·커밋 4c45a6a, T8 CLOSED.)
-- 현재 단계: `[T1~T8 완료·전부 보안 GO·push·배포 완료(origin/main=12e4733). T8=백업 리마인더 구현(Sonnet)+데스크탑 레이아웃 수정(Haiku)+총괄 증거검토 GO+보안 독립 GO(NIT1)+총괄 정밀 재검증 GO → 커밋 9ad04a2 → push·Cloudflare 재배포 → 실도메인 배너 정상 작동 확인(사용자, 2026-06-08). 티켓 종료. 잔여 NIT1(배너 role/aria 혼용)=§14 LATER a11y. 병행 외부 대기: AdSense 승인/og:image]`
+- 활성 티켓: `없음` — T9 a11y·T10 SEO 둘 다 3중 게이트 GO·커밋·Push·**실사용 검증 완료(2026-06-09) → CLOSED**. 문서 정리(커밋 671e105, codex-handoff-prompt-2026-05-24.md 삭제+.DS_Store)도 push 완료. 다음 트리거: AdSense 승인 보고 / 사용자 신규 지시. (T8도 CLOSED.)
+- 현재 단계: `[T1~T10 완료·전부 3중 게이트 GO·push·배포·실사용 확인 완료. T9 a11y(접근성 마크업, 커밋 4c45a6a)·T10 SEO(FAQ+JSON-LD 4페이지, 커밋 33034f5) 둘 다 보안 독립 GO(이슈 0)+실사용 검증 완료(사용자, 2026-06-09)→CLOSED. 문서정리 671e105 push 완료. 활성 티켓 없음. 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -264,8 +264,8 @@
 - 현재 상태: T1~T8 완료·배포·push 완료. origin/main=ba00f2e, working tree clean, 활성 티켓 없음. 정적 스캔상 버그·미완성·TODO 0. 메인 외부 게이트=AdSense 승인 대기(Google 심사).
 - 우선순위 큐(권장 순서 / 게이팅 상태):
   ① [🔴 외부 대기·PRIMARY] AdSense 승인 후 게재 확인(§13) — 승인 시 자동광고 게재 확인 + 인페이지 방해 판단 + 필요시 §11 수동 광고단위 정밀화.
-  ② [🟢 지금 가능·S] T9 a11y 접근성 폴리시(§14) — 외부 의존 0, 저위험. 대기 중 손쉬운 품질 보강(권장 Haiku).
-  ③ [🟢 지금 가능·M·설계필요] T10 SEO 콘텐츠 확장(§14) — 오가닉 SEO + AdSense 승인 심사에 긍정적. evidence rules 엄수, ㄱㄱ 시 플랜모드 재진입 설계.
+  ② [✅ 완료·CLOSED] T9 a11y 접근성 폴리시 — 커밋 4c45a6a, 3중 게이트 GO+실사용 검증 완료(2026-06-09). 상세 §23.
+  ③ [✅ 완료·CLOSED] T10 SEO 콘텐츠 확장 — 커밋 33034f5(about·contact FAQ+JSON-LD 4p), 3중 게이트 GO+실사용 검증 완료(2026-06-09). 상세 §24.
   ④ [🟡 에셋 대기·S] og:image PNG 13p 일괄 — 1200×630 PNG 준비 시 og:image/twitter:image 메타 13페이지 삽입(§16 후속).
   ⑤ [🟡 AdSense 안정화 후·M-L] _headers CSP 강화 — unsafe-inline/eval 축소·nonce. 자동광고 요건과 트레이드오프(§17 NIT 후속).
   ⑥ [⏸️ 사용자 결정 보류] PWA manifest 홈화면 — "앱 출시" 시점에 진행(사용자 결정).
