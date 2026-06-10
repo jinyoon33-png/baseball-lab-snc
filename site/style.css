@@ -4699,3 +4699,60 @@ select.cl-assess-input option {
         width: 100%;
     }
 }
+
+/* T13: 팀 워크로드 분포 차트 카드 (ACWR scatter) */
+.dashboard-chart-card {
+    background: var(--card-bg);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    padding: var(--s-5);
+    margin-bottom: 24px;
+}
+
+.dashboard-chart-card__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-3);
+    margin-bottom: var(--s-4);
+    flex-wrap: wrap;
+}
+
+.dashboard-chart-card__title {
+    font-size: var(--t-h3-size);
+    font-weight: var(--t-h3-weight);
+    color: var(--text-main);
+    margin: 0;
+}
+
+.dashboard-chart-card__sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.dashboard-chart-card__link {
+    font-size: 11px;
+    color: var(--primary);
+    text-decoration: underline;
+    margin-left: auto;
+}
+
+.dashboard-chart-card__body {
+    position: relative;
+    height: 300px;
+}
+
+.dashboard-chart-empty {
+    padding: var(--s-6) var(--s-4);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .dashboard-chart-card__body {
+        height: 240px;
+    }
+}

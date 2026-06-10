@@ -446,6 +446,7 @@ try {
 
 let currentId = null;
 let radarChartInstance = null;
+let acwrScatterChartInstance = null;
 let currentViewMode = 'card'; // 'card' | 'calendar' | 'monthly'
 let currentDashboardFilter = '조치 필요';
 let currentCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -3285,6 +3286,94 @@ function drawRadarChart(p) {
     });
 }
 
+function renderAcwrScatterChart() {
+    const canvas = document.getElementById('acwrScatterChart');
+    const emptyEl = document.getElementById('acwrScatterEmpty');
+    if (!canvas || !emptyEl) return;
+
+    // 전체 players 기준, isReady=false 제외
+    const eligible = players.filter(p => calculateACWRMetrics(p).isReady);
+
+    if (eligible.length === 0) {
+        if (acwrScatterChartInstance) { acwrScatterChartInstance.destroy(); acwrScatterChartInstance = null; }
+        canvas.parentElement.hidden = true;
+        emptyEl.hidden = false;
+        return;
+    }
+    canvas.parentElement.hidden = false;
+    emptyEl.hidden = true;
+
+    // 4구간 색상 — getComputedStyle로 토큰 해석, 비면 fallback hex
+    const resolveToken = (token, fallback) => {
+        const val = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+        return val || fallback;
+    };
+    const colorInfo    = resolveToken('--info',    '#3730a3');
+    const colorSuccess = resolveToken('--success', '#16a34a');
+    const colorWarning = resolveToken('--warning', '#d97706');
+    const colorDanger  = resolveToken('--danger',  '#dc2626');
+
+    // 4구간 dataset 분류 (ratio 기준, app.js L3417~ 기존 구간·라벨과 동일)
+    const datasets = [
+        { label: '부하 낮음',             color: colorInfo,    points: [] },
+        { label: '권장 범위 참고',         color: colorSuccess, points: [] },
+        { label: '부하 증가 확인 필요',    color: colorWarning, points: [] },
+        { label: '부하 급증 조정 검토',    color: colorDanger,  points: [] }
+    ];
+
+    eligible.forEach(p => {
+        const { acuteLoad, chronicLoad, ratio } = calculateACWRMetrics(p);
+        const point = { x: chronicLoad, y: acuteLoad, playerName: p.name, ratio };
+        if (ratio < 0.8)                       datasets[0].points.push(point);
+        else if (ratio >= 0.8 && ratio <= 1.3) datasets[1].points.push(point);
+        else if (ratio > 1.3 && ratio <= 1.5)  datasets[2].points.push(point);
+        else                                    datasets[3].points.push(point);
+    });
+
+    const chartDatasets = datasets.map(ds => ({
+        label: ds.label,
+        data: ds.points,
+        backgroundColor: ds.color,
+        borderColor: ds.color,
+        pointRadius: 6,
+        pointHoverRadius: 8
+    }));
+
+    const ctx = canvas.getContext('2d');
+    if (acwrScatterChartInstance) acwrScatterChartInstance.destroy();
+
+    acwrScatterChartInstance = new Chart(ctx, {
+        type: 'scatter',
+        data: { datasets: chartDatasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const pt = context.raw;
+                            const name = pt.playerName || '';
+                            return `${name} · ACWR ${pt.ratio.toFixed(2)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: '만성 워크로드 (4주 평균)' },
+                    beginAtZero: true
+                },
+                y: {
+                    title: { display: true, text: '급성 워크로드 (최근 7일)' },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
 let trendChartInstance = null;
 function drawTrendChart(p) {
     const ctx = document.getElementById('trendChart').getContext('2d');
@@ -4110,6 +4199,7 @@ function renderTeamDashboard() {
         }).join('');
     }
     lucide.createIcons();
+    renderAcwrScatterChart();
 }
 
 function _formatScheduleText(value, fallback = '') {

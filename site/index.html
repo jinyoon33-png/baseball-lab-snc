@@ -482,6 +482,19 @@
                     <!-- JS에서 통계 위젯 삽입 -->
                 </div>
 
+                <!-- T13: 팀 워크로드 분포 차트 (ACWR scatter) -->
+                <div class="dashboard-chart-card">
+                    <div class="dashboard-chart-card__header">
+                        <h3 class="dashboard-chart-card__title">팀 워크로드 분포 (ACWR)</h3>
+                        <span class="dashboard-chart-card__sub">전체 선수 기준</span>
+                        <a href="/workload-guide" class="dashboard-chart-card__link">지표 설명</a>
+                    </div>
+                    <div class="dashboard-chart-card__body">
+                        <canvas id="acwrScatterChart" role="img" aria-label="선수별 급성·만성 워크로드 분포 차트"></canvas>
+                    </div>
+                    <div id="acwrScatterEmpty" class="dashboard-chart-empty" hidden>워크로드 기록이 누적되면 분포가 표시됩니다.</div>
+                </div>
+
                 <div class="dashboard-section">
                     <h3 class="action-queue-heading"><i data-lucide="alert-triangle" class="ui-icon-16 text-danger"></i>오늘 액션 큐 (집중 관리 대상)</h3>
                     <div id="actionQueueList" class="action-queue-list">
