@@ -3381,7 +3381,8 @@ function renderTeamPhysiqueRadar() {
     if (!canvas || !emptyEl) return;
 
     const KEYS   = ['sprint', 'squat', 'deadlift', 'broadJump', 'thoracic', 'hip', 'core'];
-    const LABELS = ['스프린트', '스쿼트', '데드리프트', '제자리 멀리뛰기', '흉추', '고관절', '코어'];
+    // 8번째 축은 포지션 고유 항목 겸용: 투수=pullup, 타자=lateralBound
+    const LABELS = ['스프린트', '스쿼트', '데드리프트', '제자리 멀리뛰기', '흉추', '고관절', '코어', '풀업/사이드 점프'];
 
     // 평가 완료 선수만 대상
     const assessed = players.filter(p => p.scores);
@@ -3400,8 +3401,9 @@ function renderTeamPhysiqueRadar() {
     const batters  = assessed.filter(p => (p.type || '투수') === '타자');
 
     // 항목별 평균 계산 — 유한값인 선수만 분모에 포함, 0명인 키는 null
-    const calcAvgs = (group) => {
-        return KEYS.map(key => {
+    // positionKey: 8번째 축에 쓰는 포지션 고유 키(투수 pullup / 타자 lateralBound)
+    const calcAvgs = (group, positionKey) => {
+        return [...KEYS, positionKey].map(key => {
             const vals = group.map(p => p.scores[key]).filter(v => Number.isFinite(v));
             if (vals.length === 0) return null;
             const sum = vals.reduce((a, b) => a + b, 0);
@@ -3414,7 +3416,7 @@ function renderTeamPhysiqueRadar() {
     if (pitchers.length > 0) {
         datasets.push({
             label: '투수 평균',
-            data: calcAvgs(pitchers),
+            data: calcAvgs(pitchers, 'pullup'),
             borderColor: getCssVar('--primary'),
             backgroundColor: 'rgba(31, 69, 133, 0.18)',
             pointBackgroundColor: getCssVar('--primary'),
@@ -3425,7 +3427,7 @@ function renderTeamPhysiqueRadar() {
     if (batters.length > 0) {
         datasets.push({
             label: '타자 평균',
-            data: calcAvgs(batters),
+            data: calcAvgs(batters, 'lateralBound'),
             borderColor: getCssVar('--warning-accent'),
             backgroundColor: 'rgba(245, 158, 11, 0.20)',
             pointBackgroundColor: getCssVar('--warning-accent'),
