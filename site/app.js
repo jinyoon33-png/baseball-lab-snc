@@ -3417,6 +3417,7 @@ function renderTeamPhysiqueRadar() {
             data: calcAvgs(pitchers),
             borderColor: getCssVar('--primary'),
             backgroundColor: 'rgba(31, 69, 133, 0.18)',
+            pointBackgroundColor: getCssVar('--primary'),
             borderWidth: 2,
             pointRadius: 4
         });
@@ -3425,8 +3426,9 @@ function renderTeamPhysiqueRadar() {
         datasets.push({
             label: '타자 평균',
             data: calcAvgs(batters),
-            borderColor: getCssVar('--info'),
-            backgroundColor: 'rgba(55, 48, 163, 0.15)',
+            borderColor: getCssVar('--warning-accent'),
+            backgroundColor: 'rgba(245, 158, 11, 0.20)',
+            pointBackgroundColor: getCssVar('--warning-accent'),
             borderWidth: 2,
             pointRadius: 4
         });
