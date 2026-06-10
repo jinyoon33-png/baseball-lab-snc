@@ -498,6 +498,11 @@ let _staticNavClickHandler = null;
 let _modalFocusSource = {};
 let _globalModalKeydownHandler = null;
 
+let _playerListSearchTerm = '';
+let _playerListSortMode = 'registered';
+let _playerListSearchInputHandler = null;
+let _playerListSortSelectHandler = null;
+
 window.onload = () => {
     _validateExerciseEvidenceLevels();
     renderPlayerList();
@@ -537,6 +542,7 @@ window.onload = () => {
     _bindEditPlayerSaveClickHandler();
     _bindPerfValidateInputHandler();
     _bindPerfSaveClickHandler();
+    _bindPlayerListControls();
     if (!_safeLocalStorageGet('pLAppGuideSeen_v1')) {
         _safeLocalStorageSet('pLAppGuideSeen_v1', '1');
         setTimeout(() => openModal('appGuideModal'), 400);
@@ -2204,6 +2210,31 @@ function _handlePlayerListClick(e) {
     }
 }
 
+function _bindPlayerListControls() {
+    const searchInput = document.getElementById('playerSearchInput');
+    const sortSelect = document.getElementById('playerSortSelect');
+    if (searchInput) {
+        if (_playerListSearchInputHandler) {
+            searchInput.removeEventListener('input', _playerListSearchInputHandler);
+        }
+        _playerListSearchInputHandler = function(e) {
+            _playerListSearchTerm = e.target.value;
+            renderPlayerList();
+        };
+        searchInput.addEventListener('input', _playerListSearchInputHandler);
+    }
+    if (sortSelect) {
+        if (_playerListSortSelectHandler) {
+            sortSelect.removeEventListener('change', _playerListSortSelectHandler);
+        }
+        _playerListSortSelectHandler = function(e) {
+            _playerListSortMode = e.target.value;
+            renderPlayerList();
+        };
+        sortSelect.addEventListener('change', _playerListSortSelectHandler);
+    }
+}
+
 function _bindPlayerListClickHandler(list) {
     if (!list) return;
     if (_playerListClickHandler) {
@@ -2227,7 +2258,18 @@ function renderPlayerList() {
         return;
     }
 
-    list.innerHTML = players.map(p => {
+    let visiblePlayers = players;
+    const term = _playerListSearchTerm.trim().toLowerCase();
+    if (term) visiblePlayers = players.filter(p => String(p.name || '').toLowerCase().includes(term));
+    if (_playerListSortMode === 'name') visiblePlayers = [...visiblePlayers].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'ko'));
+
+    if (visiblePlayers.length === 0) {
+        list.innerHTML = '<div class="player-list-no-results">검색 결과가 없습니다</div>';
+        renderBackupReminder();
+        return;
+    }
+
+    list.innerHTML = visiblePlayers.map(p => {
         const isEvenWeek = p.week % 2 === 0;
         const is4thWeek = p.week > 0 && p.week % 4 === 0;
         const pType = p.type || '투수';

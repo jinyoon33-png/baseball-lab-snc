@@ -301,6 +301,13 @@
 
             <div class="card">
                 <h2>관리 중인 선수 목록</h2>
+                <div class="player-list-controls">
+                    <input type="text" id="playerSearchInput" class="form-control" placeholder="선수 이름 검색" autocomplete="off" aria-label="선수 검색">
+                    <select id="playerSortSelect" class="form-control" aria-label="정렬 기준">
+                        <option value="registered" selected>등록순</option>
+                        <option value="name">이름순</option>
+                    </select>
+                </div>
                 <div id="playerList"></div>
 
                 <div id="backupSection" class="backup-section">

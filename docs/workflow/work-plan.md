@@ -334,7 +334,22 @@
   - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능. NIT1은 차기 정리 시 선택 반영.
 - 총괄 보안 GO 수용 + NIT1 즉시 처리(2026-06-10): NIT1(_escKeyHandler 죽은 변수)은 이번 티켓이 새로 추가한 줄이라 커밋 전 제거가 적절 → 총괄 직접 1줄 삭제(app.js L498), node --check 재PASS. 커밋 진행.
 
-26. T12 티켓 스텁 — 선수 목록 검색·정렬 (사용자 확정 2026-06-10, T11 종료 후 설계)
-- 배경: s1 선수 목록에 검색/정렬/페이지네이션 전무 → 선수 10명+ 팀에서 탐색 불편. 2026-06-10 검토에서 제품가치 최대 후보로 보고, 사용자 후속 확정.
-- 예상 범위: 이름 검색 입력(실시간 필터) + 정렬 셀렉트(이름/등록일/포지션 등). renderPlayerList 필터 체인에 통합, players 배열 무수정(read-only 표시 필터), XSS=escapeHTML 유지.
-- 설계 시 결정 필요: 정렬 기준 목록, 검색 UI 위치(목록 카드 헤더), 상태 유지 여부(세션 내). T11 종료 후 총괄 설계로 구체화.
+26. T12 티켓 상세 — 선수 목록 검색·정렬 (2026-06-10, 총괄 설계 / 사용자 결정: 검색=이름 실시간, 정렬=등록순+이름순 최소안)
+- 배경: s1 선수 목록에 검색/정렬 전무 → 선수 10명+ 팀에서 탐색 불편. 2026-06-10 완성도 검토 최대가치 후보, 사용자 확정.
+- 설계:
+  1) UI: "관리중인 선수 목록" 카드 상단(#playerList 위)에 컨트롤 행 — 검색 input(placeholder "선수 이름 검색", id=playerSearchInput, label 연결) + 정렬 select(id=playerSortSelect, 옵션: 등록순[기본]/이름순). CSP 준수: inline handler 0, window.onload dedupe 바인딩.
+  2) 로직: 모듈 변수 _playerListSearchTerm/_playerListSortMode(세션 내 유지, localStorage 무사용=schema 무변경). renderPlayerList에서 표시용 사본만 필터·정렬: 검색=trim·소문자 비교 name.includes / 정렬 이름순=[...arr].sort(localeCompare 'ko') — **players 원본 무수정**(등록순=원본 순서 그대로).
+  3) 빈 상태 구분(중요): players 0명=기존 온보딩 empty state 유지 / players 있으나 검색결과 0=목록 영역에 "검색 결과가 없습니다" 간단 문구(온보딩 empty state 오발동 금지). 양쪽 모두 renderBackupReminder 호출 경로(L2213·L2377) 유지.
+  4) XSS: 검색어는 필터 비교에만 사용, HTML 삽입 0. 선수명 escapeHTML 기존 유지.
+  5) CSS: style.css에 .player-list-controls 소형 flex 블록만(기존 토큰 재사용, 모바일 wrap).
+- 수정 파일: site/index.html(컨트롤 마크업), site/app.js(필터·정렬·바인딩), site/style.css(컨트롤 1블록). 수정 금지: data.js, tokens.css, docs.css, _headers, ads.txt, sitemap, robots, 가이드/정책 HTML, vendor/**, docs/**.
+- 구현: Sonnet 4.6 / 검증: 총괄 증거검토 + 보안담당 터미널 독립 / 워크플로우: 3중 게이트 표준.
+- 보안 검토 포인트(터미널용): ① players 원본·localStorage schema 무수정(표시용 사본만) ② 검색어 HTML 삽입 0(XSS) ③ inline handler 0·바인딩 dedupe 1회 ④ 빈상태 분기 정확(온보딩 오발동 0) ⑤ 금지표현 0 ⑥ 수정 3파일 한정·금지파일 diff 0.
+- 구현(Sonnet 4.6, 2026-06-10): index.html 컨트롤 행(L304~, #playerList L311 위) — playerSearchInput(aria-label)+playerSortSelect(등록순/이름순, form-control 기존 클래스) / app.js 모듈변수 4종+_bindPlayerListControls(L2213, dedupe)+onload 호출(L545)+renderPlayerList 표시용 필터·정렬 체인+무결과 분기 / style.css .player-list-controls+.player-list-no-results 블록(+모바일 wrap). diff: app.js +44·index.html +7·style.css +36.
+- 총괄 증거검토 GO(2026-06-10, Opus 직접 재검증): ① node --check 2 PASS ② 수정 3파일 한정(+work-plan 총괄), 금지파일 diff 0 ③ players 원본 무수정 — 추가라인 players.(sort|splice|reverse) 0, 정렬은 [...visiblePlayers] 사본만 ④ 3분기 renderBackupReminder 전부 호출(온보딩/무결과/정상) — 무결과 분기는 정적 문구만 삽입(검색어 HTML 미삽입=XSS 0) ⑤ 코드 추가라인 onclick·localStorage 0(검출 2건=본 §26 설계 문구, 코드 0 확인)·금지표현 0 ⑥ form-control 셀렉터 실재(style.css L601)+사용 토큰 --s-3/--s-4/--s-6/--text-muted 전부 정의 확인(미정의 0) ⑦ 행 액션 data-player-id→players.find(id) 방식이라 필터·정렬 후에도 오라우팅 불가 ⑧ renderPlayerList 호출처 12곳 전부 무인자(시그니처 무변경).
+- 보안/QA 결과(2026-06-10, 보안담당 Claude Opus 4.8 — 워킹트리 T12 diff 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 브라우저 실사용: 미수행(표시용 필터·정렬은 순수 read-only 코드경로 정적추적으로 입증, players 원본·schema 무변경·XSS 0을 정적 검증으로 확정).
+  - 실행: `node --check` app.js·data.js 2 PASS / 금지경로 `git diff --stat`(data.js·tokens.css·docs.css·_headers·ads.txt·sitemap·robots·vendor·docs/evidence·docs/security·가이드/정책 HTML) = **0**(docs는 work-plan 1건=총괄 기록) / `git diff --numstat`(app.js 43/1·index.html 7/0·style.css 36/0 + work-plan).
+  - 독립 확인: ① **players 원본 무수정(핵심)** — 추가라인 `players.(sort|splice|reverse|push|pop|shift|unshift)` **0**. 검색=`players.filter()`(새 배열), 정렬=`[...visiblePlayers].sort(localeCompare 'ko')`(spread 사본). 원본 배열·localStorage schema 단 한 번도 변형 없음 ② **XSS 0** — 검색어(`_playerListSearchTerm`)는 `.trim().toLowerCase().includes(term)` 비교에만 사용, HTML 삽입 경로 0. 무결과 문구는 정적 리터럴('검색 결과가 없습니다', 검색어 미삽입). 정상 렌더 선수명 `escapeHTML(p.name)`→`safePlayerName` 기존 유지 ③ **빈상태 3분기 정확 분리** — players.length===0=온보딩 empty-state(L2251, createIcons+renderBackupReminder+return) / 필터결과 0=`.player-list-no-results` 문구(L2267, renderBackupReminder+return) / 정상=map 렌더 후 renderBackupReminder(L2432). 온보딩은 원본 길이 기준이라 검색결과 0에 **오발동 불가**, 백업리마인더 3경로 전부 호출 ④ **CSP-safe** — index.html 신규 input/select에 inline handler(onclick/oninput/onchange) **0**, 이벤트는 `_bindPlayerListControls`가 addEventListener로 위임(input/change), removeEventListener 선행 dedupe·onload 1회 바인딩 ⑤ **세션 한정** — `_playerListSearchTerm`/`_playerListSortMode` 모듈변수, localStorage write 0(schema 무변경) ⑥ **금지표현 0**·코드 추가라인 localStorage 0(검출 2건=§26 설계 문구뿐) ⑦ **CSS** — `.player-list-controls`/`.player-list-no-results` 신규 1블록, 토큰 --s-3/--s-4/--s-6/--text-muted 정의 실재, form-control 재사용, 모바일 wrap(≤480px) ⑧ **회귀 0** — 행 액션 data-player-id→find(id) 방식이라 필터·정렬 후 오라우팅 불가, renderPlayerList 시그니처 무변경.
+  - aria 접근성: playerSearchInput `aria-label="선수 검색"`, playerSortSelect `aria-label="정렬 기준"` — 라벨 보유(T9 a11y 기조 일치).
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
