@@ -495,6 +495,8 @@ let _workloadLiveCalcInputHandler = null;
 let _workloadSaveClickHandler = null;
 let _rpeBarClickHandler = null;
 let _staticNavClickHandler = null;
+let _modalFocusSource = {};
+let _globalModalKeydownHandler = null;
 
 window.onload = () => {
     _validateExerciseEvidenceLevels();
@@ -523,6 +525,7 @@ window.onload = () => {
     _bindHeaderCtaClickHandler();
     _bindBackupControlHandlers();
     _bindBackupReminderClickHandler();
+    _bindGlobalModalKeydown();
     _bindResultViewToggleClickHandler();
     _bindAssessmentActionClickHandler();
     _bindAddPlayerSubmitClickHandler();
@@ -761,9 +764,19 @@ function saveDB() {
     }
 }
 function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-function openModal(id) { document.getElementById(id).classList.add('active'); }
+function openModal(id) {
+    _modalFocusSource[id] = document.activeElement;
+    document.getElementById(id).classList.add('active');
+}
 function closeModal(id) {
     document.getElementById(id).classList.remove('active');
+    try {
+        const src = _modalFocusSource[id];
+        if (src && src.isConnected && !src.hidden && src.offsetParent !== null) {
+            src.focus();
+        }
+    } catch (_) {}
+    _modalFocusSource[id] = null;
 }
 
 function validatePlayerForm(type) {
@@ -6884,4 +6897,36 @@ function handleRestoreFile(event) {
         });
     };
     reader.readAsText(file);
+}
+
+function _handleGlobalModalKeydown(e) {
+    if (e.key !== 'Escape' || e.isComposing) return;
+    const openModals = Array.from(document.querySelectorAll('.modal-overlay.active'));
+    if (openModals.length === 0) return;
+    const modal = openModals.reduce((top, el) => {
+        const zTop = parseInt(getComputedStyle(top).zIndex, 10) || 0;
+        const zEl  = parseInt(getComputedStyle(el).zIndex, 10)  || 0;
+        return zEl >= zTop ? el : top;
+    });
+    const control =
+        modal.querySelector('.modal-close') ||
+        modal.querySelector('#confirmCancelBtn') ||
+        modal.querySelector('#resetAllCancelBtn') ||
+        modal.querySelector('#alertConfirmBtn') ||
+        null;
+    if (control) {
+        e.preventDefault();
+        control.click();
+        return;
+    }
+    e.preventDefault();
+    if (modal.id) closeModal(modal.id);
+}
+
+function _bindGlobalModalKeydown() {
+    if (_globalModalKeydownHandler) {
+        document.removeEventListener('keydown', _globalModalKeydownHandler);
+    }
+    _globalModalKeydownHandler = _handleGlobalModalKeydown;
+    document.addEventListener('keydown', _globalModalKeydownHandler);
 }

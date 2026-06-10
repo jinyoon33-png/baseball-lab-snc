@@ -1,5 +1,5 @@
 1. 요청 요약
-- 활성 티켓: `없음` — T9 a11y·T10 SEO 둘 다 3중 게이트 GO·커밋·Push·**실사용 검증 완료(2026-06-09) → CLOSED**. 문서 정리(커밋 671e105, codex-handoff-prompt-2026-05-24.md 삭제+.DS_Store)도 push 완료. 다음 트리거: AdSense 승인 보고 / 사용자 신규 지시. (T8도 CLOSED.)
+- 활성 티켓: `T12 선수 목록 검색·정렬` — 총괄 설계 착수(§26). 직전 T11(404+ESC+theme-color/아이콘)=3중 게이트 GO(NIT1 커밋 전 정리)·커밋 완료·**사용자 Push 대기**. 상세 §25. (T8~T10 CLOSED.)
 - 현재 단계: `[T1~T10 완료·전부 3중 게이트 GO·push·배포·실사용 확인 완료. T9 a11y(접근성 마크업, 커밋 4c45a6a)·T10 SEO(FAQ+JSON-LD 4페이지, 커밋 33034f5) 둘 다 보안 독립 GO(이슈 0)+실사용 검증 완료(사용자, 2026-06-09)→CLOSED. 문서정리 671e105 push 완료. 활성 티켓 없음. 외부 대기: AdSense 승인/og:image]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
@@ -139,6 +139,8 @@
 - T8 [완료·GO·배포]: 백업 리마인더(데이터 안전장치) — localStorage 전용 손실 위험 대비 정기 백업 유도. 선수목록 s1 상단 닫기가능 배너 + 마지막백업 14일 경과/이력없음 시 표시 + 3일 snooze. 백업 기능 자체는 기존(downloadBackup). lastBackupAt/snooze localStorage 키 2개 추가(players schema 무변경). 구현 Sonnet 4.6 + 데스크탑 레이아웃 수정 Haiku. 구현+총괄검증+보안 3중 GO + 총괄 정밀 재검증 GO(보안 NIT1=배너 role/aria 혼용→§14 LATER). 커밋 9ad04a2, push·Cloudflare 배포·실도메인 정상 작동 확인 완료(2026-06-08). 상세 §21.
 - T9 [완료·GO]: a11y 접근성 폴리시 — 구현 Sonnet(Haiku 2회 시행착오)+총괄 증거검토 GO+보안 독립 GO(이슈 0건). 커밋(main)·Push 대기. 상세 §23. ▸원래범위: ① 백업 배너 role="alert"+aria-live="polite" 혼용→택1(index.html L77, §21 NIT1) ② 모달 닫기 버튼 7개 aria-label="닫기"(index.html L492·551·593·658·682·824·927, 현재 &times; 텍스트만) ③ 헤더/대시보드 아이콘 전용 버튼 2개 aria-label(L47·464, data-lucide users/home) ④ form <label>→for 속성으로 input id 연결(pName 등, 현재 proximity 의존). 순수 markup·사용자 변화 0·기능/보안 영향 0·CSP-safe(inline 없음). 수정 site/index.html만. 권장 Haiku. 효과 S. 지금 가능(외부 의존 0).
 - T10 [완료·GO]: SEO 콘텐츠 확장 — 구현 Sonnet+총괄 GO+보안 독립 GO(이슈 0건). about·contact FAQ 5문항씩 + 4페이지 JSON-LD + contact 푸터링크 보강. 커밋(main)·Push 대기. 상세 §24. ▸원래범위: 얇은 페이지(about ~473w/contact ~416w) 콘텐츠 품질·분량 보강 + 정책/소개 페이지(about/contact/privacy/terms) JSON-LD 적용 검토. 오가닉 SEO·AdSense 승인 심사에 도움. 제약: evidence rules 엄수(근거 기반, 금지표현 0: 치료·처방·진단·보장·최적·예방·향상, 안전대안만 참고·확인·권장·"도움이 될 수 있음"). 워크플로우: ㄱㄱ 시 플랜모드 재진입→근거조사→설계→Sonnet 구현→3중 게이트. 효과 M. 지금은 스텁만(착수 아님).
+- T11 [진행중]: 빠른 보완 묶음 — ① 404.html 신설(브랜드 404, noindex, AdSense 스크립트 제외) ② 모달 ESC 닫기+포커스 관리(공용 openModal/closeModal L764~ 활용, ESC=취소 경로만) ③ theme-color(#0b1220)+apple-touch-icon PNG 전 페이지. 2026-06-10 사이트 완성도 검토(사용자 승인)에서 선정. 구현 Sonnet. 상세 §25.
+- T12 [대기·다음 확정]: 선수 목록 검색·정렬 — s1 목록에 이름 검색 + 정렬(이름/등록일 등). 검토 결과 제품가치 최대 후보, 사용자 확정(2026-06-10). T11 종료 후 총괄 설계. 상세 §26(스텁).
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
@@ -271,6 +273,7 @@
   ⑥ [⏸️ 사용자 결정 보류] PWA manifest 홈화면 — "앱 출시" 시점에 진행(사용자 결정).
 - 총괄 권장: 외부 의존 없는 ②T9(즉시·저위험) → ③T10(AdSense·SEO 도움) 순. ①은 Google 승인 떨어지면 최우선 전환.
 - 본 로드맵은 문서 정리 전용(2026-06-09): 코드 변경 0. T9/T10 실제 착수는 Codex 복귀 또는 사용자 ㄱㄱ 신호 시. 3중 게이트(구현→총괄검증→보안) 워크플로우 동일 적용.
+- 추가(2026-06-10, 사이트 완성도 검토 후 사용자 확정): ⑦ T11 빠른 보완 묶음(404+모달 ESC+theme-color/터치아이콘) [진행중·§25] ⑧ T12 선수 목록 검색·정렬 [다음 확정·§26]. CSV 내보내기는 실수요 확인 후 보류.
 
 23. T9 티켓 상세 — a11y 접근성 폴리시 (2026-06-09, 총괄 설계 / 사용자 ㄱㄱ로 착수)
 - 배경: Explore 정적 스캔에서 접근성 미세 갭 다수 확인. 단일 NIT(배너 role/aria)을 포함해 묶음 처리. 순수 마크업 → 사용자 화면·기능·보안 영향 0, 보조기술(스크린리더) 사용자에게만 개선.
@@ -310,3 +313,28 @@
   - 회귀/품질 교차검증: contact 푸터 신규 가이드링크 8종 전부 실파일 해소(rpe·acwr·workload·recovery·assessment·training-program·warmup-shoulder·fielding-baserunning-agility-guide.html 존재 → broken link 0), 내부링크 plain(target=_blank 0 = 기존 about/privacy/terms 푸터 패턴 일치), h-num 연번 about 01~06·contact 01~05 연속(번호 끊김 0).
   - [총괄 판단 요청] 없음.
   - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
+
+25. T11 티켓 상세 — 빠른 보완 묶음 (2026-06-10, 총괄 설계 / 사용자 "바로 작업" 지시)
+- 배경: 2026-06-10 사이트 완성도 검토에서 확인된 갭 3건 묶음 — 404.html 부재(Cloudflare 기본 404 노출), 모달 ESC/포커스 처리 0건, theme-color·apple-touch-icon 부재.
+- 범위(3항목):
+  1) **404.html 신설**: about.html 헤드/구조(.doc-wrap, docs.css) 재사용. title "페이지를 찾을 수 없습니다", `meta robots noindex`, **AdSense 스크립트 제외**(무콘텐츠 페이지 광고 정책 리스크), og/JSON-LD 불요, sitemap.xml 추가 금지. 본문=안내 + 홈/주요 가이드 링크. 금지표현 0.
+  2) **모달 ESC 닫기 + 포커스 관리**: 공용 openModal(L764)/closeModal(L765) 활용. document keydown 1회 바인딩(중복 방지), `e.key==='Escape' && !e.isComposing`(한글 IME 보호) → 열린 .modal-overlay 중 z-최상위 1개만 닫기. 닫기 = 해당 모달의 기존 닫기/취소 컨트롤 .click() 재사용(modal-close / confirmCancelBtn / resetAllCancelBtn / alertConfirmBtn). **긍정·파괴 버튼(confirmBtn, resetAllConfirmBtn 등) click 절대 금지**. 포커스: openModal에서 직전 activeElement 저장→closeModal에서 복원(요소가 DOM에 연결·가시일 때만, try-catch). openModal 미경유 모달은 수정하지 말고 보고.
+  3) **theme-color + apple-touch-icon**: 전 공개 HTML(13p+404)에 `<meta name="theme-color" content="#0b1220">`(favicon 배경색=브랜드 네이비). apple-touch-icon.png(180×180)는 favicon.svg(불투명 배경 rect 보유)에서 qlmanage 변환 시도→sips 크기 검증→site/apple-touch-icon.png + link 태그. **변환 실패/비정상 시 아이콘 스킵하고 theme-color만**(아이콘은 og:image 에셋 배치로 이관).
+- 수정 파일: site/404.html(신규), site/app.js, site/index.html+가이드/정책 HTML 12종(head 1~2줄), site/apple-touch-icon.png(신규·조건부). 수정 금지: data.js, *.css, _headers, ads.txt, sitemap.xml, robots.txt, vendor/**, docs/**.
+- 구현: Sonnet 4.6 / 검증: 총괄 증거검토(diff·node --check·ESC 로직·PNG 시각 확인) + 보안담당 터미널 독립.
+- 워크플로우: 총괄 설계(본 §25) → Sonnet 구현 → 총괄 증거검토 GO → 보안담당 터미널 독립 GO → 총괄 커밋 → 사용자 Push.
+- 보안 검토 포인트(터미널용): ① ESC 핸들러가 취소 경로만 트리거(파괴/긍정 버튼 click 0) ② keydown 바인딩 1회·중복 0 ③ 404에 AdSense/외부 스크립트 0·noindex ④ sitemap/robots/_headers diff 0 ⑤ 신규 금지표현 0 ⑥ inline handler 0 ⑦ PNG는 정적 바이너리(스크립트 무관) ⑧ 포커스 복원 try-catch 방어.
+- 구현(2026-06-10, Sonnet 2회): 1차 에이전트가 보고 중 중단(theme-color/아이콘 13p+포커스관리까지 완료, ESC·404 미구현) → 총괄 직접 diff 검증으로 미완 확인 → 2차 Sonnet이 ESC+404 완성. ※1차 부분작업은 전부 건전(되돌림 없음), 메모리 교훈(보고 아닌 diff 검증) 재적중.
+- 총괄 증거검토 GO(2026-06-10, Opus 직접 재검증): ① node --check app.js·data.js 2 PASS ② ESC: _handleGlobalModalKeydown(app.js L6903~)+_bindGlobalModalKeydown(L6926~), 선언 L499~500, onload 바인딩 L529(dedupe 패턴) — isComposing 한글IME 보호, z-index 최상위(동률=DOM 후순위), 취소경로만 click(.modal-close→confirmCancelBtn→resetAllCancelBtn→alertConfirmBtn), 추가라인 긍정/파괴버튼 참조 0 직접 확인 ③ 포커스: openModal 저장→closeModal 복원(isConnected·offsetParent 가드+try-catch, L766~779) ④ 404.html: 스크립트 0(AdSense 포함)·noindex 1·금지표현 0·onclick 0·링크 5종 전부 실파일 해소·doc-* 구조 일치(총괄 직접 열람) ⑤ theme-color 13p+404=14p(#0b1220=파비콘 배경)·apple-touch-icon.png 180×180(7.8KB) 총괄 시각 확인(네이비 라운드+블루 야구공, 파비콘 일치) ⑥ 금지파일(data.js·css·_headers·ads.txt·sitemap·robots·vendor) diff 0 — sitemap에 404 미추가 확인.
+- 보안/QA 결과(2026-06-10, 보안담당 Claude Opus 4.8 — 워킹트리 T11 diff 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR 0건. NIT 1건(미사용 변수). 브라우저 실사용: 미수행(ESC=취소경로만 트리거를 코드경로 정적추적으로 입증, 메타·404·PNG는 정적 자원 — 정적 검증으로 충분).
+  - 실행: `node --check` app.js·data.js 2 PASS / 금지경로 `git diff --stat`(data.js·*.css·_headers·ads.txt·sitemap·robots·vendor·docs/evidence·docs/security) = **0**(docs는 work-plan.md 1건만=총괄 기록, 정상) / `git diff --numstat`(app.js 47/1 + HTML 13p 각 2/0 + work-plan 23/1) / 404·HTML inline handler·script 스캔 / PNG `file`+`sips`.
+  - 독립 확인: ① **ESC 취소경로 단독 보장(핵심)** — `_handleGlobalModalKeydown`(app.js L6903~) 컨트롤 체인=`.modal-close`→`#confirmCancelBtn`→`#resetAllCancelBtn`→`#alertConfirmBtn`. 파괴버튼 `confirmBtn`(L904 btn-danger '확인')·`resetAllConfirmBtn`(L919 btn-danger '초기화 실행') **체인 0참조**(rg 교차확인). confirmModal(L899)·resetAllModal(L910)은 `.modal-close` 없음 → ESC가 각 모달 스코프 querySelector로 취소버튼(취소)만 click, danger 실행버튼 절대 미click 입증. alertModal(L891)은 alertConfirmBtn('확인'=알림 닫기, 비파괴)만 보유 → 정당. `.modal-close` 6모달(wellness/perf/guide/swap/app-guide/workload/edit-player)은 전부 `data-*-action="close"`=비파괴 닫기 ② **IME 보호** `e.isComposing` 가드(한글 입력중 ESC 무시) ③ **z-index 최상위 1개만**(동률=DOM 후순위) ④ **바인딩 1회** — addEventListener('keydown') 단 1건, `_bindGlobalModalKeydown`이 기존 핸들러 removeEventListener 후 재등록(중복 0) ⑤ **포커스 복원 방어** openModal 저장→closeModal 복원, `isConnected && !hidden && offsetParent!==null` 가드+try-catch(예외 격리) ⑥ **404.html** script/AdSense/googlesyndication 0·`robots noindex`(L7)·inline handler 0·링크 5종(/, /about, /workload-guide, /rpe-guide, /contact) 전부 실파일 해소 ⑦ **theme-color #0b1220 14p**(13p+404)·**apple-touch-icon link 14p**, PNG 정적 바이너리 180×180 RGBA(스크립트 무관) ⑧ added HTML 라인 inline handler(onclick/oninput/onchange/onload/onerror/onsubmit/javascript:) **0**·금지표현 **0** ⑨ XSS/저장경로: 사용자 데이터 삽입·localStorage schema 변경 0(ESC=기존 컨트롤 위임, 포커스소스=DOM 요소 참조뿐).
+  - NIT1: `let _escKeyHandler = null;`(app.js L498) 선언만 있고 사용처 0(실제 핸들러는 `_globalModalKeydownHandler` 사용) — 죽은 변수. 기능·보안 영향 0. 정리 시 제거 권장(즉시 조치 불요).
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능. NIT1은 차기 정리 시 선택 반영.
+- 총괄 보안 GO 수용 + NIT1 즉시 처리(2026-06-10): NIT1(_escKeyHandler 죽은 변수)은 이번 티켓이 새로 추가한 줄이라 커밋 전 제거가 적절 → 총괄 직접 1줄 삭제(app.js L498), node --check 재PASS. 커밋 진행.
+
+26. T12 티켓 스텁 — 선수 목록 검색·정렬 (사용자 확정 2026-06-10, T11 종료 후 설계)
+- 배경: s1 선수 목록에 검색/정렬/페이지네이션 전무 → 선수 10명+ 팀에서 탐색 불편. 2026-06-10 검토에서 제품가치 최대 후보로 보고, 사용자 후속 확정.
+- 예상 범위: 이름 검색 입력(실시간 필터) + 정렬 셀렉트(이름/등록일/포지션 등). renderPlayerList 필터 체인에 통합, players 배열 무수정(read-only 표시 필터), XSS=escapeHTML 유지.
+- 설계 시 결정 필요: 정렬 기준 목록, 검색 UI 위치(목록 카드 헤더), 상태 유지 여부(세션 내). T11 종료 후 총괄 설계로 구체화.
