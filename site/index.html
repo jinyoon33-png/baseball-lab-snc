@@ -495,6 +495,19 @@
                     <div id="acwrScatterEmpty" class="dashboard-chart-empty" hidden>워크로드 기록이 누적되면 분포가 표시됩니다.</div>
                 </div>
 
+                <!-- T14: 팀 평균 피지컬 레이더 -->
+                <div class="dashboard-chart-card">
+                    <div class="dashboard-chart-card__header">
+                        <h3 class="dashboard-chart-card__title">팀 피지컬 평균 (공통 7항목)</h3>
+                        <span class="dashboard-chart-card__sub">초기 평가 완료 선수 기준</span>
+                        <a href="/assessment-guide" class="dashboard-chart-card__link">평가 가이드</a>
+                    </div>
+                    <div class="dashboard-chart-card__body">
+                        <canvas id="teamPhysiqueRadar" role="img" aria-label="팀 평균 피지컬 평가 레이더 차트"></canvas>
+                    </div>
+                    <div id="teamPhysiqueRadarEmpty" class="dashboard-chart-empty" hidden>초기 평가가 완료되면 팀 평균이 표시됩니다.</div>
+                </div>
+
                 <div class="dashboard-section">
                     <h3 class="action-queue-heading"><i data-lucide="alert-triangle" class="ui-icon-16 text-danger"></i>오늘 액션 큐 (집중 관리 대상)</h3>
                     <div id="actionQueueList" class="action-queue-list">

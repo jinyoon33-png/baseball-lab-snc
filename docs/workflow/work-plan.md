@@ -1,6 +1,6 @@
 1. 요청 요약
-- 활성 티켓: `T13 팀 워크로드 분포 차트(ACWR scatter)` — 총괄 정식 설계 완료(§28)·Sonnet 구현 단계 (2026-06-10 사용자 착수 신호). 직전 T11·T12=CLOSED(실사용 확인 완료, §25·§26). (T8~T12 CLOSED.)
-- 현재 단계: `[T1~T12 완료·전부 3중 게이트 GO·push·배포·실사용 확인 완료(직전: T11 커밋 ae278e5·T12 커밋 715a190, 2026-06-10 CLOSED). 활성: T13 — §27 시드→§28 정식 설계 승격, Sonnet 구현→3중 게이트 진행 중. 외부 대기: AdSense 승인/og:image. 차기 후보 T14·T15(§27). Codex 6/11 복귀 시 §22 로드맵부터 인수]`
+- 활성 티켓: `T14 팀 평균 피지컬 레이더` — 총괄 정식 설계(§29)·Sonnet 구현 단계 (2026-06-10 사용자 ㄱㄱ). 직전 T13(ACWR 분포 차트, 커밋 f187ef1)=3중 게이트 GO·Push·실사용 확인 완료→CLOSED(§28). (T8~T13 CLOSED.)
+- 현재 단계: `[T1~T13 완료·전부 3중 게이트 GO·push·배포·실사용 확인 완료(직전: T13 ACWR scatter 커밋 f187ef1, 2026-06-10 CLOSED). 활성: T14 — §27 시드→§29 정식 설계 승격, Sonnet 구현→3중 게이트 진행 중. 외부 대기: AdSense 승인/og:image. 차기 후보 T15(보류·§27). Codex 6/11 복귀 시 §22 로드맵부터 인수]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
 - 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
@@ -141,8 +141,8 @@
 - T10 [완료·GO]: SEO 콘텐츠 확장 — 구현 Sonnet+총괄 GO+보안 독립 GO(이슈 0건). about·contact FAQ 5문항씩 + 4페이지 JSON-LD + contact 푸터링크 보강. 커밋(main)·Push 대기. 상세 §24. ▸원래범위: 얇은 페이지(about ~473w/contact ~416w) 콘텐츠 품질·분량 보강 + 정책/소개 페이지(about/contact/privacy/terms) JSON-LD 적용 검토. 오가닉 SEO·AdSense 승인 심사에 도움. 제약: evidence rules 엄수(근거 기반, 금지표현 0: 치료·처방·진단·보장·최적·예방·향상, 안전대안만 참고·확인·권장·"도움이 될 수 있음"). 워크플로우: ㄱㄱ 시 플랜모드 재진입→근거조사→설계→Sonnet 구현→3중 게이트. 효과 M. 지금은 스텁만(착수 아님).
 - T11 [CLOSED 2026-06-10]: 빠른 보완 묶음 — ① 404.html 신설(브랜드 404, noindex, AdSense 스크립트 제외) ② 모달 ESC 닫기+포커스 관리(공용 openModal/closeModal L764~ 활용, ESC=취소 경로만) ③ theme-color(#0b1220)+apple-touch-icon PNG 전 페이지. 커밋 ae278e5. 3중 게이트 GO(NIT1 커밋 전 정리)+Push+실사용 확인 완료. 상세 §25.
 - T12 [CLOSED 2026-06-10]: 선수 목록 검색·정렬 — s1 목록에 이름 실시간 검색 + 정렬(등록순/이름순). 표시용 사본만 필터·정렬(players 원본·schema 무수정). 커밋 715a190. 3중 게이트 GO(이슈 0)+Push+실사용 확인 완료. 상세 §26.
-- T13 [진행중·정식 설계 §28]: 팀 대시보드 ACWR 분포 차트 — Chart.js scatter(기존 vendor), X=만성/Y=급성 워크로드, calculateACWRMetrics 재사용, 표시 전용(schema 무변경). 구간 라벨=기존 안전 표현(부하 낮음/권장 범위 참고/부하 증가 확인 필요/부하 급증 조정 검토, app.js L3417~ 재사용). 제미나이 제안서(2026-06-10) 선별 수용분. 상세 §28(시드 §27).
-- T14 [대기·설계시드 §27]: 팀 평균 피지컬 레이더 — 기존 선수 radar(app.js L3270~) 패턴 재사용, 평가 완료 선수 8종 점수 평균 1장. 자동 진단 문구 없이 수치 표시만. 난이도 하. 상세 §27.
+- T13 [CLOSED 2026-06-10]: 팀 대시보드 ACWR 분포 차트 — Chart.js scatter, X=만성/Y=급성, calculateACWRMetrics 재사용, 표시 전용. 커밋 f187ef1. 3중 게이트 GO(이슈 0)+Push+실사용 확인 완료. 상세 §28.
+- T14 [진행중·정식 설계 §29]: 팀 평균 피지컬 레이더 — 기존 선수 radar(app.js L3269~) 패턴 재사용, 평가 완료 선수의 공통 7항목 평균을 투수/타자 2개 dataset으로 표시. 자동 진단 문구 없이 수치 표시만. 상세 §29(시드 §27).
 - T15 [보류·대형]: 코칭 메모(태그·타임라인) — pLDB_v4_5 스키마 변경 필요(마이그레이션·백업/복원 호환·XSS·용량). C1(CRUD+고정태그+타임라인)→C2(태그 필터) 분할, C3(메모→스케줄 자동개입)은 기각. 착수 전 총괄 정식 재설계 필수. 상세 §27.
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
@@ -277,7 +277,7 @@
 - 총괄 권장: 외부 의존 없는 ②T9(즉시·저위험) → ③T10(AdSense·SEO 도움) 순. ①은 Google 승인 떨어지면 최우선 전환.
 - 본 로드맵은 문서 정리 전용(2026-06-09): 코드 변경 0. T9/T10 실제 착수는 Codex 복귀 또는 사용자 ㄱㄱ 신호 시. 3중 게이트(구현→총괄검증→보안) 워크플로우 동일 적용.
 - 추가(2026-06-10, 사이트 완성도 검토 후 사용자 확정): ⑦ T11 빠른 보완 묶음(404+모달 ESC+theme-color/터치아이콘) [CLOSED·커밋 ae278e5·§25] ⑧ T12 선수 목록 검색·정렬 [CLOSED·커밋 715a190·§26]. CSV 내보내기는 실수요 확인 후 보류.
-- 추가(2026-06-10, 제미나이 제안서 검토 후 사용자 지시로 등재): ⑨ T13 ACWR 분포 차트 [대기·§27] ⑩ T14 팀 평균 레이더 [대기·§27] ⑪ T15 코칭 메모 [보류·대형·§27]. 제안서 원안의 Recharts/D3·CDN 주입·Tailwind 마크업·금지표현·"Banister Impulse Model" 출처 표기는 전부 기각(§27 검토 기록).
+- 추가(2026-06-10, 제미나이 제안서 검토 후 사용자 지시로 등재): ⑨ T13 ACWR 분포 차트 [CLOSED·커밋 f187ef1·§28] ⑩ T14 팀 평균 레이더 [진행중·§29] ⑪ T15 코칭 메모 [보류·대형·§27]. 제안서 원안의 Recharts/D3·CDN 주입·Tailwind 마크업·금지표현·"Banister Impulse Model" 출처 표기는 전부 기각(§27 검토 기록).
 
 23. T9 티켓 상세 — a11y 접근성 폴리시 (2026-06-09, 총괄 설계 / 사용자 ㄱㄱ로 착수)
 - 배경: Explore 정적 스캔에서 접근성 미세 갭 다수 확인. 단일 NIT(배너 role/aria)을 포함해 묶음 처리. 순수 마크업 → 사용자 화면·기능·보안 영향 0, 보조기술(스크린리더) 사용자에게만 개선.
@@ -397,5 +397,26 @@
   - 실행: `node --check` app.js·data.js 2 PASS / 금지경로 `git diff --stat`(data.js·tokens.css·docs.css·_headers·ads.txt·sitemap·robots·vendor·docs/evidence·docs/security·가이드/정책 HTML) = **0** / `git diff --numstat`(app.js 90/0·index.html 13/0·style.css 57/0 + work-plan).
   - 독립 확인: ① **players 원본 무수정** — 추가라인 `players.(sort|splice|reverse|push|pop|shift|unshift)` **0**. 데이터=`players.filter(isReady)`(새 배열)+`eligible.forEach`(읽기만), localStorage write 0(schema 무변경) ② **XSS 0** — 툴팁 콜백은 Chart.js **canvas 렌더**(HTML/DOM 삽입 경로 없음)라 playerName(p.name)·`ratio.toFixed(2)` 그려도 주입 불가. 무데이터 문구='워크로드 기록이 누적되면…' 정적 리터럴. index.html canvas는 정적 마크업(role="img"+aria-label) ③ **inline handler 0** — 콜백은 JS 함수, index.html onclick/oninput/onchange 추가 0(CSP-safe) ④ **차트 인스턴스 destroy 선행** — 무데이터 분기(destroy+null+canvas 숨김+안내 표시=크래시 방지)·신규 생성 직전(`if(inst) inst.destroy()`) 양쪽 모두 정리 → 중복 생성·메모리 누수 0 ⑤ **금지표현 0** — 범례 4라벨('부하 낮음'/'권장 범위 참고'/'부하 증가 확인 필요'/'부하 급증 조정 검토') 전부 **HEAD(T13 이전)에 1건씩 기존 존재**(워킹트리 2건=기존+차트)로 신규 발명 아님 입증, 축 제목(만성/급성 워크로드)도 중립. 진단·치료·처방·보장·향상·예방·최적 0 ⑥ **신규 외부 리소스 0** — 기존 vendor `chart.umd.min.js`(index L25) 사용, 신규 lib·CDN·CSP 변경 0 ⑦ **CSS** — `.dashboard-chart-card*`/`.dashboard-chart-empty` 신규 블록, 사용 토큰 13종(--card-bg/--r-lg/--shadow-card/--s-3~6/--t-h3-size/--t-h3-weight/--text-main/--text-muted/--primary/--border) 정의 실재(미정의 0), 고정 높이 300px/모바일 240px ⑧ **회귀 0** — renderTeamDashboard 변경=`renderAcwrScatterChart()` 호출 1줄뿐(기존 삭제 0), s4 표시 경로 그대로라 신규 바인딩 불요, 색상 resolveToken은 토큰 비면 fallback hex로 방어.
   - 수용 NIT(총괄 기록): calculateACWRMetrics 선수당 2회 호출(filter+forEach) — 팀 규모(수십 명)라 성능 영향 무시 가능, 보안·정확성 영향 0(차단 사유 아님).
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
+- **CLOSED(2026-06-10)**: 커밋 f187ef1 → 사용자 Push origin → Cloudflare 재배포 → 사용자 실사용 확인 완료. 3중 게이트 + 실사용 검증 전부 통과. 티켓 종료.
+
+29. T14 티켓 상세 — 팀 평균 피지컬 레이더 (2026-06-10, 총괄 정식 설계 / §27 시드 승격, 사용자 ㄱㄱ)
+- 배경: §27 T14 시드 승격. 팀 대시보드(s4)의 T13 ACWR 차트 카드 바로 아래에 평가 점수 팀 평균 레이더 카드 1장. 표시 전용·schema 무변경. 난이도 하.
+- 설계:
+  1) 포지션 키 차이 확정(시드의 미결 사항): 투수=pullup, 타자=lateralBound가 8번째 항목이라 축이 달라짐 → **공통 7항목 축**(sprint/squat/deadlift/broadJump/thoracic/hip/core = 스프린트/스쿼트/데드리프트/제자리 멀리뛰기/흉추/고관절/코어, 기존 한글 라벨 재사용) + **투수 평균/타자 평균 2개 dataset**으로 비교 표시. 해당 포지션에 평가 완료 선수 0명이면 그 dataset 생략.
+  2) 마크업(index.html): T13 카드(.dashboard-chart-card) 바로 뒤에 동일 구조 카드 — 제목 "팀 피지컬 평균 (공통 7항목)" + 부제 "초기 평가 완료 선수 기준" + /assessment-guide 링크("평가 가이드") + `<canvas id="teamPhysiqueRadar" role="img" aria-label="팀 평균 피지컬 평가 레이더 차트">` + 무데이터 div(#teamPhysiqueRadarEmpty, 기본 숨김, 정적 문구 "초기 평가가 완료되면 팀 평균이 표시됩니다.").
+  3) 데이터(app.js): 대상=players.filter(p => p.scores)(read-only). 포지션 분류는 기존 패턴 `p.type || '투수'`. 항목별 평균=해당 키가 유한값인 선수만 집계(빈 키는 분모 제외), 유한값 0명인 키=null(차트 갭 허용). 평균값은 소수 2자리 반올림.
+  4) 차트: 기존 radar 옵션 재사용(L3269~ — r축 min 0/max 5/stepSize 1/ticks 숨김, Pretendard pointLabels). 색=getCssVar('--primary')(투수)/getCssVar('--info')(타자), 반투명 배경. legend 표시(bottom). 툴팁 기본. 모듈 변수 teamRadarChartInstance + destroy 선행. 평가 선수 0명 → destroy+canvas wrapper 숨김+안내 표시. renderTeamDashboard() 끝 renderAcwrScatterChart() 호출 다음 줄에 renderTeamPhysiqueRadar() 호출 1줄.
+  5) CSS: 변경 0 목표 — T13의 .dashboard-chart-card__* 클래스 전부 재사용. 불가피할 때만 최소 추가.
+- 수정 파일: site/index.html, site/app.js 2개(+불가피 시 style.css). 수정 금지: data.js, tokens.css, docs.css, _headers, ads.txt, sitemap, robots, 가이드/정책 HTML, vendor/**, docs/**.
+- 제약: 표시 전용(players·localStorage 무수정), inline handler 0, 신규 라이브러리 0, 금지표현 0, 자동 "취약점/저하" 판정 문구 금지(수치·차트만 — §27 기각 사유).
+- 구현: Sonnet 4.6 / 워크플로우: 3중 게이트 표준.
+- 보안 검토 포인트(터미널용): ① players 원본·localStorage schema 무수정(read-only 집계) ② canvas 렌더=HTML 삽입 0(XSS 0, 무데이터 문구=정적 리터럴) ③ inline handler 0 ④ 인스턴스 destroy 선행 ⑤ 금지표현 0·자동 판정 문구 0 ⑥ 수정 파일 한정(원칙 2개)·금지파일 diff 0 ⑦ 신규 외부 리소스 0 ⑧ 항목별 평균 계산 정확(유한값만 집계·빈 키 null 처리, NaN 미발생).
+- 구현(Sonnet 4.6, 2026-06-10): index.html T14 카드(T13 카드 직후, 동일 BEM 구조) +13 / app.js 모듈변수 teamRadarChartInstance(L450)+renderTeamPhysiqueRadar()(renderAcwrScatterChart 뒤)+renderTeamDashboard 끝 호출 1줄 +82 / **style.css 변경 0**(T13 .dashboard-chart-card__* 전부 재사용). 삭제 0줄(순수 추가).
+- 총괄 증거검토 GO(2026-06-10, 직접 재검증): ① node --check app.js·data.js 2 PASS ② 수정 2파일 한정(+work-plan 총괄)·style.css 0·금지파일 diff 0 ③ 추가라인 inline handler·localStorage·금지표현·자동판정문구·players 변형 메서드 전부 0(스캔 exit 1) ④ 평균 계산 NaN 경로 0 — Number.isFinite 필터+0명 키 null+소수2자리 반올림 ⑤ 포지션 분류 전수 보장 — (p.type||'투수') 기본값으로 pitchers+batters=assessed, 평가 선수 있으면 dataset 최소 1개 ⑥ 0명 분기 destroy+canvas 숨김+정적 안내(크래시 방지), 생성 전 destroy 선행 ⑦ 기존 radar 옵션 컨벤션 일치(r축 0~5/stepSize 1/Pretendard, getCssVar 기존 헬퍼 재사용) ⑧ renderTeamDashboard 변경=호출 1줄뿐 ⑨ /assessment-guide 링크 실파일 해소, canvas role/aria-label 보유.
+- 보안/QA 결과(2026-06-10, 보안담당 Claude Opus 4.8 — 워킹트리 T14 diff 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 브라우저 실사용: 미수행(표시 전용 집계 차트는 read-only 코드경로 정적추적+Chart.js canvas 렌더 특성으로 XSS·schema 무변경·NaN 미발생 확정, 정적 검증으로 충분).
+  - 실행: `node --check` app.js·data.js 2 PASS / 금지경로 `git diff --stat`(data.js·style.css·tokens.css·docs.css·_headers·ads.txt·sitemap·robots·vendor·docs/evidence·docs/security·가이드/정책 HTML) = **0**(style.css 변경 0=T13 클래스 재사용 입증) / `git diff --numstat`(app.js 82/0·index.html 13/0 + work-plan).
+  - 독립 확인: ① **players 원본 무수정** — 추가라인 `players.(sort|splice|reverse|push|pop|shift|unshift)` **0**. 집계=`players.filter(p=>p.scores)`+`.filter`+`.map`+`.reduce`(전부 새 배열·읽기만), localStorage write 0(schema 무변경) ② **XSS 0(T13보다 표면 작음)** — 신규 차트에 툴팁 콜백·playerName 렌더 **0**(스캔 무검출). labels=정적 LABELS(스프린트/스쿼트/…7항목 한글 리터럴), dataset label='투수 평균'/'타자 평균' 정적, data=수치 평균뿐(사용자 문자열 렌더 경로 없음). 무데이터 문구='초기 평가가 완료되면…' 정적 리터럴. canvas=정적 마크업(role="img"+aria-label) ③ **평균 NaN 미발생** — `p.scores[key]`를 `Number.isFinite(v)` 필터→빈 키 `return null`(0분모 차단)→`Math.round(avg*100)/100` 2자리. null은 radar 갭으로 처리(크래시 0) ④ **포지션 분류 전수** — player.type 도메인은 '투수'/'타자' 이진(나머지 검출 '구속'/'타격'/'투구'는 목표·지표 종류로 별개 컨텍스트), `(p.type||'투수')`로 pitchers+batters=assessed, 평가 선수 있으면 dataset≥1 ⑤ **인스턴스 destroy 선행** — 0명 분기(destroy+null+canvas 숨김+안내) + 생성 직전(`if(inst) inst.destroy()`) 양쪽 정리 → 중복·누수 0 ⑥ **금지표현·자동판정 0** — 추가라인 진단·치료·처방·보장·향상·예방·최적·취약·저하·위험판정 전부 0(§27 기각사유 준수=수치·차트만, 자동 "취약점/저하" 문구 없음) ⑦ **inline handler 0**(CSP-safe)·**신규 외부 리소스 0**(기존 Chart + getCssVar 헬퍼 L7 재사용) ⑧ **회귀 0** — renderTeamDashboard 변경=`renderTeamPhysiqueRadar()` 호출 1줄뿐(기존 삭제 0), 기존 radar 옵션 컨벤션 일치(r축 0~5/stepSize1/ticks 숨김/Pretendard), /assessment-guide 링크 실파일 해소.
   - [총괄 판단 요청] 없음.
   - [결론] **GO** — 3중 게이트(구현 Sonnet·총괄 증거검토·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.

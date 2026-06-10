@@ -447,6 +447,7 @@ try {
 let currentId = null;
 let radarChartInstance = null;
 let acwrScatterChartInstance = null;
+let teamRadarChartInstance = null;
 let currentViewMode = 'card'; // 'card' | 'calendar' | 'monthly'
 let currentDashboardFilter = '조치 필요';
 let currentCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -3374,6 +3375,86 @@ function renderAcwrScatterChart() {
     });
 }
 
+function renderTeamPhysiqueRadar() {
+    const canvas = document.getElementById('teamPhysiqueRadar');
+    const emptyEl = document.getElementById('teamPhysiqueRadarEmpty');
+    if (!canvas || !emptyEl) return;
+
+    const KEYS   = ['sprint', 'squat', 'deadlift', 'broadJump', 'thoracic', 'hip', 'core'];
+    const LABELS = ['스프린트', '스쿼트', '데드리프트', '제자리 멀리뛰기', '흉추', '고관절', '코어'];
+
+    // 평가 완료 선수만 대상
+    const assessed = players.filter(p => p.scores);
+
+    if (assessed.length === 0) {
+        if (teamRadarChartInstance) { teamRadarChartInstance.destroy(); teamRadarChartInstance = null; }
+        canvas.parentElement.hidden = true;
+        emptyEl.hidden = false;
+        return;
+    }
+    canvas.parentElement.hidden = false;
+    emptyEl.hidden = true;
+
+    // 포지션별 분류 (기존 패턴)
+    const pitchers = assessed.filter(p => (p.type || '투수') === '투수');
+    const batters  = assessed.filter(p => (p.type || '투수') === '타자');
+
+    // 항목별 평균 계산 — 유한값인 선수만 분모에 포함, 0명인 키는 null
+    const calcAvgs = (group) => {
+        return KEYS.map(key => {
+            const vals = group.map(p => p.scores[key]).filter(v => Number.isFinite(v));
+            if (vals.length === 0) return null;
+            const sum = vals.reduce((a, b) => a + b, 0);
+            return Math.round((sum / vals.length) * 100) / 100;
+        });
+    };
+
+    const datasets = [];
+
+    if (pitchers.length > 0) {
+        datasets.push({
+            label: '투수 평균',
+            data: calcAvgs(pitchers),
+            borderColor: getCssVar('--primary'),
+            backgroundColor: 'rgba(31, 69, 133, 0.18)',
+            borderWidth: 2,
+            pointRadius: 4
+        });
+    }
+    if (batters.length > 0) {
+        datasets.push({
+            label: '타자 평균',
+            data: calcAvgs(batters),
+            borderColor: getCssVar('--info'),
+            backgroundColor: 'rgba(55, 48, 163, 0.15)',
+            borderWidth: 2,
+            pointRadius: 4
+        });
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (teamRadarChartInstance) teamRadarChartInstance.destroy();
+
+    teamRadarChartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: { labels: LABELS, datasets: datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    min: 0, max: 5,
+                    ticks: { stepSize: 1, display: false },
+                    pointLabels: { font: { family: 'Pretendard', size: 12, weight: 'bold' }, color: getCssVar('--text-muted') }
+                }
+            },
+            plugins: {
+                legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 11 } } }
+            }
+        }
+    });
+}
+
 let trendChartInstance = null;
 function drawTrendChart(p) {
     const ctx = document.getElementById('trendChart').getContext('2d');
@@ -4200,6 +4281,7 @@ function renderTeamDashboard() {
     }
     lucide.createIcons();
     renderAcwrScatterChart();
+    renderTeamPhysiqueRadar();
 }
 
 function _formatScheduleText(value, fallback = '') {
