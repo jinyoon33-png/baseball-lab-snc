@@ -480,8 +480,8 @@
 - 결론: 승인 전 현재 상태에서 추가 코드 수정 필요 없음. 승인 대기 중에는 큰 구조 변경, 광고 위치 실험, schema 변경, 의료·성과 보장성 문구 추가를 피한다.
 - 다음 트리거: AdSense 승인 시 §13 게재 확인과 광고 노출 위치 점검으로 이동. 거절 시 거절 사유 원문을 기준으로 수정 티켓을 작성한다.
 
-33. AdSense 승인 전 정책 접근성 보강 — 기존 가이드 문의 링크 일관화 (2026-06-11, 총괄 Codex)
-- 배경: §32 후속 세부 점검에서 신규 가이드(rpe/acwr/training/warmup/fielding)는 하단 `doc-links`에 `/contact`가 있으나 기존 3개 가이드(`assessment-guide.html`, `recovery-guide.html`, `workload-guide.html`)는 `/privacy`, `/terms`까지만 있어 문의/지원 접근성이 불균일했다.
-- 변경: 위 3개 파일의 하단 `doc-links`에서 `이용약관 및 안전 고지` 뒤에 separator와 `<a href="/contact">문의/지원</a>`를 추가했다. 본문, meta, AdSense script, canonical, JSON-LD, CSS, JS, data, schema 변경 없음.
-- 검증: 앵커 내부 링크 검사 `anchor_link_issues=0`, `node --check site/app.js` PASS, `node --check site/data.js` PASS, 3개 파일 `/contact` 링크 각 1건 확인, inline handler 0건.
+33. AdSense 승인 전 정책 접근성 보강 — 가이드·정책 페이지 문의 링크 일관화 (2026-06-11, 총괄 Codex)
+- 배경: §32 후속 세부 점검에서 신규 가이드(rpe/acwr/training/warmup/fielding)는 하단 `doc-links`에 `/contact`가 있으나 기존 3개 가이드(`assessment-guide.html`, `recovery-guide.html`, `workload-guide.html`)는 `/privacy`, `/terms`까지만 있어 문의/지원 접근성이 불균일했다. 추가 확인에서 핵심 정책 페이지(`privacy.html`, `terms.html`)도 하단 `doc-links`가 없어 앱 메인·가이드·문의 이동성이 약했다.
+- 변경: 기존 3개 가이드에는 `이용약관 및 안전 고지` 뒤에 `<a href="/contact">문의/지원</a>`를 추가했다. `privacy.html`, `terms.html`에는 `doc-note` 뒤 하단 `doc-links`를 추가해 앱 메인, 서비스 소개, 주요 가이드, 상호 정책 페이지, 문의/지원으로 이동 가능하게 했다. 본문 의미, meta, AdSense script, canonical, JSON-LD, CSS, JS, data, schema 변경 없음.
+- 검증: 앵커 내부 링크 검사 `anchor_link_issues=0`, `node --check site/app.js` PASS, `node --check site/data.js` PASS, 5개 보강 파일 `/contact` 링크 각 1건 확인, inline handler 0건.
 - 결론: AdSense 심사 관점의 정책·문의 접근성 일관성 보강 완료. 승인 대기 중 추가 대형 기능 변경은 보류한다.
