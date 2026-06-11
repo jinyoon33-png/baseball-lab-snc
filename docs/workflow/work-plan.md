@@ -454,3 +454,9 @@
   - 참고: 프리뷰 HTTP 200 검증은 총괄이 서버 종료로 생략했으나, 정적 파일 site/og-image.png 존재+메타 절대경로(/og-image.png)+도메인 정합으로 배포 시 정상 해소 예상(Cloudflare 정적 서빙).
   - [총괄 판단 요청] 없음.
   - [결론] **GO** — 3중 게이트(에셋 총괄·메타 Haiku·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
+- 사용자 피드백 보완(2026-06-11, 미리보기 정상 확인 후 로고 교체 지시): og-image.png 브랜드 lockup을 사용자 제공 로고 스타일로 재제작 — "BASEBALL"(화이트)+"LAB"(민트 #57C79C), AvenirNextCondensed-Heavy 96px(컨덴스드 헤비체, 리터치 자연스러움 총괄 시각 검수), 야구공 아이콘 행 제거. 헤드라인·기능 부제는 무변경 유지(사용자 지시). 변경=site/og-image.png 바이너리 1개뿐(HTML·URL 무변경 — 동일 절대경로 재사용). 검증: 1200×630 RGBA 확정, 잘림 0, 금지표현 0.
+- 보안/QA 결과(로고 보완분, 2026-06-11, 보안담당 Claude Opus 4.8 — 워킹트리 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 브라우저 실사용: 미수행(정적 PNG 바이너리 1개 교체 — HTML/URL/코드 무변경, 무결성·메타·시각 검수로 충분).
+  - 실행: 금지경로 `git diff --stat`(app.js·data.js·*.html·*.css·_headers·ads.txt·sitemap·robots·favicon·vendor·docs) = **0**(og-image.png+work-plan만) / PNG 무결성·청크·메타·시각 검수.
+  - 독립 확인: ① **변경=og-image.png 바이너리 1개뿐** — HTML/메타/URL 무변경(동일 절대경로 /og-image.png 재사용=13p 메타 그대로 유효), 코드 0 ② **PNG 무결성** — 시그니처 `89504e47` OK, 1200×630 RGBA(IHDR+sips, og:image:width/height 메타와 일치), IEND 뒤 잔여=CRC 4바이트뿐(**은닉 payload 0**), 청크=IHDR/gAMA/cHRM/eXIf/iTXt/IDAT×5/IEND(표준, 실행/스크립트 청크 없음) ③ **정보노출 0** — eXIf/iTXt(XMP) 메타에 PII·로컬경로·사용자명·이메일 패턴 0(strings 스캔 무검출). ※XMP에 PixelYDimension=1200 잔존(정사각 소스 흔적)이나 실제 IHDR·표시·og 메타는 1200×630이라 크롤러 영향 0(무해) ④ **이미지 내용 정상** — 총괄 시각검수 교차확인: "BASEBALL"(화이트)+"LAB"(민트) 로고 lockup + 헤드라인 "야구 훈련·회복·워크로드 한곳에서 관리" + 기능 부제(초기평가·7일 스케줄·ACWR 추적·백업/복원), 네이비 배경+야구공 워터마크. **금지표현 0**(진단·치료·처방·보장·향상·예방·최적 없음, 중립 기능 서술), 잘림·깨짐 0.
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 정적 에셋 교체, 위험 0. 총괄 커밋(main) + 사용자 Push origin 진행 가능.
