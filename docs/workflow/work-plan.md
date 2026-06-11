@@ -1,5 +1,5 @@
 1. 요청 요약
-- 활성 티켓: 없음. 직전 T14(팀 평균 피지컬 레이더, 커밋 16b1652+보완 548f31a 색상·3f68141 8축)=3중 게이트 GO·Push·**사용자 실사용 확인 완료(2026-06-11)→CLOSED**(§29). (T8~T14 CLOSED.)
+- 활성 티켓: `T16 og:image 제작·적용` — 총괄 정식 설계(§30)·구현 단계 (2026-06-11 사용자 ㄱㄱ, Codex 저녁 복귀 전 마감 목표). 직전 T14=CLOSED(§29). (T8~T14 CLOSED.)
 - 현재 단계: `[T1~T14 완료·전부 3중 게이트 GO·push·배포·실사용 확인 완료. 직전 T14=본체 16b1652+사용자 피드백 보완 2건(548f31a 투수/타자 색상 대비, 3f68141 8번축 풀업/사이드 점프 겸용) 전부 보안 독립 GO+실사용 검증(2026-06-11)→CLOSED. 활성 티켓 없음. 외부 대기: AdSense 승인/og:image. 잔여 백로그: T15 코칭 메모(보류·대형·§27). Codex 복귀 시 §22 로드맵부터 인수]`
 - 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
 - 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
@@ -144,6 +144,7 @@
 - T13 [CLOSED 2026-06-10]: 팀 대시보드 ACWR 분포 차트 — Chart.js scatter, X=만성/Y=급성, calculateACWRMetrics 재사용, 표시 전용. 커밋 f187ef1. 3중 게이트 GO(이슈 0)+Push+실사용 확인 완료. 상세 §28.
 - T14 [CLOSED 2026-06-11]: 팀 평균 피지컬 레이더 — 공통 7항목+포지션 겸용 8번축(풀업=투수/사이드 점프=타자), 투수/타자 평균 2 dataset(블루/앰버). 커밋 16b1652+보완 548f31a(색상)·3f68141(8축). 3중 게이트 GO+Push+실사용 확인 완료. 상세 §29.
 - T15 [보류·대형]: 코칭 메모(태그·타임라인) — pLDB_v4_5 스키마 변경 필요(마이그레이션·백업/복원 호환·XSS·용량). C1(CRUD+고정태그+타임라인)→C2(태그 필터) 분할, C3(메모→스케줄 자동개입)은 기각. 착수 전 총괄 정식 재설계 필수. 상세 §27.
+- T16 [진행중·정식 설계 §30]: og:image 제작·적용 — 1200×630 브랜드 PNG 자체 제작(T11 qlmanage 선례) + 13페이지 og:image/twitter:image 메타 일괄, twitter:card→summary_large_image. 로드맵 ④ "에셋 대기" 해소. 상세 §30.
 - LATER(리텐션 후속): PWA 홈화면 설치(manifest.json=가벼움/지금 가능, service worker=무거움/AdSense·CSP 검토 필요·"앱 출시" 시점). 사용자 결정으로 추후 앱 출시 시 진행. 온보딩은 이미 구현됨(첫방문 appGuideModal 자동 + 헤더 가이드 버튼)이라 별도 작업 불요.
 - 중장기(LATER): _headers CSP 강화 — 'unsafe-inline'/'unsafe-eval' 축소(nonce 등). 자동광고 요건과 트레이드오프. AdSense 안정화 후 검토.
 - 별도 대기(외부): AdSense 승인 → 승인 후 실광고 판단(§13).
@@ -434,3 +435,22 @@
   - [총괄 판단 요청] 없음.
   - [결론] **GO** — 8축 표시 보완, 위험 0. 총괄 커밋(main) + 사용자 Push origin 진행 가능.
 - **CLOSED(2026-06-11)**: 본체 커밋 16b1652 + 사용자 피드백 보완 548f31a(투수/타자 색상 대비: 타자 인디고→앰버) + 사용자 결정 보완 3f68141(8번축 풀업/사이드 점프 겸용) → 사용자 Push origin → Cloudflare 재배포 → 사용자 실사용 확인 완료. 보완 2건 포함 전 변경 3중 게이트 + 실사용 검증 통과. 티켓 종료.
+
+30. T16 티켓 상세 — og:image 제작·적용 (2026-06-11, 총괄 설계 / 사용자 ㄱㄱ, 로드맵 ④ 해소)
+- 배경: 13개 공개 페이지에 OG/Twitter 메타 완비(T2)이나 og:image만 부재 → SNS/메신저 공유 미리보기 이미지 없음. 기존엔 "에셋 준비 시"로 외부 대기였으나 T11 선례(favicon.svg→qlmanage PNG 변환·총괄 시각 확인)로 자체 제작 가능 판단.
+- 설계:
+  1) 에셋 제작(총괄 직접 — T11 아이콘과 동일하게 변환·시각검수 필요): og-image.svg 1200×630 디자인 — 네이비 #0b1220 배경, favicon 야구공 마크(#3b82f6) 확대 배치, "Baseball Lab S&C" 타이틀 + "야구 훈련 · 회복 · 워크로드 관리" 부제(시스템 폰트, 금지표현 0). qlmanage→sips로 site/og-image.png 1200×630 변환, 총괄 Read 시각 확인. 소스 SVG는 배포 불요 시 site에 미포함.
+  2) 메타 적용(하위 에이전트 — 13페이지 균일 기계 삽입): 각 페이지 og:locale 줄 뒤에 5줄 추가 — og:image(절대 URL https://www.baseballlabsnc.com/og-image.png), og:image:width(1200), og:image:height(630), og:image:alt("Baseball Lab S&C — 야구 훈련·회복·워크로드 관리"), twitter:image(동일 절대 URL). 기존 `twitter:card` "summary"→"summary_large_image" 교체(1200×630 대형 이미지 표준 페어링, 페이지당 1줄 수정).
+  3) 대상 13페이지 = og:title 보유 전체(index/about/contact/privacy/terms/가이드 8종). 404.html 제외(noindex·og 무).
+- 수정 파일: site/og-image.png(신규), 13개 HTML(head 메타만). 수정 금지: app.js, data.js, *.css, _headers, ads.txt, sitemap.xml, robots.txt, 404.html, favicon.svg, vendor/**, docs/**.
+- 제약: 메타 외 마크업 무변경, inline handler 0, 금지표현 0(이미지 텍스트 포함), PNG=정적 바이너리(스크립트 무관), URL=절대경로(크롤러 요건).
+- 구현: 에셋=총괄 / 메타 삽입=Haiku(균일 13파일 기계 삽입, 정확 텍스트 제공) / 워크플로우: 3중 게이트 표준.
+- 보안 검토 포인트(터미널용): ① 변경=head 메타 5추가+1교체×13p와 PNG 1개뿐(스크립트·핸들러 0) ② og:image 절대 URL 정확(자기 도메인, 외부 리소스 아님) ③ PNG 1200×630 정적 바이너리 ④ 금지표현 0(alt·이미지 문구) ⑤ 금지파일(404 포함) diff 0 ⑥ 기존 og/twitter 값 무변경(twitter:card 1줄 제외).
+- 구현(2026-06-11): ① 에셋(총괄 직접): og-image.svg 1200×1200 정사각 설계(콘텐츠 중앙 630 배치)→qlmanage 변환→sips 중앙 크롭 1200×630 → site/og-image.png(84.7KB RGBA, 신규). 디자인=네이비 #0b1220+블루 야구공 워터마크+브랜드명+한글 헤드라인("야구 훈련 · 회복 · 워크로드 / 한곳에서 관리")+기능 목록, 총괄 Read 시각 검수 통과(잘림 0·금지표현 0). 1차 1200×630 직접 변환은 qlmanage 정사각 패딩으로 실패→정사각+크롭 우회. ② 메타(Haiku): 13페이지 각 6/1 — og:image·width·height·alt 4줄+twitter:image 1줄 삽입, twitter:card summary→summary_large_image 교체.
+- 총괄 증거검토 GO(2026-06-11, 직접 재검증): ① PNG 1200×630 확정(sips)+시각 검수 ② 카운트 전수 13/13/13(og:image·twitter:image·summary_large_image), 잔존 content="summary" 0 ③ 13파일 균일 6/1, index diff 직접 열람=스펙 정확(절대 URL·들여쓰기 일치) ④ 404·app.js·data.js·css·_headers·sitemap diff 0 ⑤ 추가라인 script·핸들러·금지표현 0 ⑥ Haiku 보고 오기 1건(+7/-1로 보고, 실제 6/1) — 코드는 정상, 보고 수치만 부정확(메모리 교훈 재확인: diff 직접 검증). ※프리뷰 서버 종료로 HTTP 200 확인 생략 — 정적 파일 존재+경로 일치로 충분.
+- 보안/QA 결과(2026-06-11, 보안담당 Claude Opus 4.8 — 워킹트리 T16 diff 독립 검토, 커밋/Push 전): **GO**. BLOCKER/MAJOR/MINOR/NIT 0건. 브라우저 실사용: 미수행(정적 head 메타+PNG 바이너리 — JS/CSS/레이아웃/인터랙션 무변경, 크롤러용 메타는 카운트·URL·도메인 정합 정적 검증으로 충분).
+  - 실행: 금지경로 `git diff --stat`(app.js·data.js·*.css·_headers·ads.txt·sitemap·robots·404.html·favicon.svg·vendor·docs/evidence·docs/security) = **0** / `git diff --numstat`(HTML 13개 전부 균일 6/1 + work-plan) / `file`+`sips`(PNG 1200×630 RGBA) + PNG 시그니처 `89504e47`(순수 PNG, 실행 바이너리 흔적 0).
+  - 독립 확인: ① **변경=head 메타 5추가+twitter:card 1교체×13p + PNG 1개뿐** — added 라인 `<script>`·inline handler(onclick/onerror/onload/javascript:) **0**(CSP-safe·XSS 0) ② **전수 카운트 13/13/13** — og:image·twitter:image·summary_large_image 각 13파일, 잔존 `content="summary"` **0**(교체 누락 0), 404.html 제외(diff 0) ③ **og:image 절대 URL 정확·도메인 정합** — `https://www.baseballlabsnc.com/og-image.png`, 기존 canonical/og:url `https://www.baseballlabsnc.com/`(www)와 **동일 도메인**이라 이미지 URL이 페이지와 같은 호스트에서 해소(외부 리소스 아님·자기도메인) ④ **PNG=정적 바이너리** 1200×630 RGBA(84.7KB), PNG 매직넘버 확인(스크립트 무관) ⑤ **금지표현 0** — og:image:alt "Baseball Lab S&C — 야구 훈련·회복·워크로드 관리" 및 added 라인 전체 진단·치료·처방·보장·향상·예방·최적·효과 0(중립 서술) ⑥ **기존 메타 무변경** — og:title/description/url/type/site_name/locale·twitter:title 등 불변, 변경은 og:image 5줄 신규 + twitter:card "summary"→"summary_large_image" 1줄(1200×630 대형 이미지 표준 페어링=의도된 교체)뿐 ⑦ **마크업 회귀 0** — head 메타 영역만 변경, body·구조·핸들러 무변경.
+  - 참고: 프리뷰 HTTP 200 검증은 총괄이 서버 종료로 생략했으나, 정적 파일 site/og-image.png 존재+메타 절대경로(/og-image.png)+도메인 정합으로 배포 시 정상 해소 예상(Cloudflare 정적 서빙).
+  - [총괄 판단 요청] 없음.
+  - [결론] **GO** — 3중 게이트(에셋 총괄·메타 Haiku·보안 독립) 통과, 총괄 커밋(main) + 사용자 Push origin 진행 가능.
