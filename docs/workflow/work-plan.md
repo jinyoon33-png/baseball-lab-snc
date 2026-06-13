@@ -1,60 +1,54 @@
 1. 요청 요약
-- 활성 티켓: 없음. **2026-06-11 Codex 총괄 복귀 — 본 문서로 인수인계.** 직전 T16(og:image, 커밋 2d50ce1+로고 보완 4ff82bd)=3중 게이트 GO·Push·사용자 실사용 확인 완료→CLOSED(§30). (T1~T14·T16 전부 CLOSED.)
-- 최신 총괄 점검: 2026-06-11 AdSense 승인 전 공개 사이트 상태·정책 정합 점검 완료(§32) + 기존 가이드 3개 문의 링크 보강 완료(§33). 승인/거절 결과 대기.
-- 현재 단계: `[T1~T16 완료(T15만 보류)·전부 3중 게이트 GO·push·배포·실사용 확인 완료. 직전 T16=og:image 1200×630 자체 제작+13p 메타(2d50ce1)+사용자 로고 lockup 교체(4ff82bd), 2026-06-11 CLOSED. 활성 티켓 없음. 외부 대기: AdSense 승인(유일). 잔여 백로그: T15 코칭 메모(보류·대형·§27)+CSP 강화(AdSense 후)+PWA(보류). 인수 지점: §22 로드맵 → 상세는 각 티켓 §. 역할 원복: Codex=총괄, Claude=근거조사·지원(공백기 2026-06-09~11 총괄 대행 종료)]`
-- 병행 대기(외부): AdSense 승인 심사(§9~13). 승인 후 실광고 판단.
-- 담당: 총괄 Claude(Opus) 설계·검증 / Sonnet 4.6 하위 에이전트 구현.
-- 직전 완료(배포됨): ① 가이드 3종 보강(§9, 커밋 ae5ba94) ② 약관 광고 고지 정합+날짜 통일(§10) ③ AdSense 자동광고 콘솔 설정(§12).
-- 다음 트리거: 사용자가 "AdSense 승인 완료" 보고 시 → 게재 확인(§13) + 선택적 수동 광고 단위 정밀화.
+- 활성 티켓: `투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — AdSense 승인 전 구현 보류`
+- 현재 단계: `[Step 1. 설계 대기 — 투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — AdSense 승인 전 구현 보류]`
+- 담당: 코드 담당 Claude 설계 작업. 총괄 Codex 최종 검토.
+- 목적: 근거문서 `2026-06-13 — 투구수·권장 휴식일 캘린더 설계 근거 조사 1차` 결과를 바탕으로, 기존 워크로드 입력 투구 수를 활용해 7일 스케줄 카드에 `권장 휴식일 참고` 배지를 표시하는 1차 구현 범위를 설계한다.
+- 핵심 방향: MLB Pitch Smart를 기본 기준으로 삼고, Little League는 별도 모드가 아니라 비교 참고 근거로 유지한다. `realAge` 우선, `age` fallback. 위험 판정·부상 예측·투구 금지 단정·ACWR/RPE 기반 자동 휴식일 연장은 금지한다.
+- AdSense 승인 전에는 `site/*` 구현·배포를 보류한다. 이번 티켓은 설계 문서화까지만 진행한다.
+- 사용자 승인 문구(2026-06-13): 배지는 `권장 휴식 N일`을 기본으로 하고, 보조 설명은 `MLB Pitch Smart 기준을 참고한 휴식일입니다. 실제 소속 리그·대회 규정이 있으면 해당 규정을 우선하세요.`로 고정한다.
 
 2. 대상 파일
-- 수정 허용: `site/assessment-guide.html`, `site/recovery-guide.html`, `site/workload-guide.html`, `docs/workflow/work-plan.md`
-- 읽기 허용: 기타 `site/*-guide.html` (문체 참고)
-- 수정 금지: `site/app.js`, `site/data.js`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/_headers`, `site/ads.txt`, `site/index.html`, `site/sitemap.xml`, `site/robots.txt`, 기타 공개 HTML, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`
+- 수정 허용: `docs/workflow/work-plan.md` 결과 기록만.
+- 읽기 허용: `site/app.js`, `site/index.html`, `site/style.css`, `site/data.js`, `docs/evidence/evidence-research.md`.
+- 수정 금지: `site/*`, `docs/evidence/*`, `docs/security/*`, `site/assets/**`, `site/vendor/**`.
 
-3. 파일별 보강 설계 (총괄 Claude)
-[assessment-guide.html] — 현재 4섹션 → 6섹션
-- 신규 §02 "평가 전 준비와 측정 일관성"(§01 뒤 삽입): 측정 전 컨디션·웜업·시간대·평가자·장비를 일정하게 맞춰야 점수 비교가 의미 있다. 측정 직전 고강도 훈련은 피한다.
-- 신규 §06 "기록 비교로 변화 읽기"(맨 끝, 재평가 주기 뒤): 단일 점수보다 같은 선수의 이전 기록과 비교한다. 영역별 변화 폭이 다를 수 있고, 절대값보다 추세를 본다.
-- 기존 §02~04 → §03~05로 번호 재정렬.
+3. 설계 범위
+- 현재 저장 구조에서 투구 수 날짜를 어떻게 읽을지 확인한다: `dailyCompletion.pitchCount`, `workloadHistory`, `completionHistory`, `weekStartDate`, `pitchDate`.
+- 투수만 대상인지 확인한다: `type` 또는 기존 투수/타자 분기 기준을 근거로, 타자 스윙 수와 투구 수가 같은 필드에 섞이는 위험을 정리한다.
+- 나이 기준을 설계한다: `realAge`가 있으면 우선 사용하고, 없으면 `age`를 fallback으로 둔다.
+- MLB Pitch Smart 휴식일 표를 앱 내부에 어떤 형태로 둘지 설계한다. 1차는 7~22세 범위만, 범위 밖은 `확인 필요`로 둔다.
+- 7일 스케줄 카드 배지 문구와 위치를 설계한다. 예: `권장 휴식 2일`, `소속 리그 규정 확인`, `휴식일 참고`.
+- 승인된 사용자 문구를 기준으로 helper tooltip 또는 작은 보조 설명 위치를 설계한다.
+- 저장 schema 변경 여부를 판단한다. 1차 권장 방향은 기존 기록을 읽는 read-only 계산이며, 신규 저장 필드 추가는 보류한다.
+- 별도 투구수·휴식일 캘린더는 2차 후보로만 남긴다.
 
-[recovery-guide.html] — 현재 4섹션 → 6섹션
-- 신규 §03 "회복 기록을 해석하는 법"(§02 '4가지 항목' 뒤): 각 항목이 며칠 연속 나빠지는 패턴을 추세로 읽고, 다음 훈련 전 확인 신호(통증 잔존·수면 회복·피로 누적)를 점검한다.
-- 신규 §05 "학생선수·동호인 적용 시 주의"(통증 행동 원칙 뒤): 미성년 자기보고 특성, 보호자·지도자 동석, 주말 동호인의 불규칙 일정에서도 같은 기준을 유지한다.
-- 기존 §03(통증)→§04, §04(루틴)→§06으로 재정렬.
-
-[workload-guide.html] — 현재 4섹션 → 6섹션
-- 신규 §03 "입력 예시로 보는 워크로드 계산"(ACWR 설명 뒤): 구체 예시(투수 불펜 50구 RPE 6 → 300, 다음날 실전 80구 RPE 8 → 640, 주간 합계로 누적 흐름 보기). 숫자는 계산 방식 예시일 뿐 권장 임계값이 아님을 명시.
-- 신규 §05 "코치·보호자와 함께 보는 법"(활용 섹션 뒤): 숫자 단독 판단을 피하고 컨디션 메모를 함께 보며 정기적으로 리뷰한다.
-- 기존 §03(활용)→§04, §04(한계)→§06으로 재정렬.
-
-4. 표현 제한
-- 의료 진단·치료·처방 표현 금지(부정형 안전 고지 "~이 아니다/대체하지 않는다"는 허용).
-- 부상 예방 보장, 성과 향상 보장, 자동 위험 판정, 최적화 표현 금지.
-- ACWR/RPE 숫자 임계값 직접 처방 금지. "참고 신호", "확인", "조정 고려" 수준만 사용.
-- 외부 자료 장문 인용 금지. 예시 숫자는 계산 방식 설명용이며 권장 임계값이 아님을 본문에 명시.
-- 기존 `doc-note`·`doc-links`·`doc-meta`·`canonical`·AdSense script·`description` meta는 그대로 유지(수정 금지).
-
-5. 정적 검증 명령 (총괄 재실행)
+4. 정적 확인 명령
+- `rg -n "pitchCount|dailyCompletion|workloadHistory|completionHistory|weekStartDate|pitchDate|realAge|age|type" site/app.js site/index.html`
+- `rg -n "renderWeeklyCalendar|renderSchedule|week-list|schedule|dailyCompletion|workload" site/app.js`
+- `rg -n "투구수|권장 휴식일|Pitch Smart|Little League|realAge|권장 휴식" docs/evidence/evidence-research.md`
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `wc -w site/assessment-guide.html site/recovery-guide.html site/workload-guide.html`
-- `rg -n "진단|치료|처방|보장|부상 예방|성과 향상|최적화|자동 위험 판정" site/assessment-guide.html site/recovery-guide.html site/workload-guide.html docs/workflow/work-plan.md`
-- `rg -c "<h2>" site/assessment-guide.html site/recovery-guide.html site/workload-guide.html` (각 6)
-- `rg -n "adsbygoogle|rel=\"canonical\"" site/assessment-guide.html site/recovery-guide.html site/workload-guide.html` (각 유지)
-- `git diff --stat -- site/app.js site/data.js site/style.css site/docs.css site/tokens.css site/_headers site/ads.txt site/index.html site/sitemap.xml site/robots.txt site/assets site/vendor docs/evidence docs/security` (0)
+- `git diff -- site/app.js site/data.js site/index.html site/style.css site/docs.css site/tokens.css site/assets site/vendor docs/security`
+- `git diff -- docs/evidence/evidence-research.md` (참고 전용: 근거문서팀 변경분 확인, 코드 담당 수정 여부와 분리)
 
-6. 완료 조건
-- 3개 파일 각각 섹션 2개 추가(총 6섹션), `h-num` 번호 01~06 연속 정렬.
-- 금지 표현 사용자 노출 0(부정형 안전 고지 제외).
-- 단어 수가 의미 있게 증가(얕은 채우기 아님).
-- AdSense script·canonical·doc-note·doc-links·meta 보존.
-- 수정 금지 경로 diff 0.
+5. 완료 조건
+- 1차 구현 후보가 `read-only 계산 + 7일 스케줄 카드 배지`인지, 아니면 schema 변경이 필요한지 명확히 결론 낸다.
+- 투수/타자 필드 혼용 위험을 설계에 반영한다.
+- MLB Pitch Smart 기준표 적용 범위와 범위 밖 문구를 정리한다.
+- 사용자 노출 문구는 `권장`, `참고`, `확인`, `소속 리그 규정 우선` 수준으로만 제한한다.
+- 다음 구현 티켓의 수정 파일 후보와 금지 파일을 명확히 적는다.
+- AdSense 승인 전에는 구현 티켓으로 전환하지 않는다는 보류 조건을 명시한다.
 
-7. 작업 지침
-- 구현: Sonnet 4.6 하위 에이전트. 설계(§3)대로 정확히, 기존 문체·HTML 구조(`h2`+`span.h-num` 패턴, `doc-note`, `doc-links`)를 그대로 따른다.
-- 총괄 Claude: 구현 후 §5 재실행으로 독립 검증, 통과 시 work-plan §8에 결과 기록.
-- 사용자: 검증 통과 후 GitHub Desktop `Push origin` 수행.
+6. 이슈 분류 기준
+- BLOCKER: 저장 schema 변경 필요성이 있는데 영향 분석 누락, 투수/타자 pitchCount 혼용 위험 누락.
+- MAJOR: 위험 판정·부상 예측·투구 금지 단정 표현 포함, Little League 별도 모드로 범위 확대.
+- MINOR: 배지 위치·문구 후보가 불명확, 연령 범위 밖 처리 누락.
+- NIT: 용어·띄어쓰기·섹션 번호.
+
+7. Claude 작업 지침
+- 이번 티켓은 설계 전용이다. `site/*`는 수정하지 않는다.
+- 근거문서 결론을 복사하지 말고, 구현에 필요한 필드·함수·UI 위치만 압축해서 정리한다.
+- 완료 보고는 변경 파일, 설계 결론, 실행한 확인 명령, 남은 리스크만 짧게 작성한다.
 
 8. 총괄 운영 체계 메모 (Codex 복귀 인수인계)
 - Codex 사용 한도 소진 → 총괄 역할을 Claude(Opus 4.8)가 위임 인계.
