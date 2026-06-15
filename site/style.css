@@ -662,6 +662,81 @@ select.form-control {
     border: 1px solid var(--border);
 }
 
+.public-guide-hub {
+    margin-bottom: var(--s-6);
+}
+
+.public-guide-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--s-2);
+}
+
+.public-guide-lead,
+.public-guide-note {
+    color: var(--ink-2);
+    line-height: 1.65;
+}
+
+.public-guide-lead {
+    margin: var(--s-3) 0 var(--s-5);
+}
+
+.public-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+}
+
+.public-guide-grid a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 108px;
+    padding: var(--s-4);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--surface-subtle);
+    color: var(--text-main);
+    text-decoration: none;
+    transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.public-guide-grid a:hover {
+    border-color: var(--primary);
+    background: var(--tint);
+}
+
+.public-guide-grid strong {
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.public-guide-grid span {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.public-guide-note {
+    margin-top: var(--s-5);
+    font-size: 13px;
+}
+
+@media (max-width: 480px) {
+    .public-guide-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .public-guide-grid a {
+        min-height: auto;
+    }
+}
+
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1561,6 +1636,10 @@ select.form-control {
     line-height: 1;
     transition: background 0.15s, border-color 0.15s;
     box-shadow: 0 8px 22px var(--shadow-elevated-color);
+}
+
+.header-guide-cta--link {
+    text-decoration: none;
 }
 
 .header-guide-cta:hover {

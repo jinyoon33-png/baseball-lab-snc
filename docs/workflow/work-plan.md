@@ -1,7 +1,8 @@
 1. 요청 요약
-- 활성 티켓: `투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — AdSense 승인 전 구현 보류`
-- 현재 단계: `[Step 1. 설계 대기 — 투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — AdSense 승인 전 구현 보류]`
-- 담당: 코드 담당 Claude 설계 작업. 총괄 Codex 최종 검토.
+- 활성 티켓: `AdSense 가치가 별로 없는 콘텐츠 보정 1차`
+- 현재 단계: `[Step 2. 보정 완료 — 재신청 전 배포 대기]`
+- 직전 완료 문서: `투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — Step 2 설계 완료`
+- 담당: 총괄 Codex 원인 점검·콘텐츠 보정. 재신청은 배포 반영 후 사용자가 AdSense 콘솔에서 수행.
 - 목적: 근거문서 `2026-06-13 — 투구수·권장 휴식일 캘린더 설계 근거 조사 1차` 결과를 바탕으로, 기존 워크로드 입력 투구 수를 활용해 7일 스케줄 카드에 `권장 휴식일 참고` 배지를 표시하는 1차 구현 범위를 설계한다.
 - 핵심 방향: MLB Pitch Smart를 기본 기준으로 삼고, Little League는 별도 모드가 아니라 비교 참고 근거로 유지한다. `realAge` 우선, `age` fallback. 위험 판정·부상 예측·투구 금지 단정·ACWR/RPE 기반 자동 휴식일 연장은 금지한다.
 - AdSense 승인 전에는 `site/*` 구현·배포를 보류한다. 이번 티켓은 설계 문서화까지만 진행한다.
@@ -58,6 +59,41 @@
 - A5 `CSP 강화 재검토 1차`: 광고가 안정적으로 노출된 뒤 진행한다. AdSense 동작을 깨지 않는 범위에서 `script-src`, `connect-src`, `frame-src`, `style-src` 축소 가능성을 재검토한다.
 - A6 `PWA 홈화면 설치 설계/구현 1차`: 광고 안정화 후 진행한다. manifest, 앱 이름, 아이콘, standalone 표시, 설치 안내를 우선 검토한다. service worker는 AdSense·CSP 영향 검토 후 별도 보류한다.
 - A7 `투구수·권장 휴식일 7일 스케줄 배지 구현 1차`: 현재 설계 티켓 완료 후에도 AdSense 승인 및 광고 안정화 전까지 구현하지 않는다. 구현 시 read-only 계산과 `권장 휴식 N일` 배지만 우선한다.
+
+7-2. 투구수·권장 휴식일 7일 스케줄 배지 설계 결과 (Step 2 완료 — 2026-06-15)
+- 결론: 1차 구현은 `read-only 계산 + 7일 스케줄 카드 배지`로 고정한다. 저장 schema, 백업/복원 schema, `site/data.js`는 변경하지 않는다.
+- 데이터 기준: 현재 주는 `dailyCompletion[i].pitchCount`를 우선 사용한다. 날짜 기반 보조 확인은 `completionHistory[dateStr].pitchCount`로 한정한다. `workloadHistory`는 투구 수를 저장하지 않으므로 휴식일 계산 근거로 쓰지 않는다.
+- 대상 제한: 투수만 배지를 표시한다. 타자는 같은 `pitchCount` 입력이 스윙 수 의미로 쓰일 수 있으므로 1차 범위에서 제외한다.
+- 나이 기준: `realAge`가 신뢰 가능한 숫자면 우선 사용하고, 없으면 `age`를 fallback으로 둔다. 숫자로 확정할 수 없거나 MLB Pitch Smart 범위 밖이면 `소속 리그 규정 확인` 또는 `휴식일 확인 필요`로 처리한다.
+- 기준표: MLB Pitch Smart를 기본 참고표로 둔다. Little League는 별도 모드로 만들지 않고 근거문서의 비교 참고로만 유지한다.
+- 노출 위치: 1차는 `renderWeeklyCalendar()`의 `.week-list` 행 안에서 완료/날짜/WL 메타 주변에 `권장 휴식 N일` 배지를 붙인다. 별도 캘린더는 2차 후보로 보류한다.
+- 사용자 문구: 배지는 `권장 휴식 N일`, 보조 설명은 `MLB Pitch Smart 기준을 참고한 휴식일입니다. 실제 소속 리그·대회 규정이 있으면 해당 규정을 우선하세요.`로 고정한다.
+- 금지 범위: 위험 판정, 부상 예측, 투구 금지 단정, ACWR/RPE 기반 자동 휴식일 연장, 자동 처방 표현은 넣지 않는다.
+- 구현 후보 파일(승인 후): `site/app.js`, 필요 시 `site/style.css`. `site/index.html`은 정적 안내 위치가 필요할 때만 검토한다. `site/data.js`, 저장 schema, `docs/evidence/*`는 수정하지 않는다.
+- 보안/QA: 구현 후 보안/QA 담당에게 XSS escape, schema 무변경, 타자 제외, 문구 안전성, 브라우저 실사용 항목을 독립 점검시킨다.
+
+7-3. 앱 전환/PWA 승인 전 문서 정리 결과
+- 결론: 웹사이트 출시와 AdSense 안정화를 우선한다. 앱 전환은 `PWA 홈화면 설치 → Android 래핑 → iOS 출시` 순서로 검토한다.
+- PWA 1차 범위: manifest, 앱 이름, 아이콘, standalone 표시, 홈화면 설치 안내까지만 우선한다. service worker는 캐시·광고·CSP 영향이 있어 별도 티켓으로 보류한다.
+- 네이티브 앱 전환 기준: 로그인/동기화, 사용자 유지율, 푸시 알림, 반복 사용 지표가 확인되기 전에는 앱스토어 출시보다 웹/PWA 개선이 비용 대비 효율적이다.
+- 비용·정책: 앱스토어/플레이스토어/도메인/광고 정책 비용은 변경 가능하므로 실제 착수 전 최신 공식 문서로 재확인한다.
+- 현재 결론: 승인 전에는 앱 구현 티켓을 열지 않는다. AdSense 승인 후 A6 `PWA 홈화면 설치 설계/구현 1차`에서 재개한다.
+
+7-4. 승인 전 남은 문서 작업 판단
+- `docs/evidence/evidence-research.md`: 투구수·권장 휴식일 근거 조사와 총괄 방향 반영 완료.
+- `docs/workflow/work-plan.md`: AdSense 승인 후 큐(A1~A7), 투구수 배지 설계, 앱 전환/PWA 방향 정리 완료.
+- 승인 전 `site/*` 작업: 없음. 승인 심사 중 공개 사이트 안정성을 우선한다.
+- 다음 트리거: AdSense 사이트 승인 상태가 `준비됨`으로 전환되면 A1 `AdSense 승인 후 실제 광고 게재 확인 1차`부터 진행한다. 승인 전 긴급 이슈가 나오면 문서·설정 점검만 수행한다.
+
+7-5. AdSense `가치가 별로 없는 콘텐츠` 보정 결과 (Step 2 완료 — 2026-06-15)
+- 증상: AdSense 사이트 목록에서 승인 상태가 `주의 필요`, 상태 세부정보가 `가치가 별로 없는 콘텐츠`로 표시됨. `ads.txt`는 `승인됨`이므로 ads.txt 문제가 아니다.
+- 공식 기준 근거: Google AdSense 도움말은 고유하고 관련성 있는 콘텐츠, 쉬운 내비게이션, 좋은 사용자 경험을 요구한다. Google Publisher Policies는 게시자 콘텐츠가 없거나 저가치인 화면, 복제 콘텐츠, 광고가 콘텐츠·조작을 방해하는 화면을 제한한다.
+- 원인 판단: 현재 사이트는 가이드 문서가 충분히 존재하지만, 메인 첫 화면이 앱 조작 UI 중심이라 공개 콘텐츠 가치와 가이드 탐색성이 심사자에게 약하게 보일 수 있었다. 또한 별도 가이드 허브가 없어 8개 공개 가이드가 분산되어 보였다.
+- 보정 파일: `site/index.html`, `site/guides.html`(신규), `site/style.css`, `site/about.html`, `site/acwr-guide.html`, `site/rpe-guide.html`, `site/training-program-guide.html`, `site/contact.html`, `site/terms.html`, `site/sitemap.xml`.
+- 보정 내용: 메인 상단에 `공개 가이드` 진입 링크와 `야구 훈련 기록을 이해하기 위한 공개 가이드` 허브 카드 추가. 신규 `/guides` CollectionPage 추가. about에 가이드 모음 링크 추가. 5월로 남은 문서 수정일 정리. sitemap에 `/guides` 추가 및 변경 페이지 lastmod 갱신.
+- 광고 정합성: terms의 광고 원칙을 `앱 조작 버튼 주변에 광고가 끼어들지 않도록 광고 설정을 관리`하는 문구로 수정해 자동광고 운영과 충돌을 줄였다.
+- 검증: `node --check site/app.js`, `node --check site/data.js`, JSON-LD 파싱, sitemap XML 파싱, 내부 링크 검사, inline handler 0건, 로컬 브라우저 메인 허브/`guides.html`/모바일 390px 1열 확인 PASS.
+- 재신청 절차: 커밋·Push → Cloudflare 배포 완료 확인 → `https://www.baseballlabsnc.com/guides`와 `https://baseballlabsnc.com/ads.txt` 확인 → AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 → `검토 요청`.
 
 8. 총괄 운영 체계 메모 (Codex 복귀 인수인계)
 - Codex 사용 한도 소진 → 총괄 역할을 Claude(Opus 4.8)가 위임 인계.

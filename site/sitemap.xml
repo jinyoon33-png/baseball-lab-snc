@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.baseballlabsnc.com/</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/about</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.baseballlabsnc.com/guides</loc>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/workload-guide</loc>
@@ -22,15 +26,15 @@
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/rpe-guide</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/acwr-guide</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/training-program-guide</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/warmup-shoulder-guide</loc>
@@ -46,10 +50,10 @@
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/terms</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://www.baseballlabsnc.com/contact</loc>
-    <lastmod>2026-06-07</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
 </urlset>
