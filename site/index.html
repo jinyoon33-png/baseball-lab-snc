@@ -97,10 +97,16 @@
                 </div>
                 <button class="backup-reminder-close" aria-label="닫기" data-backup-reminder-action="snooze"><i data-lucide="x"></i></button>
             </div>
-            <section class="card public-guide-hub" aria-labelledby="publicGuideTitle">
-                <div class="public-guide-kicker">PUBLIC GUIDES</div>
-                <h2 id="publicGuideTitle">야구 훈련 기록을 이해하기 위한 공개 가이드</h2>
-                <p class="public-guide-lead">Baseball Lab S&amp;C는 선수 등록 도구뿐 아니라 RPE 입력, 워크로드·ACWR 해석, 회복 기록, 정밀평가 활용, 훈련 프로그램 구성 원칙을 함께 설명합니다. 처음 방문했다면 아래 가이드를 먼저 읽고, 앱의 숫자를 참고 지표로 활용하세요.</p>
+            <details class="card public-guide-hub" open aria-labelledby="publicGuideTitle">
+                <summary class="public-guide-summary">
+                    <span class="public-guide-summary-main">
+                        <span class="public-guide-kicker">PUBLIC GUIDES</span>
+                        <span id="publicGuideTitle" class="public-guide-title" role="heading" aria-level="2">야구 훈련 기록을 이해하기 위한 공개 가이드</span>
+                        <span class="public-guide-lead">Baseball Lab S&amp;C는 RPE 입력, 워크로드·ACWR 해석, 회복 기록, 정밀평가 활용, 훈련 프로그램 구성 원칙을 함께 설명합니다.</span>
+                    </span>
+                    <span class="public-guide-toggle" aria-hidden="true"></span>
+                </summary>
+                <div class="public-guide-body">
                 <div class="public-guide-grid" aria-label="공개 가이드 바로가기">
                     <a href="/rpe-guide">
                         <strong>RPE 입력</strong>
@@ -128,8 +134,9 @@
                     </a>
                 </div>
                 <p class="public-guide-note">본 사이트의 지표와 가이드는 훈련 대화를 돕는 참고 자료입니다. 통증이나 평소와 다른 불편감이 있으면 코치·보호자 또는 전문가와 확인하세요.</p>
-            </section>
-            <div class="card">
+                </div>
+            </details>
+            <div class="card player-registration-card">
                 <h2>신규 선수 등록</h2>
                 <div class="form-group">
                     <label class="form-label" for="pName">이름 <span class="form-required">필수</span></label>
@@ -343,7 +350,7 @@
                     시작</button>
             </div>
 
-            <div class="card">
+            <div class="card player-management-card">
                 <h2>관리 중인 선수 목록</h2>
                 <div class="player-list-controls">
                     <input type="text" id="playerSearchInput" class="form-control" placeholder="선수 이름 검색" autocomplete="off" aria-label="선수 검색">

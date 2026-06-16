@@ -1,55 +1,57 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 가치가 별로 없는 콘텐츠 보정 1차`
-- 현재 단계: `[Step 2. 보정 완료 — 재신청 전 배포 대기]`
-- 직전 완료 문서: `투구수·권장 휴식일 7일 스케줄 배지 설계 1차 — Step 2 설계 완료`
-- 담당: 총괄 Codex 원인 점검·콘텐츠 보정. 재신청은 배포 반영 후 사용자가 AdSense 콘솔에서 수행.
-- 목적: 근거문서 `2026-06-13 — 투구수·권장 휴식일 캘린더 설계 근거 조사 1차` 결과를 바탕으로, 기존 워크로드 입력 투구 수를 활용해 7일 스케줄 카드에 `권장 휴식일 참고` 배지를 표시하는 1차 구현 범위를 설계한다.
-- 핵심 방향: MLB Pitch Smart를 기본 기준으로 삼고, Little League는 별도 모드가 아니라 비교 참고 근거로 유지한다. `realAge` 우선, `age` fallback. 위험 판정·부상 예측·투구 금지 단정·ACWR/RPE 기반 자동 휴식일 연장은 금지한다.
-- AdSense 승인 전에는 `site/*` 구현·배포를 보류한다. 이번 티켓은 설계 문서화까지만 진행한다.
-- 사용자 승인 문구(2026-06-13): 배지는 `권장 휴식 N일`을 기본으로 하고, 보조 설명은 `MLB Pitch Smart 기준을 참고한 휴식일입니다. 실제 소속 리그·대회 규정이 있으면 해당 규정을 우선하세요.`로 고정한다.
+- 활성 티켓: `S1 공개 가이드 배너 레이아웃 보안/QA 최종 점검 1차`
+- 현재 단계: `[Step 2. 보안/QA GO(§43) — 커밋 여부 결정 대기]`
+- 담당: 보안/QA Claude 읽기 전용 점검. 총괄 Codex 최종 판정.
+- 배경: `데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차`는 총괄 정밀검토와 사용자 실사용 확인에서 정상 판정됐다.
+- 목적: 커밋 전 독립 보안/QA 관점에서 현재 변경분의 디버깅 누락, 기능 누락, 레이아웃 회귀, 보안 회귀를 한 번 더 확인한다.
+- 핵심 변경분: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`만 변경 상태다.
+- 이번 티켓은 코드 수정 티켓이 아니다. 보안/QA 담당은 파일을 수정하지 않는다.
 
 2. 대상 파일
-- 수정 허용: `docs/workflow/work-plan.md` 결과 기록만.
-- 읽기 허용: `site/app.js`, `site/index.html`, `site/style.css`, `site/data.js`, `docs/evidence/evidence-research.md`.
-- 수정 금지: `site/*`, `docs/evidence/*`, `docs/security/*`, `site/assets/**`, `site/vendor/**`.
+- 수정 허용: 없음.
+- 읽기 허용: `site/index.html`, `site/style.css`, `site/app.js`, `site/data.js`, `site/guides.html`, `site/docs.css`, `site/tokens.css`, `docs/workflow/work-plan.md`.
+- 수정 금지: 모든 파일. 특히 `site/*`, `docs/*`, `archive/*`, git commit/push 모두 금지.
 
-3. 설계 범위
-- 현재 저장 구조에서 투구 수 날짜를 어떻게 읽을지 확인한다: `dailyCompletion.pitchCount`, `workloadHistory`, `completionHistory`, `weekStartDate`, `pitchDate`.
-- 투수만 대상인지 확인한다: `type` 또는 기존 투수/타자 분기 기준을 근거로, 타자 스윙 수와 투구 수가 같은 필드에 섞이는 위험을 정리한다.
-- 나이 기준을 설계한다: `realAge`가 있으면 우선 사용하고, 없으면 `age`를 fallback으로 둔다.
-- MLB Pitch Smart 휴식일 표를 앱 내부에 어떤 형태로 둘지 설계한다. 1차는 7~22세 범위만, 범위 밖은 `확인 필요`로 둔다.
-- 7일 스케줄 카드 배지 문구와 위치를 설계한다. 예: `권장 휴식 2일`, `소속 리그 규정 확인`, `휴식일 참고`.
-- 승인된 사용자 문구를 기준으로 helper tooltip 또는 작은 보조 설명 위치를 설계한다.
-- 저장 schema 변경 여부를 판단한다. 1차 권장 방향은 기존 기록을 읽는 read-only 계산이며, 신규 저장 필드 추가는 보류한다.
-- 별도 투구수·휴식일 캘린더는 2차 후보로만 남긴다.
+3. 점검 범위
+- 현재 diff가 `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`에만 한정되는지 확인한다.
+- 1280px 이상 S1 순서가 `상단 배너 → 공개 가이드 허브 전폭 배너 → 신규 선수 등록/관리 목록 2단`인지 확인한다.
+- 390px·1100px에서 기존 스택/2열 공개 가이드 결과가 깨지지 않는지 확인한다.
+- 공개 가이드 허브의 `/guides` 링크, 6개 가이드 링크, details 접기/펼치기가 유지되는지 확인한다.
+- 신규 선수 등록 카드와 관리 중인 선수 목록의 기존 입력·버튼·검색/정렬 기능이 변경 diff에 의해 누락되지 않았는지 확인한다.
+- 신규 inline handler, 광고/analytics/canonical/JSON-LD 재도입, 저장 schema·백업/복원·data.js 변경 여부를 확인한다.
+- 브라우저 실사용은 가능하면 `http://127.0.0.1:8782/?codex_cache_bust=s1-banner-user-check-20260616-1` 또는 새 로컬 서버로 확인한다. 불가하면 정적 점검 한정이라고 명시한다.
 
 4. 정적 확인 명령
-- `rg -n "pitchCount|dailyCompletion|workloadHistory|completionHistory|weekStartDate|pitchDate|realAge|age|type" site/app.js site/index.html`
-- `rg -n "renderWeeklyCalendar|renderSchedule|week-list|schedule|dailyCompletion|workload" site/app.js`
-- `rg -n "투구수|권장 휴식일|Pitch Smart|Little League|realAge|권장 휴식" docs/evidence/evidence-research.md`
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `git diff -- site/app.js site/data.js site/index.html site/style.css site/docs.css site/tokens.css site/assets site/vendor docs/security`
-- `git diff -- docs/evidence/evidence-research.md` (참고 전용: 근거문서팀 변경분 확인, 코드 담당 수정 여부와 분리)
+- `git diff -- site/index.html site/style.css docs/workflow/work-plan.md`
+- `rg -n "s1-layout|public-guide-hub|player-registration-card|player-management-card|player-list-controls|backupReminderBanner" site/index.html site/style.css`
+- `rg -n "publicGuideTitle|public-guide-summary|public-guide-toggle|href=\"/guides\"|href=\"guides.html\"" site/index.html site/style.css`
+- `rg -n "onclick=|oninput=|onchange=" site/*.html`
+- `rg -n "canonical|application/ld\+json|adsbygoogle|pagead2.googlesyndication.com|gtag\(|googletagmanager" site`
+- `git diff -- site/app.js site/data.js site/guides.html site/docs.css site/tokens.css site/assets site/vendor docs/evidence docs/security`
+- `git diff --check`
 
 5. 완료 조건
-- 1차 구현 후보가 `read-only 계산 + 7일 스케줄 카드 배지`인지, 아니면 schema 변경이 필요한지 명확히 결론 낸다.
-- 투수/타자 필드 혼용 위험을 설계에 반영한다.
-- MLB Pitch Smart 기준표 적용 범위와 범위 밖 문구를 정리한다.
-- 사용자 노출 문구는 `권장`, `참고`, `확인`, `소속 리그 규정 우선` 수준으로만 제한한다.
-- 다음 구현 티켓의 수정 파일 후보와 금지 파일을 명확히 적는다.
-- AdSense 승인 전에는 구현 티켓으로 전환하지 않는다는 보류 조건을 명시한다.
+- BLOCKER/MAJOR 0건이면 GO.
+- 현재 변경 파일이 의도한 3개(`docs/workflow/work-plan.md`, `site/index.html`, `site/style.css`)뿐이다.
+- `site/app.js`, `site/data.js`, `site/guides.html`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**` diff 0건.
+- 신규 inline handler 0건, 광고/analytics/canonical/JSON-LD 신규 도입 0건.
+- 저장 schema, 백업/복원, 선수 등록 저장, 선수 목록 검색/정렬 동작에 변경 흔적 0건.
+- 브라우저 확인을 수행했다면 1280px 이상·1100px·390px의 핵심 레이아웃 결과와 console error 0건을 보고한다.
 
 6. 이슈 분류 기준
-- BLOCKER: 저장 schema 변경 필요성이 있는데 영향 분석 누락, 투수/타자 pitchCount 혼용 위험 누락.
-- MAJOR: 위험 판정·부상 예측·투구 금지 단정 표현 포함, Little League 별도 모드로 범위 확대.
-- MINOR: 배지 위치·문구 후보가 불명확, 연령 범위 밖 처리 누락.
-- NIT: 용어·띄어쓰기·섹션 번호.
+- BLOCKER: 저장 schema·백업/복원·선수 등록/목록 기능 변경, `site/app.js`/`site/data.js` 의도치 않은 변경, `/guides` 또는 6개 가이드 링크 제거.
+- MAJOR: 1280px 이상 배너형 레이아웃 미적용, 390px·1100px 회귀, 기능 버튼/검색/정렬 접근 불가, 신규 외부 스크립트·광고·canonical·JSON-LD 삽입.
+- MINOR: 링크/토글은 동작하지만 시각 밀도·접근성·문구에 사용자 혼란 가능성이 있음.
+- NIT: 주석, 클래스명, 간격, 보고 문구 수준의 사소한 일관성.
 
 7. Claude 작업 지침
-- 이번 티켓은 설계 전용이다. `site/*`는 수정하지 않는다.
-- 근거문서 결론을 복사하지 말고, 구현에 필요한 필드·함수·UI 위치만 압축해서 정리한다.
-- 완료 보고는 변경 파일, 설계 결론, 실행한 확인 명령, 남은 리스크만 짧게 작성한다.
+- 이번 티켓은 보안/QA Claude가 수행한다.
+- 파일 수정·삭제·이동·커밋·푸시 금지. 읽기와 명령 실행만 허용한다.
+- 보고는 BLOCKER/MAJOR/MINOR/NIT로 분류하고 파일/라인 근거를 포함한다.
+- 브라우저 실사용을 못 하면 미수행이라고 명시한다. 수행한 경우 화면 폭과 확인 결과를 수치로 적는다.
+- 다음 티켓 선택은 하지 말고 총괄 Codex 판단 대기라고 끝낸다.
 
 7-1. AdSense 승인 후 대기 티켓 큐
 - A1 `AdSense 승인 후 실제 광고 게재 확인 1차`: 총괄 Codex가 브라우저 실사용 확인을 수행한다. 메인 앱, 공개 가이드, 모바일/데스크톱에서 광고 위치가 앱 조작을 방해하는지 확인한다. `site/*` 수정 없음.
@@ -524,3 +526,94 @@
 - 변경: 기존 3개 가이드에는 `이용약관 및 안전 고지` 뒤에 `<a href="/contact">문의/지원</a>`를 추가했다. `privacy.html`, `terms.html`에는 `doc-note` 뒤 하단 `doc-links`를 추가해 앱 메인, 서비스 소개, 주요 가이드, 상호 정책 페이지, 문의/지원으로 이동 가능하게 했다. 본문 의미, meta, AdSense script, canonical, JSON-LD, CSS, JS, data, schema 변경 없음.
 - 검증: 앵커 내부 링크 검사 `anchor_link_issues=0`, `node --check site/app.js` PASS, `node --check site/data.js` PASS, 5개 보강 파일 `/contact` 링크 각 1건 확인, inline handler 0건.
 - 결론: AdSense 심사 관점의 정책·문의 접근성 일관성 보강 완료. 승인 대기 중 추가 대형 기능 변경은 보류한다.
+
+34. 코드 담당 구현 결과 — 공개 가이드 허브 2열·접기 보정 2차 (2026-06-16, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- (참고) 1차 보정(3열·문구압축)은 본 2차 details/summary·2열 재구현으로 대체됨. 변경 파일은 동일하게 `site/index.html`·`site/style.css` 2개.
+- 변경 파일: `site/index.html`(12/5), `site/style.css`(79/21). 금지 파일(app.js·data.js·guides.html·docs.css·tokens.css·sitemap·assets·vendor·evidence·security) 변경 0건.
+- 구조 전환(§3 스펙 반영):
+  1) `.public-guide-hub`를 `<section>`→`<details class="card public-guide-hub" open aria-labelledby="publicGuideTitle">`로 전환. `summary.public-guide-summary` 안에 kicker·제목(h2)·짧은 lead·`.public-guide-toggle` 배치, 그리드+note는 `.public-guide-body`로 분리. summary 내부는 phrasing/heading(span·h2)만 사용해 HTML 유효.
+  2) 접기/펼치기: 네이티브 details/summary로 구현(별도 JS 0, app.js 무변경). 토글 라벨·셰브런은 CSS만 — `.public-guide-toggle::after` 닫힘 "펼치기"/`[open]` "접기", `::before` 셰브런 45°↔-135° 회전. 기본 `open`이라 콘텐츠·AdSense 노출 유지.
+  3) 6개 링크 그리드: 모든 폭 `repeat(2, minmax(0,1fr))` 2열 고정(이전 3열/1열 미디어쿼리 제거). 카드 padding s-4→s-3·gap 6→4px·strong 15→14·span 13→12px, span `-webkit-line-clamp:2`로 설명 2줄 제한. note 13→12px·접힘 영역 내 유지(안전 고지 무삭제).
+- 검증(프리뷰 실측, 펼침 기준): 1100px 허브 680(원본)→431px·2열×3행 / 접힘 시 154px(요약만) / 390px 모바일 2열 154px×6(1열 회귀 없음)·설명 2줄 클램프 / 1280px s1-layout 좌측 527px 컬럼 2열. 네이티브 토글 동작 확인(summary click open true↔false, 키보드 기본 지원). 닫힘 시 그리드 미페인트(content-visibility) — clientHeight 잔상은 측정 아티팩트로 화면 영향 0. 콘솔 오류 0.
+- 정적: node --check app.js/data.js PASS(JS 무변경) / 추가라인 inline handler·`<script>`·adsbygoogle·ld+json 0 / 금지파일 diff 0 / `/guides` 링크 보존(헤더 CTA + 그리드 "전체 가이드 모음").
+- §5 완료조건 대조: 기본 펼침서 1차보다 작음(431<468)✓ / 390px·데스크톱 2열×3행✓ / summary 클릭·키보드 토글✓ / 접힘 시 요약·펼치기만 남아 신규 선수 등록 접근성↑✓ / 허브·/guides 유지✓ / 광고·analytics·inline·JSON-LD 변경 0✓ / 금지파일 0✓.
+- 잔여 리스크: 없음(표시용 마크업·CSS·문구만, 기능·schema·광고 무영향). 총괄 Codex 로컬 브라우저 데스크톱·모바일 실사용 확인 후 CLOSE 판단 요청.
+
+35. 코드 담당 구현 결과 — 공개 가이드 허브 summary HTML 유효성 보정 1차 (2026-06-16, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- 배경: §34(2차)에서 summary 내부를 `span.public-guide-summary-main > h2`로 구성 → span(phrasing)이 h2(heading/flow)를 감싸 HTML 유효성 위반(총괄 Codex가 `h2ParentTag=SPAN`으로 적발).
+- 변경 파일: `site/index.html`, `site/style.css` 2개. 금지 파일(app.js·data.js·guides.html·docs.css·tokens.css·sitemap·assets·vendor·evidence·security) 변경 0건.
+- 변경 내용(Codex 권장안 채택):
+  1) index.html: `<h2 id="publicGuideTitle">` → `<span id="publicGuideTitle" class="public-guide-title" role="heading" aria-level="2">`로 교체. summary 내부가 전부 phrasing/heading-role span으로 정리돼 `span > h2` 무효 중첩 제거. `aria-labelledby="publicGuideTitle"`는 동일 id 유지로 그대로 해소.
+  2) style.css: `.public-guide-summary h2 { margin:0 }` → `.public-guide-title { display:block; font-size:20px; font-weight:700; letter-spacing:-0.3px; color:var(--text-main); margin:0 }` — 기존 전역 h2(20px/700/-0.3px/text-main) 외관 그대로 재현.
+- 검증(프리뷰 실측): `titleTag=SPAN`·`titleParentTag=SPAN`·summary 내 `h2=0`(무효 중첩 제거)·`role=heading`·`aria-level=2`(헤딩 시맨틱 유지)·제목 폰트 20px/700/block(외관 동일). 허브 431px·2열×3행·기본 open 유지, summary click 토글 open true↔false 정상(네이티브 키보드 Enter/Space 기본 지원), 콘솔 오류 0.
+- 정적: `<h2 id="publicGuideTitle"` 0건, `.public-guide-title` index+css 존재, node --check app.js/data.js PASS, 금지파일 diff 0, 추가라인 inline handler·script·adsbygoogle·ld+json 0, `/guides` 보존.
+- §5 완료조건 대조: span>h2 제거✓ / 기본 펼침·2열×3행·접기 동작 유지✓ / summary 클릭·키보드 토글✓ / 접힘 시 요약·펼치기만✓ / 허브·/guides 유지✓ / 광고·analytics·inline·JSON-LD 0✓ / 금지파일 0✓.
+- 잔여 리스크: 없음(마크업 시맨틱·CSS만, 크기·기능·schema·광고 무영향). 총괄 Codex 로컬 실사용 확인 후 CLOSE 판단 요청.
+
+36. 총괄 Codex 정밀검토 결과 — 공개 가이드 허브 summary HTML 유효성 보정 1차 (2026-06-16)
+- 결론: 이슈 없음. `공개 가이드 허브 summary HTML 유효성 보정 1차` 통과.
+- 직접 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, 금지 경로 diff 0건, inline handler 0건.
+- 정적 근거: `site/index.html`에서 `<h2 id="publicGuideTitle">` 0건, `<span id="publicGuideTitle" class="public-guide-title" role="heading" aria-level="2">` 1건, `/guides` 링크 4건, `details.public-guide-hub[open]` 유지.
+- 브라우저 근거: 390px·1100px·1280px에서 `h2InsideSummary=0`, `titleTag=SPAN`, `role=heading`, `aria-level=2`, `gridColumns=2열`, `guideLinkCount=6`, `hasGuidesLink=true`, `overflowX=false`, 콘솔 오류 0건.
+- 동작 근거: `.public-guide-summary` 클릭 1회 후 `open=false`, 2회 후 `open=true`로 접기/펼치기 정상.
+- 후속 처리: 사용자 피드백에 따라 `데스크톱 전체화면 S1 레이아웃 정리 1차`를 다음 활성 티켓으로 승격했다.
+
+37. 코드 담당 구현 결과 — 데스크톱 전체화면 S1 레이아웃 정리 1차 (2026-06-16, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- 변경 파일: `site/index.html`, `site/style.css` 2개. 금지 파일(app.js·data.js·guides.html·docs.css·tokens.css·sitemap·assets·vendor·evidence·security) 변경 0건.
+- 변경 내용(§3 스펙 반영):
+  1) index.html: 신규 선수 등록 카드에 `.player-registration-card`, 관리 중인 선수 목록 카드에 `.player-management-card` 안정 클래스 추가(구조·내용 무변경).
+  2) style.css `@media (min-width:1280px)` `.s1-layout`을 2열→**3열**(`minmax(280px,340px) minmax(0,1fr) minmax(0,1fr)`)로 재정렬. 명시적 배치: 배너 `1/-1`(전폭 상단), 공개 가이드 허브 `grid-column:1`(좌측 세로 보조 컬럼, ~340px), 신규 선수 등록 `col 2`, 관리 목록 `col 3`. `:last-child` min-height → `.player-management-card`로 이관.
+  3) 좁은 사이드바에 맞춰 `@media(min-width:1280px) .s1-layout .public-guide-grid`만 1열 세로 정렬(허브가 세로로 긴 보조 영역처럼 보이게). 카드/접기/링크 자체는 §34·§35 그대로.
+- 의도: 데스크톱 전체화면에서 등록·허브·목록이 어색하게 3블럭으로 갈리던 것을 [가이드 보조 컬럼 | 신규 선수 등록 | 관리 목록] 1행 3열로 정리. 허브=좌측 세로 보조, 등록+목록=주요 2단.
+- 검증(프리뷰 실측): 1440px 컬럼 340/478/478px·셋 다 동일 행(top 382)·허브 내부 1열·허브 x=48 좌측 / 허브 접기 토글 open true↔false 정상(접어도 등록 col2 x=412·목록 col3 x=914 위치 불변) / 1100px `.s1-layout` display:block 스택·허브 2열 유지 / 390px block 스택·허브 2열·6카드 펼침 유지(1279px↓ 회귀 0). 콘솔 오류 0.
+- 정적: node --check app.js/data.js PASS / 수정 2파일 한정·금지파일 diff 0 / 추가라인 inline handler·script·adsbygoogle·ld+json 0 / `.player-registration-card`·`.player-management-card` 추가, `/guides` 보존.
+- §5 완료조건 대조: 1280px↑ 허브 독립 세로 보조 컬럼·등록+목록 주요 2단(3블럭 분할 해소)✓ / 1100px·390px 이전 결과 유지✓ / 허브·/guides·6링크·접기 유지✓ / app.js·data.js·guides.html·광고·JSON-LD·canonical 변경 0✓ / 신규 inline handler 0✓.
+- 잔여 리스크: 없음(표시용 마크업 클래스·CSS만, 기능·schema·광고 무영향). 총괄 Codex 로컬 데스크톱 전체화면·1100px·390px 실사용 확인 후 CLOSE 판단 요청.
+
+38. 총괄 Codex 정밀검토 결과 — 데스크톱 전체화면 S1 레이아웃 정리 1차 (2026-06-16)
+- 결론: 이슈 없음. `데스크톱 전체화면 S1 레이아웃 정리 1차` 총괄 검토 통과. 사용자 실사용 확인 대기.
+- 직접 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, 금지 경로 diff 0건, inline handler 0건.
+- 정적 근거: `site/index.html`에 `.player-registration-card`와 `.player-management-card` 추가 확인. `site/style.css`의 1280px 이상 `.s1-layout`은 `340px + 1fr + 1fr` 3컬럼 의도 확인.
+- 브라우저 근거: 캐시 없는 Playwright 새 세션 기준 1280px=`340px 398px 398px`, 1440px=`340px 478px 478px`, 세 카드 동일 행, `orderedColumns=true`, `overflowX=false`, 콘솔 오류 0건.
+- 회귀 확인: 1100px·390px는 `display:block` 스택 유지, 공개 가이드 허브 2열·6링크·`/guides` 유지, `details[open]` 유지.
+- 검증 주의: in-app 브라우저 기존 탭은 `/style.css` 캐시로 이전 2컬럼 CSS를 보일 수 있었다. 사용자 확인은 새 포트 또는 강력 새로고침으로 최신 CSS를 로드한 뒤 수행한다.
+
+39. 사용자 실사용 확인 결과 — 데스크톱 전체화면 S1 레이아웃 정리 1차 (2026-06-16)
+- 결론: MAJOR. 직전 3컬럼 방향은 사용자 의도와 달라 통과 처리하지 않는다.
+- 사용자 확인: 공개 가이드 허브가 왼쪽으로 가는 구성이 아니라, 맨 위 배너 바로 밑에 가로로 긴 배너칸처럼 배치되어야 한다.
+- 확정 보정 방향: `상단 배너/알림 영역 → 공개 가이드 허브 가로 배너 → 신규 선수 등록(왼쪽) + 관리 중인 선수 목록(오른쪽)` 순서.
+- 후속 처리: 활성 티켓을 `데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차`로 전환했다. 코드 담당 Claude가 `site/index.html`, `site/style.css`만 수정한다.
+
+40. 코드 담당 구현 결과 — 데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차 (2026-06-16, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- (참고) §37 좌측 세로 보조 컬럼안은 사용자 실사용에서 기각 → 본 배너형으로 대체. 변경 파일 동일.
+- 변경 파일: `site/index.html`, `site/style.css` 2개. 금지 파일(app.js·data.js·guides.html·docs.css·tokens.css·sitemap·assets·vendor·evidence·security) 변경 0건.
+- 변경 내용(§3 스펙 반영):
+  1) `.player-registration-card`·`.player-management-card` 클래스 유지(§37에서 추가분).
+  2) style.css `@media (min-width:1280px)` `.s1-layout`을 **2열**(`minmax(0,1fr) minmax(0,1fr)`)로 정리. 명시 배치: 백업 배너 `1/-1`(전폭 상단), **공개 가이드 허브 `1/-1`(전폭 가로 배너)**, 신규 선수 등록 `col 1`(좌), 관리 목록 `col 2`(우). 순서=배너→가이드 배너→등록/목록 2단.
+  3) 가로 배너 내부: `@media(min-width:1280px) .s1-layout .public-guide-grid`만 **3열**(폭 활용, 6링크=3열×2행)로 두고 카드 높이는 기존 line-clamp·축소 유지. 1279px↓는 글로벌 2열 그대로.
+- 의도: §37 좌측 사이드바 기각 반영. 데스크톱 전체화면에서 허브를 상단 가로 배너로 전폭 배치하고 그 아래 등록(좌)/목록(우) 2단 주요 흐름.
+- 검증(프리뷰 실측): 1440px 허브 전폭 w=1344·3열, 등록 x=48·w=660 / 목록 x=732·w=660 동일 행, 등록=허브 아래·등록 좌/목록 우 / 허브 접기 토글 open true↔false 정상(접으면 등록 top 783→584 상승) / 1100px `.s1-layout` block 스택·허브 2열 / 390px block 스택·허브 2열·6카드 펼침(1279px↓ 회귀 0). 콘솔 오류 0.
+- 정적: node --check app.js/data.js PASS / 수정 2파일 한정·금지파일 diff 0 / 추가라인 inline handler·script·adsbygoogle·ld+json 0 / `/guides` 4건 보존·6링크·접기 유지.
+- §5 완료조건 대조: 1280px↑ 허브=상단 가로 배너(좌측 컬럼 아님)✓ / 허브 아래 등록(좌)·목록(우) 2단✓ / 1100px·390px 이전 결과 유지✓ / 허브·/guides·6링크·접기 유지✓ / app.js·data.js·guides.html·광고·JSON-LD·canonical 0✓ / 신규 inline handler 0✓.
+- 잔여 리스크: 없음(표시용 CSS 그리드 배치만, 기능·schema·광고 무영향). 총괄 Codex 로컬 데스크톱 전체화면·1100px·390px 실사용 확인 후 CLOSE 판단 요청.
+
+41. 총괄 Codex 정밀검토 결과 — 데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차 (2026-06-16)
+- 결론: 이슈 없음. `데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차` 총괄 검토 통과. 사용자 실사용 확인 대기.
+- 직접 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, 금지 경로 diff 0건, inline handler 0건, 추가 광고·canonical·JSON-LD·analytics 0건.
+- 정적 근거: `site/index.html`은 `.public-guide-hub`, `.player-registration-card`, `.player-management-card`, `#backupReminderBanner` 유지. `site/style.css` 1280px 이상 `.s1-layout`은 2컬럼, 공개 가이드 허브는 `grid-column: 1 / -1`, 등록/목록은 각각 1·2컬럼으로 확인.
+- 브라우저 근거: 캐시 없는 새 포트 8782 기준 1280px·1440px에서 공개 가이드 허브가 상단 전폭 배너, 그 아래 등록 좌측·목록 우측 2단으로 측정됐다. 390px·1100px는 `display:block` 스택과 공개 가이드 2열을 유지했다.
+- 회귀 확인: `/guides` 링크와 6개 가이드 링크, details 접기/펼치기, 390px·1100px·1280px·1440px 가로 overflow 없음, 콘솔 오류 0건.
+- 사용자 확인: 최신 미리보기에서 `상단 배너 → 공개 가이드 허브 전폭 배너 → 신규 선수 등록/관리 목록 2단` 순서가 의도와 맞는지 확인하면 된다.
+
+42. 사용자 실사용 확인 결과 — 데스크톱 S1 공개 가이드 상단 배너형 레이아웃 보정 1차 (2026-06-16)
+- 사용자 회신: 모두 정상.
+- 결론: 티켓 종료. `상단 배너 → 공개 가이드 허브 전폭 배너 → 신규 선수 등록/관리 목록 2단` 배치가 사용자 의도와 일치함.
+- 남은 처리: 커밋 전 `git diff --check`, `node --check site/app.js`, `node --check site/data.js`, 금지 경로 diff 0건을 다시 확인한다.
+
+43. 보안/QA 점검 결과 — S1 공개 가이드 배너 레이아웃 보안/QA 최종 점검 1차 (2026-06-16)
+- 결론: GO. BLOCKER 0 / MAJOR 0 / MINOR 0 / NIT 0.
+- 정적 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS.
+- diff 범위: 현재 변경 파일은 `docs/workflow/work-plan.md`, `site/index.html`, `site/style.css` 3개뿐이다. `site/app.js`, `site/data.js`, `site/guides.html`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**` diff 0건 확인.
+- 보안 회귀: 신규 inline handler 0건. 현재 `canonical`, `application/ld+json`, AdSense script는 기존 공개 페이지에만 존재하고, 이번 변경분에서 신규 광고/analytics/canonical/JSON-LD 도입 0건 확인.
+- 기능 누락 점검: `site/index.html`에 `.player-registration-card`, `.player-management-card`, `#playerSearchInput`, `#playerSortSelect`, `.public-guide-hub`, `#backupReminderBanner` 존재. 정적 diff 기준 선수 등록/목록 기능 JS·schema 변경 없음.
+- 브라우저 검증: 로컬 서버는 8782가 empty reply를 반환해 8783 새 포트로 재검증했다. 390px·1100px는 스택 유지, 1280px는 `상단 배너 → 공개 가이드 허브 전폭 배너 → 등록/목록 2단` 배치 확인. 공개 가이드 6링크와 `/guides` 링크 유지, details summary 클릭 1회 `open=false`, 2회 `open=true`, 가로 overflow 0, console error 0.
