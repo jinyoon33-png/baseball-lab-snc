@@ -1,56 +1,56 @@
 1. 요청 요약
-- 활성 티켓: `수비·주루·민첩성 가이드 콘텐츠 가치 보강 1차`
-- 현재 단계: `[Step 1. 작업 대기 — 수비·주루·민첩성 가이드 콘텐츠 가치 보강 1차]`
+- 활성 티켓: `공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차`
+- 현재 단계: `[Step 1. 작업 대기 — 공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차]`
 - 담당: 코드 담당 Claude 구현. 총괄 Codex 정밀검토. 필요 시 보안/QA Claude 읽기 전용 점검.
 - 배경: AdSense `가치가 별로 없는 콘텐츠` 재검토 전 공개 가이드를 독립적으로 읽을 수 있는 야구 S&C 자료로 보강 중이다.
-- 목적: 수비·주루·민첩성 가이드를 앱 링크 안내 수준에서 벗어나 가속, 감속, 방향 전환, 첫 움직임, 유소년 적용 주의가 있는 공개 콘텐츠로 확장한다.
+- 목적: 공개 가이드 허브와 서비스 소개 페이지가 사이트의 고유 가치, 읽기 순서, 데이터 보관 방식, 광고·개인정보·문의 신뢰 신호를 독립적으로 설명하도록 보강한다.
 - 이번 티켓은 공개 문서 콘텐츠 보강이다. 앱 기능, 저장 schema, 광고 스크립트, canonical, sitemap은 변경하지 않는다.
 
 2. 대상 파일
-- 수정 허용: `site/fielding-baserunning-agility-guide.html`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `site/rpe-guide.html`, `site/workload-guide.html`, `site/acwr-guide.html`, `site/recovery-guide.html`, `site/warmup-shoulder-guide.html`, `site/assessment-guide.html`, `site/training-program-guide.html`, `site/guides.html`, `site/docs.css`, `site/app.js`, `site/data.js`.
+- 수정 허용: `site/guides.html`, `site/about.html`, `docs/workflow/work-plan.md`.
+- 읽기 허용: `site/rpe-guide.html`, `site/workload-guide.html`, `site/acwr-guide.html`, `site/recovery-guide.html`, `site/warmup-shoulder-guide.html`, `site/assessment-guide.html`, `site/training-program-guide.html`, `site/fielding-baserunning-agility-guide.html`, `site/docs.css`, `site/app.js`, `site/data.js`.
 - 수정 금지: `site/app.js`, `site/data.js`, `site/index.html`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- `site/fielding-baserunning-agility-guide.html` 본문을 visible word count 최소 950단어 이상으로 확장한다.
-- 기존 `doc-shell`, `doc-note`, `doc-links`, AdSense 스크립트, canonical, OG/Twitter, JSON-LD 구조를 유지한다. `h-num`은 01부터 연속 번호로 맞춘다.
+- `site/guides.html`, `site/about.html` 본문을 각각 visible word count 최소 700단어 이상으로 확장한다.
+- 기존 `doc-shell`, `doc-note`, `doc-links`, AdSense 스크립트, canonical, OG/Twitter, JSON-LD 구조를 유지한다. `h-num`은 각 문서에서 01부터 연속 번호로 맞춘다.
 - 필수 내용:
-  - 수비·주루·민첩성은 가속, 감속, 방향 전환, 첫 움직임, 균형 회복을 포함하는 참고 훈련 축이라고 설명한다.
-  - 야구 상황 예시를 넣는다: 내야 첫 스텝, 외야 타구 반응, 베이스러닝 출발·감속, 방향 전환 후 자세 회복.
-  - 유소년·학생선수는 성장 단계, 피로, 동작 숙련, 지도자 관찰을 함께 봐야 한다고 설명한다.
-  - 소프트볼 출발 자세 자료는 야구 직접 근거가 아니라 보조 참고 수준으로만 다룬다.
-  - 자동 드릴 배정, 포지션별 자동 처방, 기록 임계값, 반복 횟수 자동 설정, 부상 예측 문구는 넣지 않는다.
+  - `guides.html`: 공개 가이드 8개의 읽기 순서, 각 가이드가 해결하는 질문, 앱 사용 전 읽으면 좋은 조합을 설명한다.
+  - `guides.html`: 광고 심사 관점에서 빈 허브가 아니라 독립 안내 페이지로 읽히도록, 각 가이드의 역할과 안전한 해석 한계를 본문으로 보강한다.
+  - `about.html`: 서비스의 차별점(야구 훈련 기록·회복·워크로드·정밀평가를 한 흐름으로 보는 구조), localStorage 기반 데이터 보관 방식, 백업 책임, 문의 경로를 설명한다.
+  - 두 문서 모두 광고, 개인정보, 문의/지원, 안전 고지의 신뢰 신호를 사용자 관점에서 명확히 설명한다.
+  - 치료·처방·진단·성과 보장·부상 예방 보장·자동 위험 판정·부상 예측 문구는 넣지 않는다.
 - meta description, OG/Twitter description, JSON-LD description은 기존 의미와 충돌하지 않으면 그대로 둔다. 변경하면 세 값이 동일 의미를 유지해야 한다.
 
 4. 정적 확인 명령
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `python3 - <<'PY' ... PY`로 `site/fielding-baserunning-agility-guide.html` visible word count 확인. 기준: `words >= 950`.
-- `python3 - <<'PY' ... PY`로 `site/fielding-baserunning-agility-guide.html`의 `application/ld+json` JSON 파싱 확인.
-- `rg -n "<h2>|h-num" site/fielding-baserunning-agility-guide.html`
-- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능|임계값|자동 드릴|자동 배정" site/fielding-baserunning-agility-guide.html`
+- `python3 - <<'PY' ... PY`로 `site/guides.html`, `site/about.html` visible word count 확인. 기준: 각 `words >= 700`.
+- `python3 - <<'PY' ... PY`로 두 문서의 `application/ld+json` JSON 파싱 확인.
+- `rg -n "<h2>|h-num" site/guides.html site/about.html`
+- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/guides.html site/about.html`
 - `rg -n "onclick=|oninput=|onchange=" site/*.html`
-- `rg -n "adsbygoogle|pagead2.googlesyndication.com|canonical|application/ld\\+json" site/fielding-baserunning-agility-guide.html`
+- `rg -n "adsbygoogle|pagead2.googlesyndication.com|canonical|application/ld\\+json" site/guides.html site/about.html`
 - `git diff -- site/app.js site/data.js site/index.html site/style.css site/docs.css site/tokens.css site/sitemap.xml site/robots.txt site/ads.txt site/assets site/vendor docs/evidence docs/security`
 - `git diff --check`
 
 5. 완료 조건
-- 문서 visible word count가 950 이상이다.
-- `h-num`이 01부터 마지막 섹션까지 연속이다.
-- 기존 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links가 보존된다.
+- 두 문서 모두 visible word count가 700 이상이다.
+- 두 문서 모두 `h-num`이 01부터 마지막 섹션까지 연속이다.
+- 두 문서의 기존 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links가 보존된다.
 - 금지 표현은 0건이어야 한다. 단, 기존 doc-note의 `의료 진단·치료·처방 도구가 아니며`처럼 부정·면책 문맥이면 보고에서 안전 문맥으로 분류한다.
 - `site/app.js`, `site/data.js`, 저장 schema, sitemap/robots/ads.txt 변경 0건.
 - 모바일/데스크톱에서 문서 폭 overflow가 없어야 한다. 브라우저 확인을 못 하면 미수행으로 명시한다.
 
 6. 이슈 분류 기준
 - BLOCKER: 앱 기능·저장 schema·광고/SEO 핵심 메타 손상, 의료·성과 보장 또는 자동 위험 판정 문구 추가.
-- MAJOR: 단어 수 950 미만, 수비·주루·민첩성을 자동 처방·자동 배정처럼 오해시키는 문구, doc-links/canonical/JSON-LD 손상.
-- MINOR: 야구 실사용 예시 부족, 유소년 적용 주의 누락, 소프트볼 보조 참고 한계 누락.
+- MAJOR: 어느 한 문서라도 단어 수 700 미만, 사이트 고유 가치 설명 부족, doc-links/canonical/JSON-LD 손상.
+- MINOR: 읽기 순서 부족, localStorage/백업 책임 설명 부족, 광고·개인정보·문의 신뢰 신호 중 일부 누락.
 - NIT: 문장 중복, 띄어쓰기, 섹션 번호/제목 일관성.
 
 7. Claude 작업 지침
 - 이번 티켓은 코드 담당 Claude가 수행한다.
-- `site/fielding-baserunning-agility-guide.html`만 콘텐츠 보강하고, 앱 JS/CSS/data/SEO 인프라는 건드리지 않는다.
+- `site/guides.html`, `site/about.html`만 콘텐츠 보강하고, 앱 JS/CSS/data/SEO 인프라는 건드리지 않는다.
 - 완료 보고는 변경 요약, 단어 수, `h-num` 연속성, 금지표현 grep, 수정 금지 경로 diff만 짧게 적는다.
 - 구현 후 다음 티켓은 임의로 고르지 말고 총괄 Codex 검토 대기한다.
 
@@ -699,3 +699,25 @@
 - 금지 표현: grep 결과는 `의료 진단`, `처방하지 않습니다`, `결과를 보장하지 않습니다`, `의료 진단·치료·처방 도구가 아닙니다` 등 부정·면책 문맥뿐이다. 최적화, 성과 향상 보장, 부상 예방 보장, 자동 추천/자동 대체/위험 판정/부상 예측 문구 0건.
 - 보존 확인: 두 문서의 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links 보존. 앱 JS/data/schema, sitemap/robots/ads.txt 변경 없음.
 - 브라우저 검증: 같은 셸에서 `site/` 서버 8788을 유지한 상태로 Playwright CLI 확인. assessment/training 모두 390px·1440px에서 `overflowX=false`, h2 8개, h-num 01~08, doc-links 12건 렌더 확인.
+
+51. 코드 담당 구현 결과 — 수비·주루·민첩성 가이드 콘텐츠 가치 보강 1차 (2026-06-18, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- 변경 파일: `site/fielding-baserunning-agility-guide.html` 1개(+22/-1). 수정 금지 경로(app.js·data.js·index.html·style.css·docs.css·tokens.css·sitemap·robots·ads.txt·assets·vendor·evidence·security) diff 0건.
+- 단어 수: **995** (≥950 충족). 확장 전 670.
+- h-num 연속성: 01~09 연속(누락·중복 0).
+- 변경 요약:
+  - 인트로 프레이밍 추가: 수비·주루·민첩성 = 가속·감속·방향 전환·첫 움직임·균형 회복을 포함하는 참고 훈련 축, 자동 드릴 배정·포지션별 정답 제시 도구 아님 명시.
+  - **신설 07 야구 상황별 예시**: 내야 첫 스텝·외야 타구 반응·베이스러닝 출발·감속·방향 전환 후 자세 회복(필수 4예시 전부 포함).
+  - **신설 08 유소년·학생선수 적용 주의**: 성장 단계·피로·동작 숙련·지도자 관찰 + 소프트볼 출발 자세 자료는 야구 직접 근거 아닌 보조 참고 수준으로만 활용한다는 한계 명시.
+  - 기존 07 관련 가이드 → 09 재번호. 기존 01~06 본문 무변경.
+- 금지표현 grep: 신규 추가분 **0건**. 검출 1건은 기존 doc-note `의료 진단·치료·처방 도구가 아니며`(부정·면책 문맥, §5 안전 분류). 자동 드릴 배정·포지션별 자동 처방·기록 임계값·반복 횟수 자동 설정·부상 예측 0(인트로의 "자동" 언급은 "대신 정해 주거나…아니라"로 부정 서술).
+- 보존: AdSense 스크립트·canonical·OG/Twitter·JSON-LD(파싱 OK)·doc-note·doc-links 유지. meta/OG/JSON-LD description 무변경.
+- 브라우저 확인: 프리뷰 /fielding-baserunning-agility-guide.html 데스크톱 1440px·모바일 390px 모두 overflowX=false, h2 9개·h-num 01~09 연속 렌더, 콘솔 오류 0. node --check app.js/data.js PASS.
+- 잔여 리스크: 없음(공개 문서 콘텐츠만, 앱·schema·SEO 인프라 무영향). 다음 티켓은 임의 선택하지 않고 총괄 Codex 검토 대기.
+
+52. 총괄 Codex 정밀검토 결과 — 수비·주루·민첩성 가이드 콘텐츠 가치 보강 1차 (2026-06-18)
+- 결론: 이슈 없음. `수비·주루·민첩성 가이드 콘텐츠 가치 보강 1차` 통과. 후속으로 `공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차`를 활성화했다.
+- 직접 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS. inline handler 0건, 수정 금지 경로 diff 0건.
+- 콘텐츠 기준: 직접 파서 기준 `site/fielding-baserunning-agility-guide.html` 997단어로 950 이상. `h-num`은 01~09 연속. JSON-LD는 1건 Article 파싱 OK.
+- 금지 표현: grep 결과는 기존 doc-note의 `의료 진단·치료·처방 도구가 아니며` 1건뿐이며 부정·면책 문맥이다. 자동 드릴 배정, 포지션별 자동 처방, 기록 임계값, 반복 횟수 자동 설정, 부상 예측 문구 0건.
+- 보존 확인: AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links 보존. 앱 JS/data/schema, sitemap/robots/ads.txt 변경 없음.
+- 브라우저 검증: 같은 셸에서 `site/` 서버 8789를 유지한 상태로 Playwright CLI 확인. 390px·1440px 모두 `overflowX=false`, h2 9개, h-num 01~09, doc-links 12건 렌더 확인.
