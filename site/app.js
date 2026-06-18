@@ -4206,7 +4206,7 @@ function renderTeamDashboard() {
                 <div class="value">${safeLowRecoveryCount}</div>
             </div>
             <div class="stat-card ${wellnessMissingCount > 0 ? 'warning' : ''}">
-                <div class="label">웰니스 미입력</div>
+                <div class="label">컨디션 미입력</div>
                 <div class="value">${safeWellnessMissingCount}</div>
             </div>
             <div class="stat-card ${todayNotCompletedCount > 0 ? 'warning' : ''}">
@@ -4256,7 +4256,7 @@ function renderTeamDashboard() {
             if (risk.acwrDanger) reasons.push('<span class="aq-tag aq-danger">ACWR 부하 급증</span>');
             if (risk.acwrCaution) reasons.push('<span class="aq-tag aq-warning">ACWR 부하 증가</span>');
             if (risk.hasLowRecovery) reasons.push('<span class="aq-tag aq-warning">회복저하</span>');
-            if (risk.wellnessMissing) reasons.push('<span class="aq-tag aq-info">웰니스 미입력</span>');
+            if (risk.wellnessMissing) reasons.push('<span class="aq-tag aq-info">컨디션 미입력</span>');
             if (risk.todayNotCompleted) reasons.push('<span class="aq-tag aq-info">오늘 미완료</span>');
             const reasonsHtml = reasons.length > 0
                 ? reasons.slice(0, 2).join('')

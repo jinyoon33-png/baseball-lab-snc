@@ -4,6 +4,7 @@
 
 ## 현재 활성 큐
 
+- `AdSense 콘텐츠 가치 보강 묶음` — 활성. `가치가 별로 없는 콘텐츠` 재거절을 줄이기 위해 공개 가이드 8개와 가이드 허브/서비스 소개를 순차 확장한다. 상세 실행 순서는 `docs/workflow/work-plan.md`의 `7-6. AdSense 콘텐츠 가치 보강 티켓 큐`를 기준으로 한다.
 - `앱 전환 로드맵 후속 결정` — 웹사이트 출시 후 사용자 결정 대기. 설계 결과는 `docs/workflow/work-plan-archive.md`에 기록 완료. 다음 결정은 `PWA/TWA 우선 검토`로 갈지, `네이티브 앱 설계`로 바로 갈지 선택하는 것이다.
 - `도메인/운영자 연락처 확정 후 SEO 구현 1차` — 차단. 최종 도메인과 운영자 이메일 확정 후 sitemap/canonical/robots Sitemap 지시문을 구현한다.
 - `AdSense 코드 삽입 전 보안/QA 1차` — 차단. 실제 광고 코드/분석 코드 삽입 직전에 보안/QA Claude가 외부 스크립트, CSP, 개인정보/약관, 광고 배치 정책을 점검한다.
@@ -13,33 +14,31 @@
 ## AdSense/출시 준비 체크리스트
 
 ### 0. 현재 상태
-- 공개 HTML: 13개(`index`, `about`, `workload-guide`, `recovery-guide`, `assessment-guide`, `rpe-guide`, `acwr-guide`, `training-program-guide`, `warmup-shoulder-guide`, `fielding-baserunning-agility-guide`, `privacy`, `terms`, `contact`).
-- 현재 허용: `site/robots.txt` 기본 허용 2줄(`User-agent: *`, `Allow: /`).
-- 현재 보류: `sitemap.xml`, canonical, JSON-LD, AdSense 코드, analytics/gtag, Search Console 제출.
-- 정책 문서: `privacy`, `terms`, `contact`는 광고/분석 도입 전 갱신 원칙과 운영자 이메일 미확정 상태를 이미 고지한다.
+- 공개 HTML: 15개(`index`, `guides`, `about`, `workload-guide`, `recovery-guide`, `assessment-guide`, `rpe-guide`, `acwr-guide`, `training-program-guide`, `warmup-shoulder-guide`, `fielding-baserunning-agility-guide`, `privacy`, `terms`, `contact`, `404`).
+- 현재 허용: `site/robots.txt`는 전체 허용 + sitemap 지시문 포함.
+- 현재 적용: `sitemap.xml`, canonical, JSON-LD, AdSense 코드, ads.txt, OG/Twitter 메타, og:image.
+- 현재 이슈: AdSense 승인 상태가 `주의 필요`, 세부 사유가 `가치가 별로 없는 콘텐츠`. `ads.txt`는 승인됨.
+- 정책 문서: `privacy`, `terms`, `contact`는 광고/분석 도입 및 운영자 이메일 고지를 반영한 상태다.
 
-### 1. 도메인/연락처 확정 전 금지
-- `sitemap.xml` 생성 금지: Google sitemap은 완전한 절대 URL이 필요하므로 최종 도메인 전에는 만들지 않는다.
-- canonical 삽입 금지: 대표 URL 확정 전에는 중복 URL 신호를 만들지 않는다.
-- `robots.txt`의 `Sitemap:` 지시문 금지: sitemap 절대 URL 확정 후 추가한다.
-- JSON-LD 삽입 금지: 구조화 데이터는 보안/QA와 실제 공개 정보 정합성 확인 후 진행한다.
-- AdSense/analytics/gtag 코드 삽입 금지: 정책 문서 최종 고지와 보안/QA 전에는 외부 스크립트를 넣지 않는다.
+### 1. AdSense 재검토 전 금지
+- 검증 없이 AdSense 스크립트, ads.txt, robots.txt, sitemap.xml, canonical을 임의 변경하지 않는다.
+- 앱 조작 화면, 저장/삭제/복원/워크로드 입력/평가 저장 주변에 수동 광고 단위를 넣지 않는다.
+- `치료`, `처방`, `진단`, `보장`, `최적`, `부상 예방`, `성과 향상`, `부상 예측`, `위험 판정` 표현을 긍정·단정 문맥으로 추가하지 않는다.
+- 저장 schema(`pLDB_v4_5`), 백업/복원, `site/data.js`는 콘텐츠 보강 티켓에서 수정하지 않는다.
 
-### 2. 사용자 확정 필요값
-- 최종 도메인: 예) `https://example.com`.
-- 운영자 이메일: `contact.html`과 `privacy.html`에 동일하게 공개할 주소.
-- 배포 호스트: 정적 호스팅 경로, `_headers` 적용 여부, HTTPS 강제 여부.
-- Search Console 소유권 확인 방식: DNS TXT 또는 HTML 파일 방식 중 선택.
+### 2. 현재 확정값
+- 최종 도메인: `https://baseballlabsnc.com`.
+- 운영자 이메일: `jim3422@naver.com`.
+- 배포 호스트: GitHub 저장소 + Cloudflare 배포.
 - 광고 배치 원칙: 공개 가이드 문서 본문 중간/하단만 후보. 앱 조작 화면, 저장/삭제/복원/워크로드 입력/평가 저장 주변은 금지.
+- 추가 검토 필요: `baseballlabsnc.com`과 `www.baseballlabsnc.com` 중 대표 도메인 1개로 301 정규화할지 결정.
 
-### 3. 도메인/연락처 확정 후 작업
-- `contact.html` 운영자 이메일 반영.
-- `privacy.html` 문의 경로와 광고/분석 도입 시 사용자 선택 방법 최종 문구 보강.
-- `terms.html` 광고 배치 원칙과 광고/콘텐츠 구분 원칙 재확인.
-- `sitemap.xml` 생성 후 공개 HTML 13개 URL 포함.
-- `robots.txt`에 `Sitemap: https://.../sitemap.xml` 추가.
-- 각 HTML canonical URL 삽입 여부 설계 후 구현.
-- Search Console 등록, sitemap 제출, robots 테스트 진행.
+### 3. AdSense 재검토 전 작업
+- `docs/workflow/work-plan.md`의 `7-6. AdSense 콘텐츠 가치 보강 티켓 큐` 순서대로 공개 가이드를 확장한다.
+- 대표 도메인 정규화 방식을 결정하고 canonical/sitemap/og:url과 맞춘다.
+- Search Console에서 sitemap 제출 상태와 색인 가능 상태를 확인한다.
+- 콘텐츠 보강 완료 후 모바일/데스크톱 브라우저 실사용 QA를 수행한다.
+- 최종 QA 통과 후 AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 후 `검토 요청`한다.
 
 ### 4. AdSense 신청/광고 코드 전 작업
 - Google AdSense site readiness 기준으로 고유 콘텐츠, 명확한 내비게이션, 정책 페이지 접근성을 재확인한다.
