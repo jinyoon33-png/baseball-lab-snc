@@ -1,58 +1,53 @@
 1. 요청 요약
-- 활성 티켓: `공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차`
-- 현재 단계: `[Step 1. 작업 대기 — 공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차]`
-- 담당: 코드 담당 Claude 구현. 총괄 Codex 정밀검토. 필요 시 보안/QA Claude 읽기 전용 점검.
-- 배경: AdSense `가치가 별로 없는 콘텐츠` 재검토 전 공개 가이드를 독립적으로 읽을 수 있는 야구 S&C 자료로 보강 중이다.
-- 목적: 공개 가이드 허브와 서비스 소개 페이지가 사이트의 고유 가치, 읽기 순서, 데이터 보관 방식, 광고·개인정보·문의 신뢰 신호를 독립적으로 설명하도록 보강한다.
-- 이번 티켓은 공개 문서 콘텐츠 보강이다. 앱 기능, 저장 schema, 광고 스크립트, canonical, sitemap은 변경하지 않는다.
+- 활성 티켓: `도메인 canonical 정규화 검토 1차`
+- 현재 단계: `[Step 1. 작업 대기 — 도메인 canonical 정규화 검토 1차]`
+- 담당: 총괄 Codex 검토. 필요 시 Cloudflare/배포 설정은 사용자 확인 후 별도 구현 티켓으로 분리한다.
+- 배경: AdSense 재검토 전 `baseballlabsnc.com`과 `www.baseballlabsnc.com` 중 대표 도메인을 명확히 하고, canonical/sitemap/og:url/실제 redirect 정합성을 확인해야 한다.
+- 목적: 현재 공개 사이트가 중복 도메인으로 심사·검색엔진에 혼선을 주지 않는지 점검하고, 정규화 구현이 필요하면 별도 후속 티켓을 만든다.
+- 이번 티켓은 검토 전용이다. `site/*` 코드는 수정하지 않는다.
 
 2. 대상 파일
-- 수정 허용: `site/guides.html`, `site/about.html`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `site/rpe-guide.html`, `site/workload-guide.html`, `site/acwr-guide.html`, `site/recovery-guide.html`, `site/warmup-shoulder-guide.html`, `site/assessment-guide.html`, `site/training-program-guide.html`, `site/fielding-baserunning-agility-guide.html`, `site/docs.css`, `site/app.js`, `site/data.js`.
-- 수정 금지: `site/app.js`, `site/data.js`, `site/index.html`, `site/style.css`, `site/docs.css`, `site/tokens.css`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 수정 허용: `docs/workflow/work-plan.md`.
+- 읽기 허용: `site/*.html`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, 배포 URL의 HTTP 응답 헤더.
+- 수정 금지: `site/*`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- `site/guides.html`, `site/about.html` 본문을 각각 visible word count 최소 700단어 이상으로 확장한다.
-- 기존 `doc-shell`, `doc-note`, `doc-links`, AdSense 스크립트, canonical, OG/Twitter, JSON-LD 구조를 유지한다. `h-num`은 각 문서에서 01부터 연속 번호로 맞춘다.
-- 필수 내용:
-  - `guides.html`: 공개 가이드 8개의 읽기 순서, 각 가이드가 해결하는 질문, 앱 사용 전 읽으면 좋은 조합을 설명한다.
-  - `guides.html`: 광고 심사 관점에서 빈 허브가 아니라 독립 안내 페이지로 읽히도록, 각 가이드의 역할과 안전한 해석 한계를 본문으로 보강한다.
-  - `about.html`: 서비스의 차별점(야구 훈련 기록·회복·워크로드·정밀평가를 한 흐름으로 보는 구조), localStorage 기반 데이터 보관 방식, 백업 책임, 문의 경로를 설명한다.
-  - 두 문서 모두 광고, 개인정보, 문의/지원, 안전 고지의 신뢰 신호를 사용자 관점에서 명확히 설명한다.
-  - 치료·처방·진단·성과 보장·부상 예방 보장·자동 위험 판정·부상 예측 문구는 넣지 않는다.
-- meta description, OG/Twitter description, JSON-LD description은 기존 의미와 충돌하지 않으면 그대로 둔다. 변경하면 세 값이 동일 의미를 유지해야 한다.
+- live URL 응답을 확인한다: `https://baseballlabsnc.com`, `https://www.baseballlabsnc.com`, `/guides`, `/sitemap.xml`, `/ads.txt`.
+- 현재 파일의 canonical, og:url, JSON-LD url/mainEntityOfPage, sitemap loc가 어느 도메인을 기준으로 하는지 확인한다.
+- `robots.txt`의 `Sitemap:` 지시문과 `sitemap.xml`의 URL 도메인이 일치하는지 확인한다.
+- 대표 도메인은 원칙적으로 현재 파일 기준인 `https://www.baseballlabsnc.com`을 우선 후보로 둔다. 단, 실제 배포/Cloudflare가 apex만 안정적이면 근거를 보고한다.
+- 정규화가 필요하면 `Cloudflare redirect/Pages custom domain 설정` 또는 `파일 canonical/sitemap 변경` 중 어느 쪽이 적절한지 후속 티켓으로 분리한다.
+- 이번 티켓에서 직접 redirect 설정, DNS, site 파일 수정, commit은 하지 않는다.
 
 4. 정적 확인 명령
-- `node --check site/app.js`
-- `node --check site/data.js`
-- `python3 - <<'PY' ... PY`로 `site/guides.html`, `site/about.html` visible word count 확인. 기준: 각 `words >= 700`.
-- `python3 - <<'PY' ... PY`로 두 문서의 `application/ld+json` JSON 파싱 확인.
-- `rg -n "<h2>|h-num" site/guides.html site/about.html`
-- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/guides.html site/about.html`
-- `rg -n "onclick=|oninput=|onchange=" site/*.html`
-- `rg -n "adsbygoogle|pagead2.googlesyndication.com|canonical|application/ld\\+json" site/guides.html site/about.html`
-- `git diff -- site/app.js site/data.js site/index.html site/style.css site/docs.css site/tokens.css site/sitemap.xml site/robots.txt site/ads.txt site/assets site/vendor docs/evidence docs/security`
+- `curl -I -L https://baseballlabsnc.com/`
+- `curl -I -L https://www.baseballlabsnc.com/`
+- `curl -I -L https://baseballlabsnc.com/guides`
+- `curl -I -L https://www.baseballlabsnc.com/guides`
+- `curl -s https://baseballlabsnc.com/ads.txt | head`
+- `curl -s https://www.baseballlabsnc.com/ads.txt | head`
+- `curl -s https://www.baseballlabsnc.com/sitemap.xml | head`
+- `rg -n "canonical|og:url|mainEntityOfPage|\\\"url\\\"|https://baseballlabsnc\\.com|https://www\\.baseballlabsnc\\.com" site/*.html site/sitemap.xml site/robots.txt`
 - `git diff --check`
 
 5. 완료 조건
-- 두 문서 모두 visible word count가 700 이상이다.
-- 두 문서 모두 `h-num`이 01부터 마지막 섹션까지 연속이다.
-- 두 문서의 기존 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links가 보존된다.
-- 금지 표현은 0건이어야 한다. 단, 기존 doc-note의 `의료 진단·치료·처방 도구가 아니며`처럼 부정·면책 문맥이면 보고에서 안전 문맥으로 분류한다.
-- `site/app.js`, `site/data.js`, 저장 schema, sitemap/robots/ads.txt 변경 0건.
-- 모바일/데스크톱에서 문서 폭 overflow가 없어야 한다. 브라우저 확인을 못 하면 미수행으로 명시한다.
+- apex와 www의 현재 응답 상태, redirect 여부, 최종 URL을 기록한다.
+- 파일 기준 canonical/sitemap/og:url/JSON-LD 도메인 기준을 기록한다.
+- 중복 도메인 상태가 AdSense/검색 정합성에 문제인지 판단한다.
+- 수정이 필요하면 별도 후속 티켓을 등록하고, 필요 없으면 다음 QA 티켓으로 진행한다.
+- 이번 티켓에서 `site/*` 변경 0건을 유지한다.
 
 6. 이슈 분류 기준
-- BLOCKER: 앱 기능·저장 schema·광고/SEO 핵심 메타 손상, 의료·성과 보장 또는 자동 위험 판정 문구 추가.
-- MAJOR: 어느 한 문서라도 단어 수 700 미만, 사이트 고유 가치 설명 부족, doc-links/canonical/JSON-LD 손상.
-- MINOR: 읽기 순서 부족, localStorage/백업 책임 설명 부족, 광고·개인정보·문의 신뢰 신호 중 일부 누락.
-- NIT: 문장 중복, 띄어쓰기, 섹션 번호/제목 일관성.
+- BLOCKER: 대표 도메인 URL이 접속 불가, sitemap/robots가 잘못된 도메인을 가리켜 색인·AdSense 재검토에 직접 방해.
+- MAJOR: apex와 www가 둘 다 200 OK인데 canonical/sitemap과 충돌하거나, canonical/og:url/JSON-LD URL이 페이지별로 불일치.
+- MINOR: redirect는 없지만 canonical/sitemap이 일관되어 검색엔진이 대표 도메인을 해석할 수 있는 상태.
+- NIT: http→https, trailing slash, 확장자 없는 URL 등 표기 일관성 보강 후보.
 
 7. Claude 작업 지침
-- 이번 티켓은 코드 담당 Claude가 수행한다.
-- `site/guides.html`, `site/about.html`만 콘텐츠 보강하고, 앱 JS/CSS/data/SEO 인프라는 건드리지 않는다.
-- 완료 보고는 변경 요약, 단어 수, `h-num` 연속성, 금지표현 grep, 수정 금지 경로 diff만 짧게 적는다.
-- 구현 후 다음 티켓은 임의로 고르지 말고 총괄 Codex 검토 대기한다.
+- 이번 티켓은 총괄 Codex가 직접 수행하는 검토 전용 티켓이다.
+- 코드 담당 Claude는 대기한다.
+- 결과는 `docs/workflow/work-plan.md`에만 기록한다.
+- DNS/Cloudflare/redirect 설정 변경은 사용자 확인 없이 진행하지 않는다.
 
 7-1. AdSense 승인 후 대기 티켓 큐
 - A1 `AdSense 승인 후 실제 광고 게재 확인 1차`: 총괄 Codex가 브라우저 실사용 확인을 수행한다. 메인 앱, 공개 가이드, 모바일/데스크톱에서 광고 위치가 앱 조작을 방해하는지 확인한다. `site/*` 수정 없음.
@@ -721,3 +716,23 @@
 - 금지 표현: grep 결과는 기존 doc-note의 `의료 진단·치료·처방 도구가 아니며` 1건뿐이며 부정·면책 문맥이다. 자동 드릴 배정, 포지션별 자동 처방, 기록 임계값, 반복 횟수 자동 설정, 부상 예측 문구 0건.
 - 보존 확인: AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links 보존. 앱 JS/data/schema, sitemap/robots/ads.txt 변경 없음.
 - 브라우저 검증: 같은 셸에서 `site/` 서버 8789를 유지한 상태로 Playwright CLI 확인. 390px·1440px 모두 `overflowX=false`, h2 9개, h-num 01~09, doc-links 12건 렌더 확인.
+
+53. 코드 담당 구현 결과 — 공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차 (2026-06-18, 코드 담당 Claude — 총괄 Codex 정밀검토 대기)
+- 변경 파일: `site/guides.html`(+36/-4), `site/about.html`(+27/-5) 2개. 수정 금지 경로(app.js·data.js·index.html·style.css·docs.css·tokens.css·sitemap·robots·ads.txt·assets·vendor·evidence·security) diff 0건.
+- 단어 수: guides **894**, about **792** (둘 다 ≥700 충족). 확장 전 421/400.
+- h-num 연속성: guides 01~08, about 01~09 연속.
+- 변경 요약:
+  - guides.html: **신설 02 각 가이드가 해결하는 질문**(8개 가이드별 핵심 질문·안전한 해석 한계 / 광고 심사 관점에서 독립 안내 페이지로 읽히도록 본문 보강) / **신설 06 앱 사용 전 권장 읽기 조합**(처음 사용자·투수·유소년·코치·경기 임박 시기 5가지 시나리오별 가이드 묶음) / **신설 07 데이터·광고·문의 신뢰 신호**(데이터 보관·광고·개인정보·문의·안전 고지 한 문장씩 정리) / 기존 02~05 → 03·04·05·08로 재번호 / 01·기존 본문 무변경.
+  - about.html: **신설 02 이 서비스의 차별점**(훈련 기록·회복·워크로드·정밀평가를 한 흐름으로 보는 구조 + localStorage 기반 데이터 통제권 + 자동 위험 판정 없음) / **신설 07 데이터 보관 방식과 백업 책임**(사라질 수 있는 상황·권장 백업 방식·백업 주기·여러 기기 사용) / **신설 08 광고·개인정보·문의 신뢰 신호**(AdSense·개인정보처리방침·문의/지원·안전 고지 한 문장씩) / 기존 02~06 → 03·04·05·06·09로 재번호 / 01·기존 본문 무변경.
+- 금지표현 grep: 신규 추가분 affirmative **0건**. 검출은 전부 부정·면책 문맥(`대신하지 않으며`/`도구가 아니며`/`보장하지 않습니다`/`응대 범위가 아니므로`) 또는 기존 JSON-LD·FAQ 텍스트로 §5 안전 분류. 치료·처방·진단·성과 보장(긍정)·부상 예방(긍정)·자동 위험 판정·부상 예측 0.
+- 보존: 두 문서 AdSense 스크립트·canonical·OG/Twitter·JSON-LD(둘 다 파싱 OK)·doc-note·doc-links 유지. meta/OG/JSON-LD description 무변경.
+- 브라우저 확인: 프리뷰 /guides.html·/about.html 데스크톱 1440px·모바일 390px 모두 overflowX=false, h2 각 8·9개·h-num 연속 렌더, 콘솔 오류 0. node --check app.js/data.js PASS.
+- 잔여 리스크: 없음(공개 문서 콘텐츠만, 앱·schema·SEO 인프라 무영향). 다음 티켓은 임의 선택하지 않고 총괄 Codex 검토 대기.
+
+54. 총괄 Codex 정밀검토 결과 — 공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차 (2026-06-19)
+- 결론: 이슈 없음. `공개 가이드 허브/서비스 소개 콘텐츠 가치 보강 1차` 통과. 후속으로 `도메인 canonical 정규화 검토 1차`를 활성화했다.
+- 직접 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS. inline handler 0건, 수정 금지 경로 diff 0건.
+- 콘텐츠 기준: 직접 파서 기준 `site/guides.html` 917단어, `site/about.html` 838단어로 둘 다 700 이상. `h-num`은 guides 01~08, about 01~09 연속. JSON-LD는 guides `CollectionPage` 1건, about `@graph` 1건 파싱 OK.
+- 금지 표현: grep 결과는 `의료 진단·치료·처방을 대신하지 않습니다`, `보장하지 않습니다`, `응대 범위가 아니므로` 등 부정·면책 문맥뿐이다. 긍정형 치료/처방/진단/부상 예방/성과 보장/자동 위험 판정/부상 예측 문구 0건.
+- 보존 확인: 두 문서의 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links 보존. 앱 JS/data/schema, sitemap/robots/ads.txt 변경 없음.
+- 브라우저 검증: 같은 셸에서 `site/` 서버 8790을 유지한 상태로 Playwright CLI 확인. guides/about 모두 390px·1440px에서 `overflowX=false`, guides h2 8개·doc-links 5건, about h2 9개·doc-links 13건 렌더 확인.
