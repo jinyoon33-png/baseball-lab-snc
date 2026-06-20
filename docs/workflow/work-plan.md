@@ -1,10 +1,10 @@
 1. 요청 요약
-- 활성 티켓: `도메인 canonical 정규화 검토 1차`
-- 현재 단계: `[Step 1. 작업 대기 — 도메인 canonical 정규화 검토 1차]`
-- 담당: 총괄 Codex 검토. 필요 시 Cloudflare/배포 설정은 사용자 확인 후 별도 구현 티켓으로 분리한다.
-- 배경: AdSense 재검토 전 `baseballlabsnc.com`과 `www.baseballlabsnc.com` 중 대표 도메인을 명확히 하고, canonical/sitemap/og:url/실제 redirect 정합성을 확인해야 한다.
-- 목적: 현재 공개 사이트가 중복 도메인으로 심사·검색엔진에 혼선을 주지 않는지 점검하고, 정규화 구현이 필요하면 별도 후속 티켓을 만든다.
-- 이번 티켓은 검토 전용이다. `site/*` 코드는 수정하지 않는다.
+- 활성 티켓: `AdSense 재검토 요청 대기`
+- 현재 단계: `[Step 2. 최종 QA 완료(§57) — 사용자 AdSense 재검토 요청 대기]`
+- 담당: 총괄 Codex 직접 검토. 필요 시 보안/QA Claude 읽기 전용 보조 점검.
+- 배경: AdSense `가치가 별로 없는 콘텐츠` 보정 티켓 1~7순위가 완료됐다. 재검토 요청 전 공개 페이지 전체를 마지막으로 점검한다.
+- 목적: 전체 공개 페이지의 콘텐츠 분량, 내부 링크, sitemap/robots/canonical/JSON-LD, 금지 표현, 모바일 overflow, 광고 스크립트 유지 여부를 확인한다.
+- 이번 티켓은 최종 QA 전용이다. 원칙적으로 `site/*` 수정 없이 점검하고, 결함이 나오면 별도 수정 티켓을 만든다.
 
 2. 대상 파일
 - 수정 허용: `docs/workflow/work-plan.md`.
@@ -12,42 +12,48 @@
 - 수정 금지: `site/*`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- live URL 응답을 확인한다: `https://baseballlabsnc.com`, `https://www.baseballlabsnc.com`, `/guides`, `/sitemap.xml`, `/ads.txt`.
-- 현재 파일의 canonical, og:url, JSON-LD url/mainEntityOfPage, sitemap loc가 어느 도메인을 기준으로 하는지 확인한다.
-- `robots.txt`의 `Sitemap:` 지시문과 `sitemap.xml`의 URL 도메인이 일치하는지 확인한다.
-- 대표 도메인은 원칙적으로 현재 파일 기준인 `https://www.baseballlabsnc.com`을 우선 후보로 둔다. 단, 실제 배포/Cloudflare가 apex만 안정적이면 근거를 보고한다.
-- 정규화가 필요하면 `Cloudflare redirect/Pages custom domain 설정` 또는 `파일 canonical/sitemap 변경` 중 어느 쪽이 적절한지 후속 티켓으로 분리한다.
-- 이번 티켓에서 직접 redirect 설정, DNS, site 파일 수정, commit은 하지 않는다.
+- 공개 HTML 전체를 점검한다: `index`, `guides`, `about`, 8개 가이드, `privacy`, `terms`, `contact`, `404`.
+- 콘텐츠 가치 보강 대상 페이지의 visible word count 기준을 재확인한다.
+- sitemap/robots/canonical/og:url/JSON-LD가 대표 도메인 `https://www.baseballlabsnc.com` 기준으로 일관되는지 확인한다.
+- 광고 스크립트와 ads.txt가 존재하는지 확인하되, 새 광고 단위는 만들지 않는다.
+- 금지 표현은 긍정·단정 문맥을 기준으로 검토한다. 부정·면책 문맥은 안전 문맥으로 분류한다.
+- 모바일/데스크톱 브라우저에서 주요 공개 페이지의 가로 overflow가 없는지 확인한다.
+- 결함이 발견되면 `BLOCKER/MAJOR/MINOR/NIT`로 분류하고, 수정 티켓을 우선 등록한다. 이슈가 없으면 AdSense 재검토 요청 준비 완료로 기록한다.
 
 4. 정적 확인 명령
-- `curl -I -L https://baseballlabsnc.com/`
+- `node --check site/app.js`
+- `node --check site/data.js`
+- `python3 - <<'PY' ... PY`로 공개 HTML visible word count와 JSON-LD 파싱 확인.
+- `python3 - <<'PY' ... PY`로 sitemap XML 파싱과 sitemap URL 14건 확인.
+- `rg -n "onclick=|oninput=|onchange=" site/*.html`
+- `rg -n "canonical|og:url|application/ld\\+json|pagead2.googlesyndication.com" site/*.html`
+- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/*.html`
 - `curl -I -L https://www.baseballlabsnc.com/`
-- `curl -I -L https://baseballlabsnc.com/guides`
 - `curl -I -L https://www.baseballlabsnc.com/guides`
-- `curl -s https://baseballlabsnc.com/ads.txt | head`
 - `curl -s https://www.baseballlabsnc.com/ads.txt | head`
 - `curl -s https://www.baseballlabsnc.com/sitemap.xml | head`
-- `rg -n "canonical|og:url|mainEntityOfPage|\\\"url\\\"|https://baseballlabsnc\\.com|https://www\\.baseballlabsnc\\.com" site/*.html site/sitemap.xml site/robots.txt`
 - `git diff --check`
 
 5. 완료 조건
-- apex와 www의 현재 응답 상태, redirect 여부, 최종 URL을 기록한다.
-- 파일 기준 canonical/sitemap/og:url/JSON-LD 도메인 기준을 기록한다.
-- 중복 도메인 상태가 AdSense/검색 정합성에 문제인지 판단한다.
-- 수정이 필요하면 별도 후속 티켓을 등록하고, 필요 없으면 다음 QA 티켓으로 진행한다.
+- 주요 공개 페이지 word count와 JSON-LD가 기준을 충족한다.
+- sitemap/robots/canonical/og:url/JSON-LD가 대표 도메인 기준으로 충돌하지 않는다.
+- AdSense 스크립트와 ads.txt가 유지된다.
+- 긍정·단정형 금지 표현 0건이다.
+- 모바일/데스크톱 주요 공개 페이지에서 가로 overflow가 없다.
+- 수정 필요 이슈가 없으면 AdSense 콘솔에서 재검토 요청 가능 상태로 판정한다.
 - 이번 티켓에서 `site/*` 변경 0건을 유지한다.
 
 6. 이슈 분류 기준
-- BLOCKER: 대표 도메인 URL이 접속 불가, sitemap/robots가 잘못된 도메인을 가리켜 색인·AdSense 재검토에 직접 방해.
-- MAJOR: apex와 www가 둘 다 200 OK인데 canonical/sitemap과 충돌하거나, canonical/og:url/JSON-LD URL이 페이지별로 불일치.
-- MINOR: redirect는 없지만 canonical/sitemap이 일관되어 검색엔진이 대표 도메인을 해석할 수 있는 상태.
-- NIT: http→https, trailing slash, 확장자 없는 URL 등 표기 일관성 보강 후보.
+- BLOCKER: 공개 핵심 URL 접속 불가, ads.txt 누락, sitemap/robots 심각 오류, 광고 심사에 직접 불리한 빈/저가치 페이지 발견.
+- MAJOR: 주요 가이드 단어 수 기준 미달, canonical/JSON-LD/sitemap 충돌, 긍정형 의료·성과 보장 문구 발견, 모바일 overflow로 콘텐츠 읽기 불가.
+- MINOR: 내부 링크 누락, 일부 페이지의 설명 밀도 부족, 비핵심 메타 일관성 문제.
+- NIT: 띄어쓰기, 날짜 표기, trailing slash 등 표기 일관성.
 
 7. Claude 작업 지침
-- 이번 티켓은 총괄 Codex가 직접 수행하는 검토 전용 티켓이다.
+- 이번 티켓은 총괄 Codex가 직접 수행하는 최종 QA 티켓이다.
 - 코드 담당 Claude는 대기한다.
 - 결과는 `docs/workflow/work-plan.md`에만 기록한다.
-- DNS/Cloudflare/redirect 설정 변경은 사용자 확인 없이 진행하지 않는다.
+- 수정이 필요하면 바로 고치지 말고 별도 수정 티켓을 만든다.
 
 7-1. AdSense 승인 후 대기 티켓 큐
 - A1 `AdSense 승인 후 실제 광고 게재 확인 1차`: 총괄 Codex가 브라우저 실사용 확인을 수행한다. 메인 앱, 공개 가이드, 모바일/데스크톱에서 광고 위치가 앱 조작을 방해하는지 확인한다. `site/*` 수정 없음.
@@ -736,3 +742,45 @@
 - 금지 표현: grep 결과는 `의료 진단·치료·처방을 대신하지 않습니다`, `보장하지 않습니다`, `응대 범위가 아니므로` 등 부정·면책 문맥뿐이다. 긍정형 치료/처방/진단/부상 예방/성과 보장/자동 위험 판정/부상 예측 문구 0건.
 - 보존 확인: 두 문서의 AdSense 스크립트, canonical, OG/Twitter, JSON-LD, doc-note, doc-links 보존. 앱 JS/data/schema, sitemap/robots/ads.txt 변경 없음.
 - 브라우저 검증: 같은 셸에서 `site/` 서버 8790을 유지한 상태로 Playwright CLI 확인. guides/about 모두 390px·1440px에서 `overflowX=false`, guides h2 8개·doc-links 5건, about h2 9개·doc-links 13건 렌더 확인.
+
+55. 도메인 canonical 정규화 검토 결과 (2026-06-19, 코드 담당 Claude — 사용자 ㄱㄱ 지시로 검토 대행)
+- 검토 범위: live URL 응답(apex·www, /, /guides), ads.txt, sitemap.xml, robots.txt 일치성, 파일 내 canonical/og:url/JSON-LD 도메인 기준. `site/*` 변경 0건.
+- live 응답:
+  - `https://baseballlabsnc.com/` → **HTTP/2 200**(cloudflare, redirect 없음).
+  - `https://www.baseballlabsnc.com/` → **HTTP/2 200**(cloudflare, redirect 없음).
+  - `https://baseballlabsnc.com/guides` → 200, `https://www.baseballlabsnc.com/guides` → 200. 둘 다 동일 콘텐츠 서빙(Cloudflare Pages 동일 프로젝트가 apex+www 모두 바인딩된 상태).
+  - apex/www `ads.txt` 본문 완전 동일(`google.com, pub-2911719487887723, DIRECT, …`). 게시 책임 충족.
+- 파일 도메인 기준(전부 `www.baseballlabsnc.com`):
+  - 14개 HTML `rel="canonical"` 100% www / `og:url` 100% www / JSON-LD `url`·`mainEntityOfPage` 등 79건 전부 www.
+  - `site/sitemap.xml` `<loc>` 14건 전부 www / `site/robots.txt` `Sitemap:` www.
+  - apex로 접근해도 응답 페이지 안의 canonical/og:url은 **www**를 가리킴(예: apex `/` → `<link rel="canonical" href="https://www.baseballlabsnc.com/">`). 검색엔진은 canonical 신호로 www를 대표 도메인으로 해석할 수 있음.
+- 판정: **MINOR**.
+  - apex·www 둘 다 200 OK라 기술적 중복은 존재하지만, 모든 페이지가 일관되게 www를 canonical로 선언하고 sitemap·robots도 www만 가리키므로 검색엔진·AdSense가 대표 도메인을 해석하는 데 충돌은 없음. BLOCKER/MAJOR 사유 없음.
+  - AdSense는 ads.txt가 양쪽 도메인에서 동일 게시되므로 결제 식별 누락도 없음.
+- 권고(후속 분기 — 코드 변경 없는 옵션 vs 코드 변경 옵션):
+  1. **현행 유지(권장 기본)**: 검색·AdSense 정합성은 canonical 신호로 충분. AdSense 재검토 게이트에는 이 항목이 BLOCKER가 아님. 다른 콘텐츠/QA 티켓을 우선 진행.
+  2. **Cloudflare apex→www 301 redirect 도입(권장 보완)**: Cloudflare 대시보드 → Rules → Redirect Rules에서 `Hostname equals baseballlabsnc.com` → `Static redirect to https://www.baseballlabsnc.com/$1`(301) 한 줄. `site/*` 코드·sitemap·robots 무변경. 사용자 직접 설정 사항이라 본 리포에서는 미적용. 도입 후엔 두 도메인 신호가 완전히 통합돼 미세한 가산점.
+  3. **www→apex로 통일(비권장)**: 파일 14개 canonical/og:url/JSON-LD·sitemap·robots 전부 재작성 필요. 현행 자산이 www 기준이라 변경 비용 큼.
+- 후속 티켓 분리 제안: 옵션 2를 채택할 경우 별도 `Cloudflare apex→www redirect 설정 1차` 티켓(사용자 콘솔 작업, `site/*` 무변경)으로 분리. 본 티켓은 검토 전용으로 종료 후보.
+- 이번 티켓 결과물: `site/*` 변경 0건(워킹트리에 sitemap·robots·_headers·HTML 변경 없음 확인). `docs/workflow/work-plan.md` 본 §55 기록만.
+
+56. 총괄 Codex 재검증 결과 — 도메인 canonical 정규화 검토 1차 (2026-06-20)
+- 결론: BLOCKER/MAJOR 없음. `도메인 canonical 정규화 검토 1차`는 현행 유지로 통과. 후속으로 `AdSense 재검토 전 최종 콘텐츠 QA 1차`를 활성화했다.
+- live 재검증: `curl -I -L` 기준 `https://baseballlabsnc.com/`, `https://www.baseballlabsnc.com/`, apex `/guides`, www `/guides` 모두 HTTP/2 200. apex→www 301 redirect는 아직 없다.
+- ads.txt: apex와 www 모두 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0` 동일 본문 확인.
+- sitemap/robots/canonical: live `https://www.baseballlabsnc.com/sitemap.xml`은 www `<loc>`를 반환한다. 로컬 `site/robots.txt`도 `Sitemap: https://www.baseballlabsnc.com/sitemap.xml`이다. 로컬 HTML canonical 14건은 모두 `https://www.baseballlabsnc.com` 기준이고 apex canonical 0건.
+- 판정: apex·www가 둘 다 200이라 중복 서빙은 남아 있지만, canonical/sitemap/robots/og:url/JSON-LD가 www로 일관되어 있어 AdSense 재검토의 직접 차단 사유로 보지 않는다.
+- 권고: Cloudflare apex→www 301 redirect는 장기적으로 좋지만, 지금은 AdSense 재검토 전 필수 수정으로 보지 않는다. 재검토 이후 안정화 단계에서 별도 설정 티켓으로 처리한다.
+- 검증: `git diff --check` PASS. 이번 재검증에서 `site/*` 변경 0건 유지.
+
+57. 총괄 Codex 최종 QA 결과 — AdSense 재검토 전 최종 콘텐츠 QA 1차 (2026-06-20)
+- 결론: BLOCKER/MAJOR/MINOR 없음. AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 후 `검토 요청` 진행 가능.
+- 담당: 총괄 Codex 직접 검토. 코드 담당 Claude와 보안/QA Claude 추가 호출 없음.
+- 정적 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, inline handler 0건.
+- 콘텐츠 기준: 8개 핵심 가이드 word count는 rpe 1072, workload 994, acwr 998, recovery 986, warmup 959, assessment 983, training 1294, fielding 1002로 모두 950 이상. `guides.html` 919, `about.html` 835로 허브·소개 기준도 충족.
+- 구조화 데이터: 공개 HTML 14페이지 JSON-LD 파싱 OK. sitemap URL 14건 모두 `https://www.baseballlabsnc.com` 기준. 404는 sitemap 제외·AdSense script 0건 유지.
+- 광고·도메인: 배포 `https://www.baseballlabsnc.com/`와 `/guides` HTTP/2 200. `ads.txt`는 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0` 확인. canonical/og:url은 모두 www 기준.
+- 금지 표현: `치료|처방|진단|보장|부상 예방|성과 향상|위험 판정|부상 예측` 검출분은 전부 부정·면책·전문가 확인 문맥이다. 긍정형 의료·성과 보장 문구 0건.
+- 브라우저 검증: 로컬 서버 8792 + Playwright CLI 기준 sitemap 포함 14페이지를 390px·1440px에서 확인. 전부 `overflowX=false`, 콘솔 error/warning 0건.
+- 변경 범위: 이번 최종 QA에서 `site/*` 변경 0건. 결과 기록은 `docs/workflow/work-plan.md`에만 남김.
+- 다음 사용자 작업: GitHub Push origin 이후 Cloudflare 배포 상태를 확인하고, AdSense 콘솔에서 문제 수정 확인 체크 후 재검토 요청.
