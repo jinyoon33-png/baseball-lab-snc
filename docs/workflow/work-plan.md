@@ -1,6 +1,6 @@
 1. 요청 요약
 - 활성 티켓: `AdSense 재검토 요청 대기`
-- 현재 단계: `[Step 2. 최종 QA 완료(§57) — 사용자 AdSense 재검토 요청 대기]`
+- 현재 단계: `[Step 2. 최종 QA+보안/QA 완료(§57·§58) — 사용자 AdSense 재검토 요청 대기]`
 - 담당: 총괄 Codex 직접 검토. 필요 시 보안/QA Claude 읽기 전용 보조 점검.
 - 배경: AdSense `가치가 별로 없는 콘텐츠` 보정 티켓 1~7순위가 완료됐다. 재검토 요청 전 공개 페이지 전체를 마지막으로 점검한다.
 - 목적: 전체 공개 페이지의 콘텐츠 분량, 내부 링크, sitemap/robots/canonical/JSON-LD, 금지 표현, 모바일 overflow, 광고 스크립트 유지 여부를 확인한다.
@@ -784,3 +784,11 @@
 - 브라우저 검증: 로컬 서버 8792 + Playwright CLI 기준 sitemap 포함 14페이지를 390px·1440px에서 확인. 전부 `overflowX=false`, 콘솔 error/warning 0건.
 - 변경 범위: 이번 최종 QA에서 `site/*` 변경 0건. 결과 기록은 `docs/workflow/work-plan.md`에만 남김.
 - 다음 사용자 작업: GitHub Push origin 이후 Cloudflare 배포 상태를 확인하고, AdSense 콘솔에서 문제 수정 확인 체크 후 재검토 요청.
+
+58. 보안/QA 담당 전체 점검 결과 반영 — AdSense 재검토 전 보안/정책 QA (2026-06-23)
+- 보안/QA 담당 결론: 총괄 판단 필요 없음. AdSense 재검토 요청 가능 상태로 판정.
+- 총괄 재확인: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, inline handler 0건, `localStorage.clear(` 0건.
+- 배포 재확인: `https://www.baseballlabsnc.com/` HTTP/2 200, `ads.txt`는 `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0`, sitemap은 `https://www.baseballlabsnc.com` 기준 `<loc>` 반환.
+- 보안/QA 담당 참고사항: 도메인 301 통일은 §7-6 7순위와 §55·§56에 이미 기록되어 있고, CSP 강화는 A5 큐에 이미 존재한다. 신규 티켓 생성 불필요.
+- 변경 범위: 보안/QA 담당은 파일 수정·커밋·push 없이 읽기 전용 점검만 수행. 총괄은 본 §58 기록만 추가.
+- 최종 판정: AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 후 `검토 요청` 진행 가능.
