@@ -1,59 +1,60 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 재검토 요청 대기`
-- 현재 단계: `[Step 2. 최종 QA+보안/QA 완료(§57·§58) — 사용자 AdSense 재검토 요청 대기]`
-- 담당: 총괄 Codex 직접 검토. 필요 시 보안/QA Claude 읽기 전용 보조 점검.
-- 배경: AdSense `가치가 별로 없는 콘텐츠` 보정 티켓 1~7순위가 완료됐다. 재검토 요청 전 공개 페이지 전체를 마지막으로 점검한다.
-- 목적: 전체 공개 페이지의 콘텐츠 분량, 내부 링크, sitemap/robots/canonical/JSON-LD, 금지 표현, 모바일 overflow, 광고 스크립트 유지 여부를 확인한다.
-- 이번 티켓은 최종 QA 전용이다. 원칙적으로 `site/*` 수정 없이 점검하고, 결함이 나오면 별도 수정 티켓을 만든다.
+- 활성 티켓: `AdSense 재거절 대응 홈페이지·앱 분리 구현 1차`
+- 현재 단계: `[Step 1. 작업 대기 — 코드 담당 Claude 구현]`
+- 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토 → 보안/QA Claude 독립 점검.
+- 배경: AdSense가 다시 `주의 필요 / 가치가 별로 없는 콘텐츠`로 거절됐다. 현재 루트 화면은 선수 등록·관리 앱 UI가 중심이고, 공개 가이드 허브가 앱 UI 중간에 끼어 있어 콘텐츠 사이트로 인식되기 어렵다.
+- 목적: 루트(`/`)는 콘텐츠형 서비스 랜딩으로 바꾸고, 기존 앱 UI는 `/app.html`로 분리한다. 첫 화면의 `야구 훈련 기록을 이해하기 위한 공개 가이드` 허브는 앱 화면에서 제거한다.
+- 이번 티켓은 AdSense 재검토 구조 보정 1차다. 승인 전 앱 조작 화면에는 광고 노출을 보류하고, 공개 콘텐츠 페이지 중심으로 심사 신호를 정리한다.
 
 2. 대상 파일
-- 수정 허용: `docs/workflow/work-plan.md`.
-- 읽기 허용: `site/*.html`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, 배포 URL의 HTTP 응답 헤더.
-- 수정 금지: `site/*`, `docs/evidence/**`, `docs/security/**`.
+- 수정 허용: `site/index.html`, `site/app.html`(신규), `site/style.css`, `site/sitemap.xml`, `docs/workflow/work-plan.md`.
+- 읽기 허용: `site/*.html`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, `site/app.js`, `site/data.js`.
+- 수정 금지: `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- 공개 HTML 전체를 점검한다: `index`, `guides`, `about`, 8개 가이드, `privacy`, `terms`, `contact`, `404`.
-- 콘텐츠 가치 보강 대상 페이지의 visible word count 기준을 재확인한다.
-- sitemap/robots/canonical/og:url/JSON-LD가 대표 도메인 `https://www.baseballlabsnc.com` 기준으로 일관되는지 확인한다.
-- 광고 스크립트와 ads.txt가 존재하는지 확인하되, 새 광고 단위는 만들지 않는다.
-- 금지 표현은 긍정·단정 문맥을 기준으로 검토한다. 부정·면책 문맥은 안전 문맥으로 분류한다.
-- 모바일/데스크톱 브라우저에서 주요 공개 페이지의 가로 overflow가 없는지 확인한다.
-- 결함이 발견되면 `BLOCKER/MAJOR/MINOR/NIT`로 분류하고, 수정 티켓을 우선 등록한다. 이슈가 없으면 AdSense 재검토 요청 준비 완료로 기록한다.
+- 기존 `site/index.html`의 앱 UI 전체를 `site/app.html`로 복제한 뒤, 앱 화면에서는 `public-guide-hub` details 블록을 제거한다.
+- `site/app.html`은 앱 조작 도구 페이지로 둔다. 승인 전 1차에서는 AdSense script를 제거하고 `<meta name="robots" content="noindex, follow">`를 적용한다. canonical은 `https://www.baseballlabsnc.com/app`로 둔다.
+- `site/index.html`은 새 콘텐츠형 랜딩 페이지로 재작성한다. 필수 구성: 서비스 정체성, 사용 대상, 핵심 기능, 공개 가이드 진입, 앱 시작 CTA(`/app`), 개인정보/문의/이용약관 신뢰 링크, 안전 고지.
+- 루트 랜딩은 AdSense script, canonical `/`, og:url `/`, WebSite/Organization JSON-LD를 유지한다. 앱 JS/vendor(chart/html2canvas/app.js/data.js)는 루트 랜딩에서 로드하지 않는다.
+- `site/sitemap.xml`은 공개 콘텐츠 중심으로 유지한다. `/app`은 1차에서 sitemap에 넣지 않는다.
+- `site/style.css`는 루트 랜딩에 필요한 최소 CSS만 추가한다. 신규 색상은 기존 토큰만 사용한다.
+- 기존 공개 가이드 문서 내용은 이번 티켓에서 변경하지 않는다.
 
 4. 정적 확인 명령
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `python3 - <<'PY' ... PY`로 공개 HTML visible word count와 JSON-LD 파싱 확인.
+- `python3 - <<'PY' ... PY`로 `index.html`, `app.html`, 공개 HTML JSON-LD 파싱 확인.
 - `python3 - <<'PY' ... PY`로 sitemap XML 파싱과 sitemap URL 14건 확인.
 - `rg -n "onclick=|oninput=|onchange=" site/*.html`
 - `rg -n "canonical|og:url|application/ld\\+json|pagead2.googlesyndication.com" site/*.html`
 - `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/*.html`
-- `curl -I -L https://www.baseballlabsnc.com/`
-- `curl -I -L https://www.baseballlabsnc.com/guides`
-- `curl -s https://www.baseballlabsnc.com/ads.txt | head`
-- `curl -s https://www.baseballlabsnc.com/sitemap.xml | head`
+- `rg -n "public-guide-hub|야구 훈련 기록을 이해하기 위한 공개 가이드" site/app.html site/index.html`
+- `rg -n "app\\.js|data\\.js|chart\\.umd|min\\.js|html2canvas" site/index.html`
+- `rg -n "pagead2.googlesyndication.com" site/app.html site/index.html`
 - `git diff --check`
 
 5. 완료 조건
-- 주요 공개 페이지 word count와 JSON-LD가 기준을 충족한다.
-- sitemap/robots/canonical/og:url/JSON-LD가 대표 도메인 기준으로 충돌하지 않는다.
-- AdSense 스크립트와 ads.txt가 유지된다.
-- 긍정·단정형 금지 표현 0건이다.
-- 모바일/데스크톱 주요 공개 페이지에서 가로 overflow가 없다.
-- 수정 필요 이슈가 없으면 AdSense 콘솔에서 재검토 요청 가능 상태로 판정한다.
-- 이번 티켓에서 `site/*` 변경 0건을 유지한다.
+- `/`는 앱 폼이 아닌 콘텐츠형 랜딩으로 보인다. 첫 화면에서 사이트 목적, 앱 시작 CTA, 공개 가이드 진입, 신뢰 링크가 명확하다.
+- `/app.html`에서 기존 선수 등록·관리·평가·스케줄 기능 진입 구조가 유지된다.
+- 앱 화면의 `public-guide-hub`와 `야구 훈련 기록을 이해하기 위한 공개 가이드` 블록은 제거된다.
+- `index.html`에는 AdSense script 1건이 있고, `app.html`에는 AdSense script 0건이다.
+- `index.html`은 `app.js`, `data.js`, chart/html2canvas vendor를 로드하지 않는다.
+- `site/app.js`, `site/data.js`, 저장 schema, 백업/복원 schema 변경 0건.
+- 390px·1440px 브라우저에서 `/`, `/app.html`, `/guides` 가로 overflow 0건.
+- inline handler 0건, 신규 analytics/gtag/외부 tracker 0건, 긍정형 의료·성과 보장 문구 0건.
 
 6. 이슈 분류 기준
-- BLOCKER: 공개 핵심 URL 접속 불가, ads.txt 누락, sitemap/robots 심각 오류, 광고 심사에 직접 불리한 빈/저가치 페이지 발견.
-- MAJOR: 주요 가이드 단어 수 기준 미달, canonical/JSON-LD/sitemap 충돌, 긍정형 의료·성과 보장 문구 발견, 모바일 overflow로 콘텐츠 읽기 불가.
-- MINOR: 내부 링크 누락, 일부 페이지의 설명 밀도 부족, 비핵심 메타 일관성 문제.
-- NIT: 띄어쓰기, 날짜 표기, trailing slash 등 표기 일관성.
+- BLOCKER: `/app.html` 기능 진입 불가, 앱 데이터/저장 schema 변경, 루트 랜딩 접속 불가, AdSense script 루트 누락.
+- MAJOR: 루트가 여전히 앱 폼 중심으로 보임, 앱 화면 광고 script 잔존, app.js/data.js 변경, sitemap/canonical 충돌, 모바일 overflow.
+- MINOR: CTA/내부 링크 누락, 루트 랜딩 설명 밀도 부족, `/app` canonical/sitemap 정책 불명확.
+- NIT: 문구 반복, 버튼 라벨, 간격, 섹션 순서.
 
 7. Claude 작업 지침
-- 이번 티켓은 총괄 Codex가 직접 수행하는 최종 QA 티켓이다.
-- 코드 담당 Claude는 대기한다.
-- 결과는 `docs/workflow/work-plan.md`에만 기록한다.
-- 수정이 필요하면 바로 고치지 말고 별도 수정 티켓을 만든다.
+- 이번 티켓은 코드 담당 Claude가 수행한다.
+- 먼저 `index.html`을 `app.html`로 복제한 뒤 앱 화면 보정을 하고, 마지막에 `index.html`을 랜딩 페이지로 재작성한다.
+- `site/app.js`, `site/data.js`, 저장 schema는 수정하지 않는다.
+- 구현 완료 후 §4 검증 결과와 브라우저 390px·1440px 확인 결과만 짧게 보고한다.
+- 완료 후 총괄 Codex 정밀검토와 보안/QA Claude 독립 점검 전에는 commit/push하지 않는다.
 
 7-1. AdSense 승인 후 대기 티켓 큐
 - A1 `AdSense 승인 후 실제 광고 게재 확인 1차`: 총괄 Codex가 브라우저 실사용 확인을 수행한다. 메인 앱, 공개 가이드, 모바일/데스크톱에서 광고 위치가 앱 조작을 방해하는지 확인한다. `site/*` 수정 없음.
@@ -792,3 +793,11 @@
 - 보안/QA 담당 참고사항: 도메인 301 통일은 §7-6 7순위와 §55·§56에 이미 기록되어 있고, CSP 강화는 A5 큐에 이미 존재한다. 신규 티켓 생성 불필요.
 - 변경 범위: 보안/QA 담당은 파일 수정·커밋·push 없이 읽기 전용 점검만 수행. 총괄은 본 §58 기록만 추가.
 - 최종 판정: AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 후 `검토 요청` 진행 가능.
+
+59. 총괄 Codex 판단 — AdSense 재거절 대응 홈페이지·앱 분리 구현 티켓 작성 (2026-06-25)
+- 배경: AdSense가 다시 `주의 필요 / 가치가 별로 없는 콘텐츠`로 표시됨. `ads.txt`·보안·canonical보다는 사이트 목적과 콘텐츠 신호 문제로 판단한다.
+- 현실 판단: 루트 화면이 선수 등록·관리 앱 UI 중심이고, 공개 가이드 허브가 앱 UI 중간에 삽입되어 있어 심사자/크롤러에게 콘텐츠 사이트보다 도구 화면으로 보일 가능성이 높다.
+- 결정: 첫 화면의 `야구 훈련 기록을 이해하기 위한 공개 가이드` 허브는 제거한다. `/guides` 페이지와 개별 공개 가이드는 유지한다.
+- 구조 결정: 루트(`/`)는 콘텐츠형 서비스 랜딩으로 전환하고, 기존 앱 UI는 `/app.html`로 분리한다. 승인 전 `app.html`에는 광고 script를 넣지 않는다.
+- 이유: AdSense 재검토에서는 공개 콘텐츠·탐색·신뢰 신호가 먼저 보여야 한다. 앱 조작 화면은 사용자 가치가 있지만 광고 심사상 `비콘텐츠 기반 페이지`로 오인될 수 있어 분리한다.
+- 활성 티켓: `AdSense 재거절 대응 홈페이지·앱 분리 구현 1차`를 상단에 등록했다. 코드 담당 Claude가 구현하고, 총괄 Codex와 보안/QA Claude가 각각 검토한다.
