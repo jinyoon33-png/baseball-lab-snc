@@ -1,54 +1,59 @@
 1. 요청 요약
-- 활성 티켓: `AdSense 홈페이지·앱 분리 보정 1차`
-- 현재 단계: `[Step 4. 보안/QA Claude 독립 점검 완료 — GO. 총괄 커밋 대기]`
+- 활성 티켓: `홈페이지 랜딩 앱 톤 정합·모던 보정 1차`
+- 현재 단계: `[Step 5. 완료 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차]`
 - 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토 → 보안/QA Claude 독립 점검.
-- 배경: `AdSense 재거절 대응 홈페이지·앱 분리 구현 1차` 총괄 검토에서 핵심 구조는 통과했지만, 문서 링크 의미 오류와 신규 CSS 색상 literal이 발견됐다.
-- 목적: 공개 문서의 `앱으로 돌아가기`/`앱 메인` 링크 표현을 새 구조에 맞게 보정하고, 랜딩 CSS의 신규 하드코딩 색상을 기존 토큰으로 치환한다.
-- 이번 티켓은 보정 전용이다. `index.html` 랜딩 구조와 `app.html` 앱 분리 구조는 유지한다.
+- 배경: 총괄 Codex가 `site/index.html` 루트 랜딩을 1차로 간결화했으나, 사용자 확인에서 “기존 앱과 차이 나지 않게 조금 더 세련되게, 토스 참고” 피드백이 나왔다.
+- 목적: 현재 워킹트리의 랜딩 WIP를 기준으로, 앱 본체의 Clinical Trust 톤과 이질감이 적고 더 정돈된 제품형 랜딩으로 보정한다.
+- 방향: 토스 스타일을 복제하지 말고, `짧은 문장`, `넓은 여백`, `명확한 CTA`, `낮은 카드 밀도`, `단순한 정보 위계` 원칙만 참고한다.
 
 2. 대상 파일
-- 수정 허용: `site/*.html`, `site/style.css`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `site/*.html`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, `site/app.js`, `site/data.js`.
-- 수정 금지: `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 수정 허용: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
+- 읽기 허용: `site/app.html`, `site/tokens.css`, `site/docs.css`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, `site/app.js`, `site/data.js`.
+- 수정 금지: `site/app.html`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- 공개 문서의 상단 `← 앱으로 돌아가기`는 새 구조에 맞게 `← 사이트 홈으로 돌아가기`로 바꾸고 href는 `/`를 유지한다.
-- 공개 문서 하단 doc-links의 `앱 메인`은 `사이트 홈`으로 바꾸고 href는 `/`를 유지한다.
-- 앱 진입은 `index.html`의 `앱 시작하기` CTA(`/app`)로 담당한다. 공개 문서마다 앱 CTA를 추가하지 않는다.
-- `site/style.css`의 `.landing-cta-sub` 신규 `rgba(...)`와 `#fff` literal은 기존 hero 토큰으로 치환한다. 후보: `var(--hero-glass-bg)`, `var(--hero-glass-border)`, `var(--hero-text-on-dark)`.
-- `index.html` 랜딩 구조, `app.html` 앱 구조, `sitemap.xml`은 변경하지 않는다.
+- 현재 워킹트리에 남아 있는 `site/index.html`/`site/style.css` 랜딩 WIP를 기준으로 작업한다. 임의로 원복하지 않는다.
+- 첫 화면은 기존 앱의 `Clinical Trust` 색·토큰과 맞춘다. 새 브랜드 색, 새 폰트, 외부 디자인 에셋을 추가하지 않는다.
+- 데스크톱에서는 `상단 브랜드/네비게이션 → 앱 톤과 맞는 히어로 → 3개 핵심 가치 → 압축 가이드 링크 → CTA` 흐름을 유지한다.
+- 모바일/좁은 브라우저에서는 미리보기 패널이 과하게 길어지지 않게 숨기거나 축약한다.
+- 문장은 현재보다 더 짧게 유지하되, AdSense 재검토용 고유 콘텐츠 신호가 사라지지 않도록 `무엇을 기록하는지`, `데이터가 어디 저장되는지`, `공개 가이드가 무엇인지`는 남긴다.
+- CTA는 `앱 시작하기`와 `가이드 보기` 2개 중심으로 둔다. 앱 진입 href는 `/app`, 가이드 진입 href는 `/guides`.
+- 금지: 토스 UI를 그대로 베끼는 것, Toss 명칭/로고/문구 사용, 외부 이미지 추가, `site/app.html` 앱 구조 변경, `site/app.js` 기능 변경.
 
 4. 정적 확인 명령
 - `node --check site/app.js`
 - `node --check site/data.js`
 - `rg -n "onclick=|oninput=|onchange=" site/*.html`
 - `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/*.html`
-- `rg -n "public-guide-hub|야구 훈련 기록을 이해하기 위한 공개 가이드" site/app.html site/index.html`
 - `rg -n "app\\.js|data\\.js|chart\\.umd|min\\.js|html2canvas" site/index.html`
 - `rg -n "pagead2.googlesyndication.com" site/app.html site/index.html`
-- `rg -n "앱으로 돌아가기|앱 메인" site/*.html`
-- `git diff -U0 -- site/style.css | rg -n "^\\+.*(#[0-9A-Fa-f]{3,8}|rgba\\(|hsla?\\()"`
+- `rg -n "토스|Toss|toss" site/index.html site/style.css`
+- `rg -n "랜딩|landing-page|landing-hero|landing-preview|landing-guide-grid" site/index.html site/style.css`
+- `git diff -- site/app.html site/app.js site/data.js site/docs.css site/tokens.css site/assets site/vendor docs/evidence docs/security`
 - `git diff --check`
 
 5. 완료 조건
-- `rg -n "앱으로 돌아가기|앱 메인" site/*.html` 결과 0건.
-- 공개 문서 상단 뒤로가기 라벨은 `사이트 홈으로 돌아가기`, 하단 링크 라벨은 `사이트 홈`으로 통일.
-- 신규 landing CSS diff에 `#hex`, `rgba(`, `hsl(` literal 추가 0건.
-- `/`, `/app.html`, `/guides`의 기존 구조는 유지된다.
-- `site/app.js`, `site/data.js`, 저장 schema, 백업/복원 schema 변경 0건.
+- 루트 `/`는 기존 앱과 색·타이포·카드 톤이 크게 어긋나지 않는다.
+- 첫 화면 문구가 짧고 CTA가 명확하다. 긴 설명 카드가 다시 늘어나지 않는다.
+- `/app.html`은 noindex/앱 스크립트 구조 유지, `index.html`은 AdSense 스크립트 유지.
+- `index.html`에서 `app.js`, `data.js`, vendor script 로드 0건.
+- `site/app.html`, `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, 저장 schema, 백업/복원 schema 변경 0건.
+- `토스|Toss|toss` 문자열 0건. 참고 원칙만 반영하고 직접 언급하지 않는다.
 - inline handler 0건, 신규 analytics/gtag/외부 tracker 0건, 긍정형 의료·성과 보장 문구 0건.
+- 완료 후 총괄 Codex가 데스크톱/모바일 브라우저 실사용 확인을 수행한다.
 
 6. 이슈 분류 기준
-- BLOCKER: `site/app.js`/`site/data.js` 변경, 앱 구조 손상, 루트 랜딩 구조 손상.
-- MAJOR: 공개 문서의 `앱으로 돌아가기`/`앱 메인` 잔존, 앱 화면 광고 script 재도입.
-- MINOR: 신규 색상 literal 잔존, 일부 문서 링크 라벨 누락.
-- NIT: 문구 반복, 버튼 라벨, 간격, 섹션 순서.
+- BLOCKER: `site/app.html`, `site/app.js`, `site/data.js`, 저장 schema 변경. 루트에서 앱 스크립트 로드. 앱 화면 광고 스크립트 재도입.
+- MAJOR: AdSense 스크립트가 루트에서 제거됨, `/app` CTA 손상, 모바일 가로 overflow, 토스 직접 복제/명칭 사용.
+- MINOR: 기존 앱 톤과 과도한 색상 불일치, 첫 화면 과밀, 가이드 링크 누락, 공개 콘텐츠 신호 과도 축소.
+- NIT: 문구 어색함, 간격/정렬/hover 미세 보정, 버튼 라벨 세부 조정.
 
 7. Claude 작업 지침
 - 이번 티켓은 코드 담당 Claude가 수행한다.
-- 이번 작업은 보정 전용이다. `index.html` 랜딩 재작성이나 `app.html` 재생성은 하지 않는다.
-- 공개 문서 링크 라벨 보정과 `style.css` 토큰 치환만 수행한다.
-- `site/app.js`, `site/data.js`, `site/sitemap.xml`, 저장 schema는 수정하지 않는다.
+- 현재 워킹트리의 `index.html`/`style.css` 랜딩 WIP를 출발점으로 보정한다. 원복 금지.
+- 토스는 참고 원칙만 사용한다. 명칭/로고/문구/레이아웃 직접 복제 금지.
+- 앱 본체 Clinical Trust 톤과 맞추고, 새 외부 에셋·새 폰트·새 JS를 추가하지 않는다.
+- `site/app.html`, `site/app.js`, `site/data.js`, `site/tokens.css`, 저장 schema는 수정하지 않는다.
 - 구현 완료 후 §4 검증 결과만 짧게 보고한다.
 - 완료 후 총괄 Codex 정밀검토와 보안/QA Claude 독립 점검 전에는 commit/push하지 않는다.
 
@@ -888,3 +893,42 @@
   - 긍정형 의료·성과 보장 표현 추가 0(매칭된 `반드시`/`완전히 교체`는 app.html 백업/복원 운영 경고문, 의료·성과 보장 아님). 안전 고지는 부정형("…도구가 아닙니다"/"…사용할 수 없습니다") 유지.
   - 앱 화면(app.html)에 광고 script 재도입 없음. 금지 경로(app.js·data.js·docs.css·tokens.css·assets·vendor·docs/evidence·docs/security) 변경 0, 저장/백업 schema 변경 0.
 - 총괄 Codex 판단 필요: 있음(경미) — `site/sitemap.xml`에 `lastmod 2026-06-15→2026-06-25` 변경이 워킹트리에 존재. 본 보정 티켓은 sitemap 「변경하지 않음」 선언이나, 선행 티켓(`분리 구현 1차`, sitemap 수정 허용)에서 넘어온 미커밋 변경으로 판단됨. 본 점검 체크리스트 범위 외라 GO 판정에는 영향 없으나, 커밋 분리 시점에 의도 변경인지 1회 확인 권장.
+
+66. 코드 담당 Claude 구현 결과 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차 (2026-06-25)
+- 기준: 워킹트리의 `site/index.html`/`site/style.css` 랜딩 WIP(landing-shell/landing-hero/landing-preview 구조)를 출발점으로 보정. 원복·재작성 없음. HTML 구조는 그대로 두고 `site/style.css`의 landing 규칙만 손봄(index.html 본문 변경 0).
+- 보정 내용(앱 Clinical Trust 톤 정합, 토스는 원칙만 참고):
+  1. 히어로 h1: `clamp(40px,6vw,74px)`/`-0.06em`/`lh 0.95` → `clamp(34px,4.6vw,52px)`/`-0.03em`/`lh 1.08`. 과대·과밀 마케팅 톤을 앱 display(44px/-0.025em) 결에 맞춤. 모바일 override 42px→34px.
+  2. 버튼: 알약 `--r-pill`(999px) → `--r-md`(4px, 앱 `.btn`과 동일). weight 800→700. 주 CTA·nav-cta 배경 `--ink`(검정) → `--primary`(navy #1F4585, 앱 주색)로 정합, hover `--primary-dark` 추가. ghost 버튼 hover 보강.
+  3. 섹션·히어로·프리뷰 패널 radius `--r-2xl`(14px) → `--r-xl`(8px). 앱 카드(6px) 결의 클리니컬 radius로 축소.
+  4. 프리뷰 패널 그림자 `--shadow-modal`(0 30px 90px) → `--shadow-card`(0 1px 0 hairline). 앱 카드 hairline 톤과 통일.
+  5. 여백: landing-main gap 18→20px, 섹션 padding 28→30px(넓은 여백 원칙).
+- 신규 색·폰트·외부 에셋 추가 0. 기존 토큰만 사용. 콘텐츠 신호 유지(무엇을 기록=RPE·투구·컨디션, 데이터=브라우저 저장, 공개 가이드 grid 6건).
+- §4 검증 결과: `node --check` app.js/data.js 2 PASS, inline handler 0건, `토스|Toss|toss` 0건, index.html app/data/vendor 로드 0건, AdSense index 1건·app 0건, 금지표현 부정형(`훈련 가능 여부를 대신 결정하지 않습니다`)만, 금지 파일(app.html/app.js/data.js/docs.css/tokens.css/assets/vendor/docs) diff 0, `git diff --check` PASS, landing 클래스 존재(index 9·css 36).
+- 브라우저 확인(computed): h1 52px/-1.56px(-0.03em)/lh 56px, 주 CTA `rgb(31,69,133)`(navy)·radius 4px·weight 700, 섹션 radius 8px·그림자 `rgba(15,23,42,0.04) 0 1px 0`, 프리뷰 그림자 동일 hairline. 1440px 2단 히어로 정상(섹션 x191 w1058, 프리뷰 x852 w358). 모바일 390px: 프리뷰 `display:none`, 가로 overflow 0(scrollWidth 390=clientWidth 390), 콘솔 에러 0건.
+- 커밋/푸시 안 함. 총괄 Codex 정밀검토(데스크톱/모바일 실사용) + 보안/QA Claude 독립 점검 대기.
+
+67. 총괄 Codex 정밀검토 결과 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차 (2026-06-25)
+- 결론: 조건부 PASS. 총괄 검토 중 좁은 화면(774px)에서 히어로가 1열로 접힌 뒤 `.landing-preview`가 계속 표시되어 히어로 높이 834px까지 늘어나는 MINOR를 발견했고, `@media (max-width: 900px)`에서 `.landing-preview { display: none; }`로 즉시 보정했다.
+- 추가 보정: 브라우저가 기존 `style.css`를 캐시해 보정 CSS를 반영하지 않는 문제가 있어 루트 `site/index.html` stylesheet를 `style.css?v=landing-20260625`로 변경했다. `site/app.html`은 변경하지 않았다.
+- 재검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS, inline handler 0건, `토스|Toss|toss` 0건, 루트 index의 `app.js|data.js|vendor` 로드 0건, AdSense script는 index 1건·app 0건.
+- 금지 경로 diff: `site/app.html`, `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, `site/assets`, `site/vendor`, `docs/evidence`, `docs/security` 변경 0건.
+- 브라우저 확인: `http://127.0.0.1:8797/?codex_cache_bust=landing-app-tone-review-20260625-3`, 현재 폭 774px 기준 overflowX=false, hero 742x410, previewDisplay=none, CTA href `/app`, CSS 링크 `style.css?v=landing-20260625`, console error 0건.
+- 남은 절차: 보안/QA Claude 독립 점검 후 GO이면 사용자 실사용 확인 → 커밋.
+
+68. 보안/QA Claude 독립 점검 결과 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차 (2026-06-25, 보안/QA Claude Opus 4.8, 읽기 전용 워킹트리 점검, 커밋/Push 전)
+- 결론: GO. BLOCKER/MAJOR/MINOR/NIT 0건. 파일 수정 0(점검만, 본 결과 기입 외 변경 없음). 브라우저 실사용: 미수행(반응형 숨김·CTA·스크립트 분리는 정적·diff 검증으로 확인, 실사용 폭 확인은 총괄 단계).
+- 실행 결과: `node --check` app.js/data.js 2 PASS, `git diff --check` 0, inline handler(`onclick|oninput|onchange`) 0건, `토스|Toss|toss`(index.html·style.css) 0건, index의 `app.js|data.js|chart.umd|html2canvas|lucide` 로드 0건.
+- 루트/앱 분리: index.html AdSense loader 1건(L28), 광고 유닛(`<ins>`/`adsbygoogle.push`) 0. app.html AdSense 0, `robots: noindex, follow`(L9), vendor(chart/html2canvas/lucide L28~30)+data.js/app.js(L1160~1161) 구조 유지.
+- 금지 경로 diff 0: `git diff -- site/app.html site/app.js site/data.js site/docs.css site/tokens.css site/assets site/vendor docs/evidence docs/security` 출력 없음. 저장/백업 schema 변경 0.
+- 모바일 overflow/과밀: `style.css:3802~3804` `@media (max-width:900px)` 내 `.landing-preview{display:none}` — 좁은 폭 미리보기 패널 숨김. `.landing-shell` `width:min(1120px, calc(100% - 32px))`(L3358) + `@media(max-width:620px)` `width:min(100% - 24px,1120px)`(L3813) — 고정 px 폭 없음, 가로 overflow 위험 없음. index.html diff 추가라인에 고정 width/min-width/overflow/100vw 0건, style.css diff 신규 색상 literal 0건.
+- 의료·성과 보장 문구: index.html diff 추가라인에 `보장|향상|예방|최적|치료|처방|진단|효과` 신규 0. `index.html:177` landing-disclaimer는 부정형 고지("…대신 결정하지 않습니다")로 적정. 그 외 매칭은 전부 기존 가이드/정책 문서의 기존 부정형 안전 고지(신규 추가 아님).
+- CTA: `앱 시작하기`→`/app`(L63·172), `가이드 보기`→`/guides`(L64) 정상.
+- 캐시버스트 확인: §67의 index 루트 stylesheet `style.css?v=landing-20260625` 변경은 같은 `style.css` 참조에 버전 쿼리만 부여한 것으로 외부 리소스·신규 에셋 추가 아님. app.html 미변경 확인.
+- 총괄 Codex 판단 필요: 없음.
+
+69. 사용자 실사용 확인 및 최종 완료 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차 (2026-06-25)
+- 사용자 확인: 히어로 문구를 `오늘 훈련을 기록하고, 다음 훈련을 확인하세요.`로 보정한 뒤 사용자가 "좋아 패스"로 승인.
+- 최종 상태: 코드 담당 구현, 총괄 정밀검토, 보안/QA 독립 GO, 사용자 실사용 확인을 모두 통과.
+- 최종 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS.
+- 변경 파일: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
+- 커밋 대상: 위 3개 파일만 포함한다.
