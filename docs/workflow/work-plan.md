@@ -1,61 +1,74 @@
 1. 요청 요약
-- 활성 티켓: `홈페이지 랜딩 앱 톤 정합·모던 보정 1차`
-- 현재 단계: `[Step 5. 완료 — 홈페이지 랜딩 앱 톤 정합·모던 보정 1차]`
-- 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토 → 보안/QA Claude 독립 점검.
-- 배경: 총괄 Codex가 `site/index.html` 루트 랜딩을 1차로 간결화했으나, 사용자 확인에서 “기존 앱과 차이 나지 않게 조금 더 세련되게, 토스 참고” 피드백이 나왔다.
-- 목적: 현재 워킹트리의 랜딩 WIP를 기준으로, 앱 본체의 Clinical Trust 톤과 이질감이 적고 더 정돈된 제품형 랜딩으로 보정한다.
-- 방향: 토스 스타일을 복제하지 말고, `짧은 문장`, `넓은 여백`, `명확한 CTA`, `낮은 카드 밀도`, `단순한 정보 위계` 원칙만 참고한다.
+- 활성 티켓: `홈 랜딩 제품 대시보드 히어로 반응형 고도화 1차`
+- 현재 단계: `[Step 4. 완료 — 홈 랜딩 제품 대시보드 히어로 반응형 고도화 1차]`
+- 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토/데스크톱·모바일 브라우저 확인 → 보안/QA Claude 독립 점검.
+- 배경: 사용자는 C안 `제품 대시보드 히어로형`을 선택했다. 현재 홈은 개선됐지만, 상업 서비스 첫 화면으로는 제품감·시각적 완성도·반응형 정리가 더 필요하다.
+- 목적: 루트 홈을 `앱 시작 + 공개 가이드 진입 + 실제 기능 미리보기`가 한눈에 보이는 제품형 랜딩으로 고도화한다.
+- 상세 스펙: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`를 기준으로 한다.
 
 2. 대상 파일
 - 수정 허용: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `site/app.html`, `site/tokens.css`, `site/docs.css`, `site/robots.txt`, `site/ads.txt`, `site/_headers`, `site/app.js`, `site/data.js`.
-- 수정 금지: `site/app.html`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 읽기 허용: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`, `site/app.html`, `site/guides.html`, `site/about.html`, `site/tokens.css`, `site/docs.css`, `site/_headers`, `site/app.js`, `site/data.js`.
+- 수정 금지: `site/app.html`, `site/guides.html`, `site/about.html`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
-- 현재 워킹트리에 남아 있는 `site/index.html`/`site/style.css` 랜딩 WIP를 기준으로 작업한다. 임의로 원복하지 않는다.
-- 첫 화면은 기존 앱의 `Clinical Trust` 색·토큰과 맞춘다. 새 브랜드 색, 새 폰트, 외부 디자인 에셋을 추가하지 않는다.
-- 데스크톱에서는 `상단 브랜드/네비게이션 → 앱 톤과 맞는 히어로 → 3개 핵심 가치 → 압축 가이드 링크 → CTA` 흐름을 유지한다.
-- 모바일/좁은 브라우저에서는 미리보기 패널이 과하게 길어지지 않게 숨기거나 축약한다.
-- 문장은 현재보다 더 짧게 유지하되, AdSense 재검토용 고유 콘텐츠 신호가 사라지지 않도록 `무엇을 기록하는지`, `데이터가 어디 저장되는지`, `공개 가이드가 무엇인지`는 남긴다.
-- CTA는 `앱 시작하기`와 `가이드 보기` 2개 중심으로 둔다. 앱 진입 href는 `/app`, 가이드 진입 href는 `/guides`.
-- 금지: 토스 UI를 그대로 베끼는 것, Toss 명칭/로고/문구 사용, 외부 이미지 추가, `site/app.html` 앱 구조 변경, `site/app.js` 기능 변경.
+- 현재 `site/index.html` 랜딩을 원복하지 말고, C안 기준으로 히어로를 `제품 대시보드 미리보기` 중심으로 재정렬한다.
+- 첫 화면은 짧은 kicker, 강한 headline, 1문장 lead, `앱 시작하기`(`/app`)·`가이드 보기`(`/guides`) CTA, 실제 앱 흐름을 떠올릴 수 있는 미리보기 패널로 구성한다.
+- 미리보기 패널은 오늘 확인, 7일 스케줄, 컨디션 입력, 워크로드 RPE/투구 수, ACWR, 8종목 평가 중 3~5개 카드만 사용한다. 표처럼 길어지지 않게 한다.
+- 데스크톱은 2열 히어로와 정돈된 가이드 2~3열, 태블릿은 자연스러운 1열 전환, 모바일 390px은 가로 overflow 0과 CTA 터치 크기 보존을 완료 조건으로 둔다.
+- 다크모드에서 히어로 미리보기 배경이 밝게 반전되지 않도록 `--hero-gradient-*`, `--hero-text-on-dark`, `--hero-glass-*` 등 히어로 전용 토큰을 우선 사용한다.
+- 공개 가이드와 신뢰 신호는 남기되, 홈을 긴 설명문으로 만들지 않는다. 문구는 짧고 자연스럽게 쓴다.
+- 금지: 외부 이미지/폰트/스크립트 추가, 레퍼런스 사이트명 노출, 앱 본체 구조 변경, 저장 schema 변경, 의료·성과 보장 문구 추가.
 
 4. 정적 확인 명령
 - `node --check site/app.js`
 - `node --check site/data.js`
 - `rg -n "onclick=|oninput=|onchange=" site/*.html`
-- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/*.html`
+- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/index.html site/style.css`
 - `rg -n "app\\.js|data\\.js|chart\\.umd|min\\.js|html2canvas" site/index.html`
-- `rg -n "pagead2.googlesyndication.com" site/app.html site/index.html`
-- `rg -n "토스|Toss|toss" site/index.html site/style.css`
-- `rg -n "랜딩|landing-page|landing-hero|landing-preview|landing-guide-grid" site/index.html site/style.css`
-- `git diff -- site/app.html site/app.js site/data.js site/docs.css site/tokens.css site/assets site/vendor docs/evidence docs/security`
+- `rg -n "토스|Toss|toss|Linear|Supabase|TrainingPeaks|WHOOP" site/index.html site/style.css`
+- `rg -n "pagead2.googlesyndication.com" site/index.html site/app.html`
+- `rg -n "landing-page|landing-hero|landing-preview|landing-guide-grid|landing-section" site/index.html site/style.css`
+- `git diff -- site/app.html site/guides.html site/about.html site/app.js site/data.js site/docs.css site/tokens.css site/sitemap.xml site/robots.txt site/ads.txt site/assets site/vendor docs/evidence docs/security`
 - `git diff --check`
 
 5. 완료 조건
-- 루트 `/`는 기존 앱과 색·타이포·카드 톤이 크게 어긋나지 않는다.
-- 첫 화면 문구가 짧고 CTA가 명확하다. 긴 설명 카드가 다시 늘어나지 않는다.
-- `/app.html`은 noindex/앱 스크립트 구조 유지, `index.html`은 AdSense 스크립트 유지.
-- `index.html`에서 `app.js`, `data.js`, vendor script 로드 0건.
-- `site/app.html`, `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, 저장 schema, 백업/복원 schema 변경 0건.
-- `토스|Toss|toss` 문자열 0건. 참고 원칙만 반영하고 직접 언급하지 않는다.
-- inline handler 0건, 신규 analytics/gtag/외부 tracker 0건, 긍정형 의료·성과 보장 문구 0건.
-- 완료 후 총괄 Codex가 데스크톱/모바일 브라우저 실사용 확인을 수행한다.
+- 루트 `/` 첫 화면이 제품형 서비스처럼 보이고, 기존 앱의 Clinical Trust 톤과 이질적이지 않다.
+- 홈이 긴 글형 페이지로 늘어나지 않는다. 핵심 역할은 `앱 시작`, `가이드 진입`, `기능 미리보기`, `짧은 신뢰 신호`다.
+- 모바일 390px, 태블릿, 데스크톱에서 가로 overflow 0, CTA 가시성, 카드 줄바꿈, 다크모드 대비가 유지된다.
+- `index.html`은 AdSense 스크립트 유지, `app.js`/`data.js`/vendor script 로드 0건 유지.
+- `site/app.html`, `site/app.js`, `site/data.js`, `site/guides.html`, `site/about.html`, `site/tokens.css`, 저장 schema, 백업/복원 schema 변경 0건.
+- 레퍼런스 사이트명 문자열 0건, inline handler 0건, 신규 외부 tracker 0건, 긍정형 의료·성과 보장 문구 0건.
 
 6. 이슈 분류 기준
 - BLOCKER: `site/app.html`, `site/app.js`, `site/data.js`, 저장 schema 변경. 루트에서 앱 스크립트 로드. 앱 화면 광고 스크립트 재도입.
-- MAJOR: AdSense 스크립트가 루트에서 제거됨, `/app` CTA 손상, 모바일 가로 overflow, 토스 직접 복제/명칭 사용.
-- MINOR: 기존 앱 톤과 과도한 색상 불일치, 첫 화면 과밀, 가이드 링크 누락, 공개 콘텐츠 신호 과도 축소.
-- NIT: 문구 어색함, 간격/정렬/hover 미세 보정, 버튼 라벨 세부 조정.
+- MAJOR: AdSense 스크립트 제거, `/app` 또는 `/guides` CTA 손상, 모바일 가로 overflow, 레퍼런스 사이트 직접 복제/명칭 노출, 다크모드 대비 붕괴.
+- MINOR: 첫 화면 과밀, 제품 미리보기 과도 축소, 공개 콘텐츠 신뢰 신호 과도 축소, 가이드 링크 누락, 기존 앱 톤과 색상 불일치.
+- NIT: 문구 어색함, 간격/정렬/hover 미세 보정, 카드 크기·줄바꿈 세부 조정.
 
 7. Claude 작업 지침
 - 이번 티켓은 코드 담당 Claude가 수행한다.
-- 현재 워킹트리의 `index.html`/`style.css` 랜딩 WIP를 출발점으로 보정한다. 원복 금지.
-- 토스는 참고 원칙만 사용한다. 명칭/로고/문구/레이아웃 직접 복제 금지.
-- 앱 본체 Clinical Trust 톤과 맞추고, 새 외부 에셋·새 폰트·새 JS를 추가하지 않는다.
-- `site/app.html`, `site/app.js`, `site/data.js`, `site/tokens.css`, 저장 schema는 수정하지 않는다.
-- 구현 완료 후 §4 검증 결과만 짧게 보고한다.
-- 완료 후 총괄 Codex 정밀검토와 보안/QA Claude 독립 점검 전에는 commit/push하지 않는다.
+- `site/index.html`과 `site/style.css`만 수정한다. 앱 본체와 가이드 본문은 건드리지 않는다.
+- C안 스펙 문서를 기준으로 제품 대시보드형 히어로를 구현한다.
+- 새 외부 에셋·새 폰트·새 JS를 추가하지 않는다.
+- 구현 완료 후 변경 요약과 §4 검증 결과만 짧게 보고한다. commit/push는 총괄 검토 전 금지한다.
+
+8. 구현 및 총괄 검토 결과 (2026-06-29)
+- 수행자: 총괄 Codex 직접 구현. 코드 담당 Claude 한도/흐름과 무관하게 사용자 지시로 진행.
+- 변경 파일: `.gitignore`, `docs/workflow/work-plan.md`, `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`, `site/index.html`, `site/style.css`.
+- 구현 요약: C안 제품 대시보드형 히어로 적용. 첫 화면 문구 단축, hero dark dashboard preview 재구성, proof 3개 간결화, 모바일 390px proof/preview 밀도 보정, stylesheet cache bust 갱신.
+- 정적 검증: `node --check site/app.js` PASS / `node --check site/data.js` PASS / `git diff --check` PASS / inline handler 0건 / index app·data·vendor script 0건 / reference site name 0건 / AdSense script index 1건·app 0건.
+- 수정 금지 경로 diff: `site/app.html`, `site/guides.html`, `site/about.html`, `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/assets`, `site/vendor`, `docs/evidence`, `docs/security` 0건.
+- 브라우저 확인: `http://127.0.0.1:8801/?codex_cache_bust=landing-dashboard-final-20260629-1` 열림. 1280px overflow 0·hero 2열·guide 3열·console error 0. 768px overflow 0·guide 2열·console error 0. 390px overflow 0·proof 3열·preview grid 2열·guide 1열·console error 0.
+- 잔여 게이트: 사용자 실사용 확인. commit/push는 그 이후 진행.
+
+9. 보안/QA 독립 점검 결과 (2026-06-29)
+- 결론: GO. BLOCKER/MAJOR/MINOR 0건.
+- 보안/QA 보고: `node --check site/app.js`/`site/data.js` OK, index 앱/vendor script 0건, inline handler 0건, reference site name 0건, 수정 금지 경로 diff 0건, whitespace clean.
+- 총괄 재확인: `node --check site/app.js && node --check site/data.js && git diff --check` PASS. `pagead2.googlesyndication.com`은 `site/index.html` 1건만 유지.
+- 금지 표현 grep: `site/index.html`의 의료/훈련 가능 문구는 부정형 disclaimer, `site/style.css`의 성능 매칭은 기존 CSS 주석. 신규 긍정형 의료·성과 보장 문구 없음.
+- 관찰: `.gitignore`의 `.superpowers/` 1줄 추가와 `docs/superpowers/specs/...` 신규 스펙 문서는 이번 디자인 의사결정 산출물로 유지한다.
+- 사용자 실사용 확인: 정상. 커밋 진행 가능 상태로 종결.
 
 7-0. 보안/QA 독립 점검 결과 — AdSense 홈페이지·앱 분리 보정 1차 (2026-06-25, 보안/QA Claude Opus 4.8, 읽기 전용 워킹트리 점검, 커밋/Push 전)
 - **결론: GO.** BLOCKER/MAJOR/MINOR/NIT 0건. 파일 수정 0(점검 후 본 결과 기입만). 브라우저 실사용: 미수행(링크 라벨·토큰 치환·스크립트 분리는 정적 검증으로 충분).
@@ -932,3 +945,15 @@
 - 최종 검증: `node --check site/app.js` PASS, `node --check site/data.js` PASS, `git diff --check` PASS.
 - 변경 파일: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
 - 커밋 대상: 위 3개 파일만 포함한다.
+
+70. 코드 담당 Claude 구현 결과 — 홈 랜딩 레퍼런스 기반 UI 밀도·신뢰 보정 1차 (2026-06-29)
+- 기준: 워킹트리의 `site/index.html`/`site/style.css` 랜딩 WIP를 출발점으로 보정. 원복·재작성 없음. 레퍼런스(토스/Linear/Supabase/TrainingPeaks)는 원칙(짧은 문장·넓은 여백·낮은 카드 밀도·정돈된 위계)만 참고, 명칭·문구·레이아웃 직접 노출/복제 0.
+- 다크모드 검증(선행 WIP 상태 확인): `.landing-preview`는 이미 `--hero-gradient-*`(다크 고정) + `--hero-text-on-dark`(#fff 고정)로 되어 있어, 다크모드 실측에서 배경 `linear-gradient(#0F172A→#1A3A72→#1F4585)`·텍스트 `rgb(255,255,255)` 유지(반전 안 됨). 완료 조건(다크모드 미리보기 대비 유지) 충족 확인. `--ink`/`--surface` 등 반전 토큰을 히어로 고정 영역 배경/텍스트에 직접 쓰는 곳 0.
+- UI 밀도·위계 보정(style.css만, index.html 본문 구조 변경 0):
+  1. 카드 밀도 완화: value-grid gap 10→12·article padding 16→18, tool-list gap 10→12·a padding 16→16/18, guide-grid gap 10→12·a padding 15→18·margin-top 20→22, proof gap 8→10·div padding 12→14.
+  2. 위계 정돈(앱 헤딩 weight 700 결로 통일, 과중한 800 제거): value-grid span(01/02/03) 800→700, tool-list a 800→700, guides-head a(전체 보기) 800→700, proof dd 800→700. guide-grid strong에 weight 700·letter-spacing -0.01em 명시, guide-grid span line-height 1.5·간격 6px로 가독성 보강. tool-list a letter-spacing -0.01em.
+- index.html: stylesheet 캐시버스트 `style.css?v=landing-20260625` → `style.css?v=landing-20260629`로만 변경(새 CSS 반영용). 콘텐츠·구조·CTA·신뢰 신호 변경 0. 신뢰 신호 유지 확인 — 무엇을 기록(hero lead+value-grid), 공개 가이드(guides 섹션 6장+전체 보기), 데이터 브라우저 저장(proof `데이터: 브라우저 저장`+split 본문), 의료 판단 비대신(footer 면책).
+- 신규 색·폰트·외부 에셋·JS 추가 0. 기존 토큰만 사용.
+- §4 검증: `node --check` app.js/data.js 2 PASS, inline handler 0건, 금지표현 신규 추가 0건(매칭 2건은 기존 L177 면책 부정형·기존 style.css 주석 "최적화", 내 diff 추가라인 0건), 레퍼런스명(`토스|Toss|toss|Linear|Supabase|TrainingPeaks|WHOOP`) 0건, index app/data/vendor 로드 0건, AdSense index 1·app 0, landing 클래스 존재(index 16·css 44), 금지 파일(app.html/guides.html/about.html/app.js/data.js/docs.css/tokens.css/sitemap.xml/robots.txt/ads.txt/assets/vendor/docs) diff 0건, `git diff --check` PASS.
+- 브라우저 확인: 라이트 1280 overflowX=false·CSS `?v=landing-20260629` 반영·tool-list weight 700·guide-grid 3열/padding 18px·프리뷰 다크 네이비+흰텍스트. 다크 1280 프리뷰 배경 `#0F172A→#1A3A72→#1F4585`·전 텍스트 #fff·콘솔 에러 0. 모바일 390 overflowX=false·guide-grid 1열·프리뷰 display:none.
+- 변경 파일: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`. 커밋/푸시 안 함. 총괄 Codex 정밀검토(데스크톱/모바일 실사용) + 보안/QA Claude 독립 점검 대기.
