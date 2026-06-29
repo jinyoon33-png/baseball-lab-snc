@@ -1,14 +1,14 @@
 1. 요청 요약
-- 활성 티켓: `홈 랜딩 제품 대시보드 히어로 반응형 고도화 1차`
-- 현재 단계: `[Step 4. 완료 — 홈 랜딩 제품 대시보드 히어로 반응형 고도화 1차]`
+- 활성 티켓: `홈 랜딩 프로급 리디자인 3차`
+- 현재 단계: `[Step 5. 사용자 실사용 확인 완료 — 커밋 대기]`
 - 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토/데스크톱·모바일 브라우저 확인 → 보안/QA Claude 독립 점검.
-- 배경: 사용자는 C안 `제품 대시보드 히어로형`을 선택했다. 현재 홈은 개선됐지만, 상업 서비스 첫 화면으로는 제품감·시각적 완성도·반응형 정리가 더 필요하다.
-- 목적: 루트 홈을 `앱 시작 + 공개 가이드 진입 + 실제 기능 미리보기`가 한눈에 보이는 제품형 랜딩으로 고도화한다.
-- 상세 스펙: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`를 기준으로 한다.
+- 배경: 사용자는 C안 `제품 대시보드 히어로형`을 선택했고, 추가로 전문 제품 사이트 수준의 밀도·위계·반응형 완성도를 요구했다.
+- 목적: 루트 홈을 `앱 시작 + 공개 가이드 진입 + 실제 기능 미리보기 + 사용 흐름 안내`가 한눈에 보이는 제품형 랜딩으로 고도화한다.
+- 상세 스펙: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`와 `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`를 기준으로 한다.
 
 2. 대상 파일
 - 수정 허용: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`, `site/app.html`, `site/guides.html`, `site/about.html`, `site/tokens.css`, `site/docs.css`, `site/_headers`, `site/app.js`, `site/data.js`.
+- 읽기 허용: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`, `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`, `site/app.html`, `site/guides.html`, `site/about.html`, `site/tokens.css`, `site/docs.css`, `site/_headers`, `site/app.js`, `site/data.js`.
 - 수정 금지: `site/app.html`, `site/guides.html`, `site/about.html`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
 
 3. 구현 범위
@@ -69,6 +69,20 @@
 - 금지 표현 grep: `site/index.html`의 의료/훈련 가능 문구는 부정형 disclaimer, `site/style.css`의 성능 매칭은 기존 CSS 주석. 신규 긍정형 의료·성과 보장 문구 없음.
 - 관찰: `.gitignore`의 `.superpowers/` 1줄 추가와 `docs/superpowers/specs/...` 신규 스펙 문서는 이번 디자인 의사결정 산출물로 유지한다.
 - 사용자 실사용 확인: 정상. 커밋 진행 가능 상태로 종결.
+
+10. 홈 랜딩 프로급 리디자인 3차 (2026-06-29)
+- 목적: 1차 C안과 2차 밀도 보정 위에서 전문 제품 사이트처럼 보이도록 첫 화면 위계, 사용 흐름 안내, 반응형 안정성을 추가 보정한다.
+- 수정 허용: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`, `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`.
+- 수정 금지: `site/app.html`, `site/app.js`, `site/data.js`, `site/guides.html`, `site/about.html`, `site/tokens.css`, `site/docs.css`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 구현 범위: 공개 가이드와 앱 기록 흐름을 연결하는 insight 섹션 추가, 카드 hover/간격 보정, 모바일 620px 이하 mockup 숨김·proof 1열 전환, CSS cache bust 갱신. 새 외부 에셋·새 JS 없음.
+- 결과: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`, `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`만 수정. 앱 런타임·저장 schema·AdSense 설정 변경 0건.
+- 총괄 검증: `node --check site/app.js` PASS / `node --check site/data.js` PASS / `git diff --check` PASS / inline handler 0건 / index 앱·vendor script 0건 / reference site name 0건 / AdSense script index 1건 유지.
+- 수정 금지 경로 diff: `site/app.html`, `site/guides.html`, `site/about.html`, `site/app.js`, `site/data.js`, `site/docs.css`, `site/tokens.css`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/assets`, `site/vendor`, `docs/evidence`, `docs/security` 0건.
+- 브라우저 확인: in-app browser 최신 URL 오픈 완료(`landing-professional-20260629-3`), 1280px `scrollWidth=1280`, console error 0건. 대체로 Chrome headless 1280px·768px·500px 캡처 확인. 500px 모바일 폭에서 overflow 없이 hero/proof/insight 1열 정상. 390px은 headless 최소 layout 폭 영향으로 crop artifact 가능성이 있어 사용자 실사용 확인 필요.
+- 보안/QA 독립 점검: GO. `node --check` 2건 PASS, `git diff --check` PASS, inline handler 0건, index 앱/vendor script 0건, AdSense index 1건·app 0건, 보호 파일 diff 0건, 1280/768/500 반응형 overflow 0.
+- NIT: 면책 문구·CSS 주석 정규식 오탐, stylesheet cache-bust 라벨 `-2`는 기능 영향 없음. 머지 차단 아님.
+- 사용자 실사용 확인: 정상.
+- 잔여 게이트: 커밋.
 
 7-0. 보안/QA 독립 점검 결과 — AdSense 홈페이지·앱 분리 보정 1차 (2026-06-25, 보안/QA Claude Opus 4.8, 읽기 전용 워킹트리 점검, 커밋/Push 전)
 - **결론: GO.** BLOCKER/MAJOR/MINOR/NIT 0건. 파일 수정 0(점검 후 본 결과 기입만). 브라우저 실사용: 미수행(링크 라벨·토큰 치환·스크립트 분리는 정적 검증으로 충분).
