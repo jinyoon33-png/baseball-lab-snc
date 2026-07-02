@@ -1,6 +1,6 @@
 1. 요청 요약
 - 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`
-- 현재 단계: `[Step 3. 문서화·검증 완료 — 사용자 확인 대기]`
+- 현재 단계: `[Step 4. 완료 — 커밋·푸시·production 확인 완료]`
 - 담당: 총괄 Codex 직접 수행.
 - 배경: 기존 코드 담당 Claude, 보안/QA Claude, 근거문서 Claude를 더 이상 사용하지 않는다. 앞으로 총괄 Codex가 필요할 때마다 하위 에이전트를 생성해 코드 구현, 보안/QA, 브라우저 실사용, 근거 조사, 릴리즈 점검 역할을 부여한다.
 - 목적: 프로젝트 운영 문서에서 상시 Claude 담당 체계를 제거하고 `총괄 Codex + 티켓별 하위 에이전트` 방식으로 고정한다.
@@ -52,7 +52,16 @@
 - 모델 기준: 단순 반복은 `gpt-5.4-mini`, 일반 구현은 `gpt-5.4`, 보안·출시·schema·AdSense 최종 판단은 총괄 Codex 또는 높은 모델.
 - 보호 범위: `site/*`, `docs/evidence/evidence-research.md`, `docs/evidence/evidence-archive.md`, `docs/security/verify-common.md`, `docs/workflow/work-plan-archive.md` 변경 0건이어야 한다.
 - 총괄 검증: `git diff -- site` 0건 / evidence 본문·아카이브 diff 0건 / security common diff 0건 / work-plan archive diff 0건 / 현재 운영 문서 내 구 담당명 0건 / `git diff --check` PASS.
-- 잔여 게이트: 사용자 확인. commit/push는 사용자 지시 전까지 보류.
+- 완료 게이트: 사용자 확인 완료, commit `344b0ca`, 사용자 push 완료.
+
+7-B. AdSense 재검토 전 production 확인 결과 (2026-07-02)
+- 담당: 총괄 Codex 직접 점검 + 릴리즈 점검 에이전트(`gpt-5.4-mini`) 보조.
+- URL 상태: `/`, `/app`, `/guides`, `/ads.txt`, `/robots.txt`, `/sitemap.xml` 모두 `https://www.baseballlabsnc.com` 기준 200 OK.
+- 루트(`/`) 확인: AdSense loader 1건 유지, `app.js`·`data.js`·vendor 로드 0건, 콘텐츠형 랜딩 유지.
+- 앱(`/app`) 확인: `robots: noindex, follow`, AdSense loader 0건, vendor·`data.js`·`app.js` 로드 유지.
+- `ads.txt`: `google.com, pub-2911719487887723, DIRECT, f08c47fec0942fa0` 게시 확인.
+- `robots.txt`/`sitemap.xml`: sitemap 지시문과 공개 URL 14건 모두 `https://www.baseballlabsnc.com` 기준.
+- 결론: AdSense 콘솔에서 `문제를 수정했음을 확인합니다` 체크 후 `검토 요청` 진행 가능. 추가 `site/*` 수정은 재검토 결과 전까지 보류한다.
 
 8. 구현 및 총괄 검토 결과 (2026-06-29)
 - 수행자: 총괄 Codex 직접 구현. 코드 담당 Claude 한도/흐름과 무관하게 사용자 지시로 진행.
