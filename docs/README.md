@@ -15,11 +15,12 @@
 | 프로젝트 운영 기준 | `docs/project/README.md` | `docs/project/workspace-map.md` | `docs/project/ticket-conventions.md`, `docs/security/verify-common.md`, `docs/project/role-prompts.md` |
 
 ## 3. 담당별 사용법
-- Claude Code는 `docs/workflow/README.md`와 `docs/workflow/work-plan.md`만 확인하고 코드 작업을 진행한다.
-- 근거문서 Claude와 근거문서 검토 담당은 `docs/evidence/README.md`와 `docs/evidence/evidence-research.md`를 기준으로 작업한다.
-- 보안/QA Claude Code는 `docs/security/README.md`를 기준으로 읽기 전용 점검을 수행한다.
-- 현재 Codex는 `docs/project/workspace-map.md`, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`를 기준으로 최종 판단과 다음 티켓 작성을 수행한다.
-- 담당별 시작 프롬프트는 `docs/project/role-prompts.md`를 사용한다.
+- 총괄 Codex는 `docs/project/workspace-map.md`, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`를 기준으로 최종 판단과 다음 티켓 작성을 수행한다.
+- 코드 구현 에이전트는 `docs/workflow/README.md`와 `docs/workflow/work-plan.md`를 기준으로 총괄 Codex가 지정한 활성 티켓만 수행한다.
+- 근거/문서 에이전트는 `docs/evidence/README.md`와 `docs/evidence/evidence-research.md`를 기준으로 지정된 조사만 수행한다.
+- 보안/QA 에이전트는 `docs/security/README.md`를 기준으로 읽기 전용 점검을 수행한다.
+- 브라우저 QA와 릴리즈 점검은 총괄 Codex가 티켓별로 범위를 지정한다.
+- 담당별 프롬프트 템플릿은 `docs/project/role-prompts.md`를 사용한다.
 
 ## 4. 현재 표준 경로
 - `docs/workflow/work-plan.md`

@@ -1,57 +1,58 @@
 1. 요청 요약
-- 활성 티켓: `홈 랜딩 프로급 리디자인 3차`
-- 현재 단계: `[Step 5. 사용자 실사용 확인 완료 — 커밋 대기]`
-- 담당: 코드 담당 Claude 구현 → 총괄 Codex 정밀검토/데스크톱·모바일 브라우저 확인 → 보안/QA Claude 독립 점검.
-- 배경: 사용자는 C안 `제품 대시보드 히어로형`을 선택했고, 추가로 전문 제품 사이트 수준의 밀도·위계·반응형 완성도를 요구했다.
-- 목적: 루트 홈을 `앱 시작 + 공개 가이드 진입 + 실제 기능 미리보기 + 사용 흐름 안내`가 한눈에 보이는 제품형 랜딩으로 고도화한다.
-- 상세 스펙: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`와 `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`를 기준으로 한다.
+- 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`
+- 현재 단계: `[Step 3. 문서화·검증 완료 — 사용자 확인 대기]`
+- 담당: 총괄 Codex 직접 수행.
+- 배경: 기존 코드 담당 Claude, 보안/QA Claude, 근거문서 Claude를 더 이상 사용하지 않는다. 앞으로 총괄 Codex가 필요할 때마다 하위 에이전트를 생성해 코드 구현, 보안/QA, 브라우저 실사용, 근거 조사, 릴리즈 점검 역할을 부여한다.
+- 목적: 프로젝트 운영 문서에서 상시 Claude 담당 체계를 제거하고 `총괄 Codex + 티켓별 하위 에이전트` 방식으로 고정한다.
+- 상세 계획: `docs/superpowers/plans/2026-07-02-agentic-operations-transition-plan.md`를 기준으로 한다.
 
 2. 대상 파일
-- 수정 허용: `site/index.html`, `site/style.css`, `docs/workflow/work-plan.md`.
-- 읽기 허용: `docs/superpowers/specs/2026-06-29-landing-dashboard-hero-design.md`, `docs/superpowers/plans/2026-06-29-landing-professional-polish-plan.md`, `site/app.html`, `site/guides.html`, `site/about.html`, `site/tokens.css`, `site/docs.css`, `site/_headers`, `site/app.js`, `site/data.js`.
-- 수정 금지: `site/app.html`, `site/guides.html`, `site/about.html`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`, `site/docs.css`, `site/tokens.css`, `site/assets/**`, `site/vendor/**`, `docs/evidence/**`, `docs/security/**`.
+- 수정 허용: `docs/README.md`, `docs/evidence/README.md`, `docs/project/workspace-map.md`, `docs/project/role-prompts.md`, `docs/project/ticket-conventions.md`, `docs/workflow/README.md`, `docs/security/README.md`, `docs/workflow/work-plan.md`, `docs/superpowers/plans/2026-07-02-agentic-operations-transition-plan.md`.
+- 읽기 허용: `docs/README.md`, `docs/project/README.md`, `docs/evidence/README.md`, `docs/security/verify-common.md`, `docs/workflow/follow-up-queue.md`.
+- 수정 금지: `site/*`, `docs/evidence/evidence-research.md`, `docs/evidence/evidence-archive.md`, `docs/security/verify-common.md`, `docs/workflow/work-plan-archive.md`.
 
 3. 구현 범위
-- 현재 `site/index.html` 랜딩을 원복하지 말고, C안 기준으로 히어로를 `제품 대시보드 미리보기` 중심으로 재정렬한다.
-- 첫 화면은 짧은 kicker, 강한 headline, 1문장 lead, `앱 시작하기`(`/app`)·`가이드 보기`(`/guides`) CTA, 실제 앱 흐름을 떠올릴 수 있는 미리보기 패널로 구성한다.
-- 미리보기 패널은 오늘 확인, 7일 스케줄, 컨디션 입력, 워크로드 RPE/투구 수, ACWR, 8종목 평가 중 3~5개 카드만 사용한다. 표처럼 길어지지 않게 한다.
-- 데스크톱은 2열 히어로와 정돈된 가이드 2~3열, 태블릿은 자연스러운 1열 전환, 모바일 390px은 가로 overflow 0과 CTA 터치 크기 보존을 완료 조건으로 둔다.
-- 다크모드에서 히어로 미리보기 배경이 밝게 반전되지 않도록 `--hero-gradient-*`, `--hero-text-on-dark`, `--hero-glass-*` 등 히어로 전용 토큰을 우선 사용한다.
-- 공개 가이드와 신뢰 신호는 남기되, 홈을 긴 설명문으로 만들지 않는다. 문구는 짧고 자연스럽게 쓴다.
-- 금지: 외부 이미지/폰트/스크립트 추가, 레퍼런스 사이트명 노출, 앱 본체 구조 변경, 저장 schema 변경, 의료·성과 보장 문구 추가.
+- 기존 상시 담당 표현을 새 역할로 치환한다: 코드 구현 에이전트, 보안/QA 에이전트, 브라우저 QA 에이전트, 근거/문서 에이전트, 릴리즈 점검 에이전트.
+- 총괄 Codex가 티켓 선정, 작업 지시, 에이전트 생성, 최종 검토, 사용자 보고를 담당한다는 원칙을 명시한다.
+- 하위 에이전트는 다음 티켓 선택과 최종 완료 판단을 하지 않는다는 금지 원칙을 명시한다.
+- 모델 선택 기준을 명시한다: 단순 반복은 낮은 모델, 일반 구현은 중간 모델, 보안·출시·schema 판단은 총괄 또는 높은 모델.
+- 이번 작업은 운영 문서만 수정하고 `site/*`는 변경하지 않는다.
 
 4. 정적 확인 명령
-- `node --check site/app.js`
-- `node --check site/data.js`
-- `rg -n "onclick=|oninput=|onchange=" site/*.html`
-- `rg -n "치료|처방|진단|보장|최적|부상 예방|성과 향상|위험 판정|부상 예측|자동 추천|자동 대체|훈련 가능" site/index.html site/style.css`
-- `rg -n "app\\.js|data\\.js|chart\\.umd|min\\.js|html2canvas" site/index.html`
-- `rg -n "토스|Toss|toss|Linear|Supabase|TrainingPeaks|WHOOP" site/index.html site/style.css`
-- `rg -n "pagead2.googlesyndication.com" site/index.html site/app.html`
-- `rg -n "landing-page|landing-hero|landing-preview|landing-guide-grid|landing-section" site/index.html site/style.css`
-- `git diff -- site/app.html site/guides.html site/about.html site/app.js site/data.js site/docs.css site/tokens.css site/sitemap.xml site/robots.txt site/ads.txt site/assets site/vendor docs/evidence docs/security`
+- `git diff -- site`
+- `git diff -- docs/evidence/evidence-research.md docs/evidence/evidence-archive.md docs/security/verify-common.md docs/workflow/work-plan-archive.md`
+- `rg -n "Claude Code|보안/QA Claude|근거문서 Claude" docs/project docs/workflow/README.md docs/security/README.md`
+- `rg -n "코드 구현 에이전트|보안/QA 에이전트|브라우저 QA 에이전트|근거/문서 에이전트|릴리즈 점검 에이전트" docs/project docs/workflow/README.md docs/security/README.md`
 - `git diff --check`
 
 5. 완료 조건
-- 루트 `/` 첫 화면이 제품형 서비스처럼 보이고, 기존 앱의 Clinical Trust 톤과 이질적이지 않다.
-- 홈이 긴 글형 페이지로 늘어나지 않는다. 핵심 역할은 `앱 시작`, `가이드 진입`, `기능 미리보기`, `짧은 신뢰 신호`다.
-- 모바일 390px, 태블릿, 데스크톱에서 가로 overflow 0, CTA 가시성, 카드 줄바꿈, 다크모드 대비가 유지된다.
-- `index.html`은 AdSense 스크립트 유지, `app.js`/`data.js`/vendor script 로드 0건 유지.
-- `site/app.html`, `site/app.js`, `site/data.js`, `site/guides.html`, `site/about.html`, `site/tokens.css`, 저장 schema, 백업/복원 schema 변경 0건.
-- 레퍼런스 사이트명 문자열 0건, inline handler 0건, 신규 외부 tracker 0건, 긍정형 의료·성과 보장 문구 0건.
+- 현재 운영 문서가 `총괄 Codex + 티켓별 하위 에이전트` 구조로 설명된다.
+- 기존 상시 Claude 담당을 현재 운영 기준으로 요구하지 않는다.
+- 코드/보안/브라우저/근거/릴리즈 역할별 프롬프트 템플릿이 존재한다.
+- `site/*` 변경 0건.
+- `docs/evidence/evidence-research.md`, `docs/evidence/evidence-archive.md`, `docs/security/verify-common.md`, `docs/workflow/work-plan-archive.md` 변경 0건.
 
 6. 이슈 분류 기준
-- BLOCKER: `site/app.html`, `site/app.js`, `site/data.js`, 저장 schema 변경. 루트에서 앱 스크립트 로드. 앱 화면 광고 스크립트 재도입.
-- MAJOR: AdSense 스크립트 제거, `/app` 또는 `/guides` CTA 손상, 모바일 가로 overflow, 레퍼런스 사이트 직접 복제/명칭 노출, 다크모드 대비 붕괴.
-- MINOR: 첫 화면 과밀, 제품 미리보기 과도 축소, 공개 콘텐츠 신뢰 신호 과도 축소, 가이드 링크 누락, 기존 앱 톤과 색상 불일치.
-- NIT: 문구 어색함, 간격/정렬/hover 미세 보정, 카드 크기·줄바꿈 세부 조정.
+- BLOCKER: `site/*` 변경, evidence 본문/아카이브 또는 security 공통 검증 파일 변경, 기존 역할 문서와 새 역할 문서의 직접 충돌.
+- MAJOR: 하위 에이전트가 최종 판단권을 갖는 것처럼 문서화, 보안/QA 에이전트 수정 허용, 모델 선택 기준 누락.
+- MINOR: 일부 README 표현이 오래된 담당명으로 남음.
+- NIT: 역사 기록 영역의 과거 Claude 언급, 문서 표현 중복.
 
-7. Claude 작업 지침
-- 이번 티켓은 코드 담당 Claude가 수행한다.
-- `site/index.html`과 `site/style.css`만 수정한다. 앱 본체와 가이드 본문은 건드리지 않는다.
-- C안 스펙 문서를 기준으로 제품 대시보드형 히어로를 구현한다.
-- 새 외부 에셋·새 폰트·새 JS를 추가하지 않는다.
-- 구현 완료 후 변경 요약과 §4 검증 결과만 짧게 보고한다. commit/push는 총괄 검토 전 금지한다.
+7. 에이전트 운영 지침
+- 이번 티켓은 총괄 Codex가 직접 수행한다.
+- 다음 코드/보안/브라우저/근거/릴리즈 티켓부터 필요한 하위 에이전트를 생성한다.
+- 하위 에이전트 프롬프트는 `docs/project/role-prompts.md`를 기준으로 작성한다.
+- 하위 에이전트 보고는 총괄 Codex가 직접 대조한 뒤에만 승인한다.
+- commit/push는 사용자 확인 또는 명시 지시 전까지 수행하지 않는다.
+
+7-A. 운영 체계 전환 결과 (2026-07-02)
+- 변경 파일: `docs/README.md`, `docs/evidence/README.md`, `docs/project/workspace-map.md`, `docs/project/role-prompts.md`, `docs/project/ticket-conventions.md`, `docs/workflow/README.md`, `docs/security/README.md`, `docs/workflow/work-plan.md`, `docs/superpowers/plans/2026-07-02-agentic-operations-transition-plan.md`.
+- 변경 요약: 상시 Claude 담당 체계를 제거하고, 총괄 Codex가 티켓별 하위 에이전트를 생성·지시·검토하는 방식으로 전환했다.
+- 새 역할: 코드 구현 에이전트, 보안/QA 에이전트, 브라우저 QA 에이전트, 근거/문서 에이전트, 릴리즈 점검 에이전트.
+- 모델 기준: 단순 반복은 `gpt-5.4-mini`, 일반 구현은 `gpt-5.4`, 보안·출시·schema·AdSense 최종 판단은 총괄 Codex 또는 높은 모델.
+- 보호 범위: `site/*`, `docs/evidence/evidence-research.md`, `docs/evidence/evidence-archive.md`, `docs/security/verify-common.md`, `docs/workflow/work-plan-archive.md` 변경 0건이어야 한다.
+- 총괄 검증: `git diff -- site` 0건 / evidence 본문·아카이브 diff 0건 / security common diff 0건 / work-plan archive diff 0건 / 현재 운영 문서 내 구 담당명 0건 / `git diff --check` PASS.
+- 잔여 게이트: 사용자 확인. commit/push는 사용자 지시 전까지 보류.
 
 8. 구현 및 총괄 검토 결과 (2026-06-29)
 - 수행자: 총괄 Codex 직접 구현. 코드 담당 Claude 한도/흐름과 무관하게 사용자 지시로 진행.
