@@ -1,3 +1,74 @@
+0. 현재 활성 티켓
+- 활성 티켓: `루트 진입 앱 전환 1차`
+- 현재 단계: `[Step 4. 완료 — 코드·보안·QA 에이전트 검증 완료, 커밋 진행]`
+- 담당: 총괄 Codex가 코드 구현 에이전트 또는 직접 구현을 선택하고, 최종 검토까지 수행한다.
+- 배경: 프로젝트 방향을 AdSense 승인 우선 랜딩 구조에서 앱 제품 우선 구조로 전환한다. 사용자는 첫 진입에서 설명형 랜딩을 거치지 않고 바로 앱을 사용한다.
+- 전략: `/`는 앱 화면, 공개 가이드는 도움말·신뢰·SEO·향후 광고 후보, 로그인·구독·클라우드 동기화는 앱화 이후 v2 설계로 보류한다.
+- 상세 계획: `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`를 기준으로 한다.
+
+0-1. 대상 파일
+- 수정 허용: `site/index.html`, 공개 문서 링크 라벨이 필요한 `site/*.html`, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`, `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`.
+- 읽기 허용: `site/app.html`, `site/style.css`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`.
+- 수정 금지: `site/app.js`, `site/data.js`, `site/vendor/**`, `site/assets/**`, `docs/evidence/**`, `docs/security/**`.
+
+0-2. 구현 범위
+- `site/index.html`을 현재 `site/app.html` 기반 앱 진입 화면으로 전환한다.
+- 루트(`/`)는 `index, follow`, canonical/og:url은 `https://www.baseballlabsnc.com/`로 유지한다.
+- 루트(`/`)에는 앱 실행에 필요한 vendor/data/app script를 로드하고, AdSense loader는 제거한다.
+- `site/app.html`은 호환용으로 유지하고 삭제하지 않는다.
+- 공개 문서에서 `/`로 돌아가는 링크 라벨을 앱 우선 구조에 맞게 보정한다.
+- 로그인, 구독, cloud sync, PWA manifest, Android/iOS 패키징은 이번 티켓 범위 밖이다.
+
+0-3. 정적 검증 명령
+- `node --check site/app.js`
+- `node --check site/data.js`
+- `rg -n "pagead2|adsbygoogle|app\\.js|data\\.js|vendor/" site/index.html site/app.html`
+- `rg -n "canonical|robots|og:url" site/index.html site/app.html`
+- `rg -n "사이트 홈으로 돌아가기|사이트 홈|앱으로 돌아가기|앱 홈" site/*.html`
+- `rg -n "onclick=|oninput=|onchange=" site/*.html`
+- `git diff --check`
+
+0-4. 완료 조건
+- `https://www.baseballlabsnc.com/` 진입 대상인 root HTML이 바로 앱 화면을 표시한다.
+- root HTML에서 AdSense loader 0건, app/data/vendor script 로드 존재.
+- `/app` 호환 페이지 유지.
+- 공개 문서의 root 이동 라벨이 앱 우선 구조와 일치.
+- 앱 저장 schema, 백업/복원, `site/data.js` 변경 0건.
+- 브라우저 실사용 확인에서 루트 앱 로드, 선수 등록, 공개 가이드 이동, 팀 대시보드, 다크모드가 정상.
+
+0-5. 이슈 분류 기준
+- BLOCKER: root 앱 로드 실패, `site/app.js`/`site/data.js` 변경, 저장 schema 변경, 앱 화면에 AdSense 재도입.
+- MAJOR: canonical/robots/og:url 불일치, 공개 문서 링크 대량 오류, `/app` 호환 깨짐.
+- MINOR: 링크 라벨 일부 잔존, sitemap/robots와 실제 구조 설명 불일치.
+- NIT: 설명형 랜딩 CSS 잔존, 과거 landing class 미사용 잔재.
+
+0-6. 에이전트 운영 지침
+- 구현이 필요하면 코드 구현 에이전트는 `site/index.html`과 공개 문서 링크 라벨만 수정한다.
+- 보안/QA 에이전트는 읽기 전용으로 root/app script 분리, AdSense 제거, inline handler, schema 무변경을 확인한다.
+- 브라우저 QA 에이전트는 최신 cache-bust URL로 루트 앱 실사용을 확인한다.
+- 하위 에이전트는 다음 티켓 선택, 최종 완료, 커밋 판단을 하지 않는다.
+- 커밋은 사용자가 “커밋까지”라고 지시할 때만 수행한다.
+
+0-7. 구현 및 총괄 검증 결과 (2026-07-04)
+- 변경 파일: `site/index.html`, 공개 문서 14개 링크 라벨, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`, `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`.
+- 구현 요약: root `/`를 앱 화면으로 전환했다. 기존 설명형 랜딩은 root 첫 진입에서 제거됐다. `/app`은 호환용으로 유지했다.
+- 광고 구조: root 앱 화면 AdSense loader 0건. 공개 가이드 문서의 AdSense loader는 유지.
+- 메타 구조: root는 `robots: index, follow`, canonical/og:url `/`. `/app`은 `robots: noindex, follow`, canonical/og:url `/app`.
+- 링크 보정: 공개 문서의 `사이트 홈` 계열 라벨을 `앱으로 돌아가기`/`앱 홈`으로 변경하고 href `/`는 유지했다.
+- 정적 검증: `node --check site/app.js` PASS / `node --check site/data.js` PASS / inline handler 0건 / `git diff --check` PASS / `site/app.js`, `site/data.js`, vendor, assets, evidence, security diff 0건.
+- 브라우저 검증: root 1280px·390px 모두 landing class 0, 앱 컨테이너 존재, `신규 선수 등록` 표시, AdSense 0, app script 존재, overflowX false, console warning/error 0. `/guides.html`은 앱 복귀 라벨 정상, 기존 `사이트 홈` 라벨 0, AdSense 유지, overflowX false.
+- 잔여 확인: 기존 앱의 첫 방문 사용 가이드 모달은 유지했다. 광고용 랜딩은 제거됐지만 온보딩 모달 제거는 별도 티켓으로 분리한다.
+- 잔여 게이트: 사용자 실사용 확인. 커밋은 사용자 지시 전까지 보류.
+
+0-8. 에이전트 분리 검증 결과 (2026-07-04)
+- 운영 방식: 총괄 Codex는 직접 코드 수정 없이 코드 담당 에이전트, 보안 담당 에이전트, QA 담당 에이전트에 검증을 분리 위임했다.
+- 코드 담당: PASS. `site/index.html`은 앱 UI와 vendor/`data.js`/`app.js`를 로드하고, `site/app.html`은 `noindex` + `/app` canonical 호환 경로로 유지됨. 공개 문서 복귀 링크는 href `/` 유지, 라벨만 앱 기준으로 변경됨.
+- 보안 담당: PASS. BLOCKER/MAJOR/MINOR 0건. root/app에 inline handler 0건, root 앱 화면 AdSense/analytics 없음, `site/app.js`·`site/data.js`·vendor·assets·evidence·security diff 0건.
+- 보안 NIT: 비루트 공개 문서에는 기존 AdSense loader가 남아 있음. 현재 전략상 공개 가이드 광고 후보를 유지하는 의도와 일치하므로 차단 이슈 아님. 사이트 전체 광고 제거가 목표가 되면 별도 티켓으로 분리한다.
+- QA 담당: PASS. `/` desktop 1280px·mobile 390px 모두 앱 바로 진입, `.landing-page` 0, `신규 선수 등록` 표시, AdSense 0, overflowX false. `/guides.html`은 `← 앱으로 돌아가기` 라벨과 AdSense 유지 확인.
+- QA 참고: 공개 가이드에서 Google 광고 품질 요청 1건 `ERR_ABORTED`가 있었으나 console error/warn 0건이며 비차단 요청으로 분류.
+- 총괄 결론: 루트 앱 전환 1차는 코드·보안·QA 검증 기준 통과. 사용자 지시에 따라 커밋 진행.
+
 1. 요청 요약
 - 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`
 - 현재 단계: `[Step 4. 완료 — 커밋·푸시·production 확인 완료]`

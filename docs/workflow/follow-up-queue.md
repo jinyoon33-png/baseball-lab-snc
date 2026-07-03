@@ -4,8 +4,9 @@
 
 ## 현재 활성 큐
 
-- `AdSense 콘텐츠 가치 보강 묶음` — 활성. `가치가 별로 없는 콘텐츠` 재거절을 줄이기 위해 공개 가이드 8개와 가이드 허브/서비스 소개를 순차 확장한다. 상세 실행 순서는 `docs/workflow/work-plan.md`의 `7-6. AdSense 콘텐츠 가치 보강 티켓 큐`를 기준으로 한다.
-- `앱 전환 로드맵 후속 결정` — 웹사이트 출시 후 사용자 결정 대기. 설계 결과는 `docs/workflow/work-plan-archive.md`에 기록 완료. 다음 결정은 `PWA/TWA 우선 검토`로 갈지, `네이티브 앱 설계`로 바로 갈지 선택하는 것이다.
+- `앱 제품 우선 전환 묶음` — 활성. 첫 진입을 설명형 랜딩이 아니라 앱 화면으로 전환하고, PWA/Android 앱화 준비를 순차 진행한다. 현재 첫 티켓은 `docs/workflow/work-plan.md`의 `루트 진입 앱 전환 1차`다.
+- `AdSense 콘텐츠 가치 보강 묶음` — 보류. 앱 제품 우선 전환 중에는 AdSense 승인을 최우선 목표로 두지 않는다. 공개 가이드와 정책 문서는 유지하되, 루트 앱 UX를 흔드는 광고 승인용 구조 변경은 중단한다.
+- `앱 전환 로드맵 후속 결정` — 진행 방향 확정. 우선순위는 `루트 앱 진입 → PWA manifest → Android 앱화 검토 → 로그인/구독 v2 설계`다.
 - `도메인/운영자 연락처 확정 후 SEO 구현 1차` — 차단. 최종 도메인과 운영자 이메일 확정 후 sitemap/canonical/robots Sitemap 지시문을 구현한다.
 - `AdSense 코드 삽입 전 보안/QA 1차` — 차단. 실제 광고 코드/분석 코드 삽입 직전에 보안/QA Claude가 외부 스크립트, CSP, 개인정보/약관, 광고 배치 정책을 점검한다.
 
@@ -17,6 +18,7 @@
 - 공개 HTML: 15개(`index`, `guides`, `about`, `workload-guide`, `recovery-guide`, `assessment-guide`, `rpe-guide`, `acwr-guide`, `training-program-guide`, `warmup-shoulder-guide`, `fielding-baserunning-agility-guide`, `privacy`, `terms`, `contact`, `404`).
 - 현재 허용: `site/robots.txt`는 전체 허용 + sitemap 지시문 포함.
 - 현재 적용: `sitemap.xml`, canonical, JSON-LD, AdSense 코드, ads.txt, OG/Twitter 메타, og:image.
+- 현재 전략: AdSense 승인은 후순위로 두고 앱 제품 전환을 우선한다. 공개 문서의 AdSense/SEO 기반은 유지하되 root 진입은 앱 UX 중심으로 재정렬한다.
 - 현재 이슈: AdSense 승인 상태가 `주의 필요`, 세부 사유가 `가치가 별로 없는 콘텐츠`. `ads.txt`는 승인됨.
 - 정책 문서: `privacy`, `terms`, `contact`는 광고/분석 도입 및 운영자 이메일 고지를 반영한 상태다.
 
