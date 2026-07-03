@@ -1,73 +1,67 @@
 0. 현재 활성 티켓
-- 활성 티켓: `루트 진입 앱 전환 1차`
-- 현재 단계: `[Step 4. 완료 — 코드·보안·QA 에이전트 검증 완료, 커밋 진행]`
-- 담당: 총괄 Codex가 코드 구현 에이전트 또는 직접 구현을 선택하고, 최종 검토까지 수행한다.
-- 배경: 프로젝트 방향을 AdSense 승인 우선 랜딩 구조에서 앱 제품 우선 구조로 전환한다. 사용자는 첫 진입에서 설명형 랜딩을 거치지 않고 바로 앱을 사용한다.
-- 전략: `/`는 앱 화면, 공개 가이드는 도움말·신뢰·SEO·향후 광고 후보, 로그인·구독·클라우드 동기화는 앱화 이후 v2 설계로 보류한다.
-- 상세 계획: `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`를 기준으로 한다.
+- 활성 티켓: `PWA manifest 설계·기초 구현 1차`
+- 현재 단계: `[Step 3. 코드·보안·QA 에이전트 검증 완료 — 사용자 실사용 확인 대기]`
+- 담당: 코드 담당 에이전트가 구현하고, 보안 담당 에이전트와 QA 담당 에이전트가 독립 검증한다. 총괄 Codex는 워크플랜·최종 판단만 수행한다.
+- 배경: 루트 `/`가 앱 화면으로 전환됐으므로, 다음 단계는 설치형 앱 전환을 위한 최소 PWA 기반을 만든다.
+- 전략: 1차는 `manifest.webmanifest`, 192/512 앱 아이콘, root/app head 연결만 수행한다. service worker, 오프라인 캐시, 로그인, 구독, cloud sync는 제외한다.
+- 상세 계획: `docs/superpowers/plans/2026-07-04-pwa-manifest-plan.md`를 기준으로 한다.
 
 0-1. 대상 파일
-- 수정 허용: `site/index.html`, 공개 문서 링크 라벨이 필요한 `site/*.html`, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`, `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`.
-- 읽기 허용: `site/app.html`, `site/style.css`, `site/app.js`, `site/data.js`, `site/sitemap.xml`, `site/robots.txt`, `site/ads.txt`.
-- 수정 금지: `site/app.js`, `site/data.js`, `site/vendor/**`, `site/assets/**`, `docs/evidence/**`, `docs/security/**`.
+- 수정 허용: `site/manifest.webmanifest`, `site/icon-192.png`, `site/icon-512.png`, `site/index.html`, `site/app.html`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
+- 읽기 허용: `site/apple-touch-icon.png`, `site/favicon.svg`, `site/og-image.png`, `site/style.css`, `site/app.js`, `site/data.js`.
+- 수정 금지: `site/app.js`, `site/data.js`, `site/vendor/**`, `site/assets/**`, `docs/evidence/**`, `docs/security/**`, 공개 문서 본문.
 
 0-2. 구현 범위
-- `site/index.html`을 현재 `site/app.html` 기반 앱 진입 화면으로 전환한다.
-- 루트(`/`)는 `index, follow`, canonical/og:url은 `https://www.baseballlabsnc.com/`로 유지한다.
-- 루트(`/`)에는 앱 실행에 필요한 vendor/data/app script를 로드하고, AdSense loader는 제거한다.
-- `site/app.html`은 호환용으로 유지하고 삭제하지 않는다.
-- 공개 문서에서 `/`로 돌아가는 링크 라벨을 앱 우선 구조에 맞게 보정한다.
-- 로그인, 구독, cloud sync, PWA manifest, Android/iOS 패키징은 이번 티켓 범위 밖이다.
+- 새 `site/manifest.webmanifest`를 추가한다.
+- 기존 `site/apple-touch-icon.png`에서 `site/icon-192.png`, `site/icon-512.png`를 생성한다.
+- `site/index.html`과 `site/app.html` head에 `<link rel="manifest" href="/manifest.webmanifest">`를 1건씩 추가한다.
+- manifest `start_url`과 `scope`는 `/`로 둔다.
+- service worker와 offline cache는 이번 티켓에서 추가하지 않는다.
 
 0-3. 정적 검증 명령
+- `file site/icon-192.png site/icon-512.png`
+- `node -e "JSON.parse(require('fs').readFileSync('site/manifest.webmanifest','utf8')); console.log('manifest ok')"`
+- `rg -n 'rel="manifest"|manifest.webmanifest' site/index.html site/app.html site/manifest.webmanifest`
+- `rg -n 'serviceWorker|service-worker|sw\\.js' site || true`
+- `rg -n "onclick=|oninput=|onchange=" site/*.html || true`
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `rg -n "pagead2|adsbygoogle|app\\.js|data\\.js|vendor/" site/index.html site/app.html`
-- `rg -n "canonical|robots|og:url" site/index.html site/app.html`
-- `rg -n "사이트 홈으로 돌아가기|사이트 홈|앱으로 돌아가기|앱 홈" site/*.html`
-- `rg -n "onclick=|oninput=|onchange=" site/*.html`
 - `git diff --check`
+- `git diff -- site/app.js site/data.js site/vendor site/assets docs/evidence docs/security`
 
 0-4. 완료 조건
-- `https://www.baseballlabsnc.com/` 진입 대상인 root HTML이 바로 앱 화면을 표시한다.
-- root HTML에서 AdSense loader 0건, app/data/vendor script 로드 존재.
-- `/app` 호환 페이지 유지.
-- 공개 문서의 root 이동 라벨이 앱 우선 구조와 일치.
+- manifest JSON parse PASS.
+- root/app에 manifest link가 각각 1건 존재.
+- icon 192/512 PNG가 존재하고 크기가 맞음.
+- service worker 참조 0건.
 - 앱 저장 schema, 백업/복원, `site/data.js` 변경 0건.
-- 브라우저 실사용 확인에서 루트 앱 로드, 선수 등록, 공개 가이드 이동, 팀 대시보드, 다크모드가 정상.
+- 브라우저 QA에서 root 앱 로드, manifest HTTP 200, desktop/mobile overflowX false, manifest/icon console error 0건.
 
 0-5. 이슈 분류 기준
-- BLOCKER: root 앱 로드 실패, `site/app.js`/`site/data.js` 변경, 저장 schema 변경, 앱 화면에 AdSense 재도입.
-- MAJOR: canonical/robots/og:url 불일치, 공개 문서 링크 대량 오류, `/app` 호환 깨짐.
-- MINOR: 링크 라벨 일부 잔존, sitemap/robots와 실제 구조 설명 불일치.
-- NIT: 설명형 랜딩 CSS 잔존, 과거 landing class 미사용 잔재.
+- BLOCKER: root 앱 로드 실패, manifest JSON 파싱 실패, service worker 도입, `site/app.js`/`site/data.js` 변경.
+- MAJOR: `start_url`/`scope`가 `/`가 아님, root/app manifest link 누락, 아이콘 파일 깨짐.
+- MINOR: icon size mismatch, manifest description/name 부정확, app.html 호환 경로 누락.
+- NIT: manifest 색상값·short_name 표현 보정 후보.
 
 0-6. 에이전트 운영 지침
-- 구현이 필요하면 코드 구현 에이전트는 `site/index.html`과 공개 문서 링크 라벨만 수정한다.
-- 보안/QA 에이전트는 읽기 전용으로 root/app script 분리, AdSense 제거, inline handler, schema 무변경을 확인한다.
-- 브라우저 QA 에이전트는 최신 cache-bust URL로 루트 앱 실사용을 확인한다.
+- 코드 담당 에이전트는 계획 문서 Task 1~2만 수행한다.
+- 보안 담당 에이전트는 service worker 0건, inline handler 0건, schema diff 0건, manifest 경로·scope를 읽기 전용 점검한다.
+- QA 담당 에이전트는 최신 cache-bust URL로 root/app과 manifest HTTP 200을 확인한다.
 - 하위 에이전트는 다음 티켓 선택, 최종 완료, 커밋 판단을 하지 않는다.
-- 커밋은 사용자가 “커밋까지”라고 지시할 때만 수행한다.
+- 총괄 Codex는 에이전트 결과 대조 후 work-plan 결과 기록과 커밋 여부만 판단한다.
 
-0-7. 구현 및 총괄 검증 결과 (2026-07-04)
-- 변경 파일: `site/index.html`, 공개 문서 14개 링크 라벨, `docs/workflow/work-plan.md`, `docs/workflow/follow-up-queue.md`, `docs/superpowers/plans/2026-07-04-app-product-transition-plan.md`.
-- 구현 요약: root `/`를 앱 화면으로 전환했다. 기존 설명형 랜딩은 root 첫 진입에서 제거됐다. `/app`은 호환용으로 유지했다.
-- 광고 구조: root 앱 화면 AdSense loader 0건. 공개 가이드 문서의 AdSense loader는 유지.
-- 메타 구조: root는 `robots: index, follow`, canonical/og:url `/`. `/app`은 `robots: noindex, follow`, canonical/og:url `/app`.
-- 링크 보정: 공개 문서의 `사이트 홈` 계열 라벨을 `앱으로 돌아가기`/`앱 홈`으로 변경하고 href `/`는 유지했다.
-- 정적 검증: `node --check site/app.js` PASS / `node --check site/data.js` PASS / inline handler 0건 / `git diff --check` PASS / `site/app.js`, `site/data.js`, vendor, assets, evidence, security diff 0건.
-- 브라우저 검증: root 1280px·390px 모두 landing class 0, 앱 컨테이너 존재, `신규 선수 등록` 표시, AdSense 0, app script 존재, overflowX false, console warning/error 0. `/guides.html`은 앱 복귀 라벨 정상, 기존 `사이트 홈` 라벨 0, AdSense 유지, overflowX false.
-- 잔여 확인: 기존 앱의 첫 방문 사용 가이드 모달은 유지했다. 광고용 랜딩은 제거됐지만 온보딩 모달 제거는 별도 티켓으로 분리한다.
-- 잔여 게이트: 사용자 실사용 확인. 커밋은 사용자 지시 전까지 보류.
+0-7. 직전 티켓 결과 — 루트 진입 앱 전환 1차 (2026-07-04)
+- 커밋: `a795909 Switch root entry to app-first flow`.
+- 결과: root `/`는 앱 바로 진입, `/app.html`은 호환 경로 유지, 공개 문서 복귀 라벨은 앱 기준으로 정리.
+- 검증: 코드 담당 PASS / 보안 담당 PASS / QA 담당 PASS. `site/app.js`, `site/data.js`, vendor, assets, evidence, security diff 0건.
+- 참고: 공개 가이드 문서의 기존 AdSense loader는 광고 후보 유지 의도와 일치하므로 제거하지 않음.
 
-0-8. 에이전트 분리 검증 결과 (2026-07-04)
-- 운영 방식: 총괄 Codex는 직접 코드 수정 없이 코드 담당 에이전트, 보안 담당 에이전트, QA 담당 에이전트에 검증을 분리 위임했다.
-- 코드 담당: PASS. `site/index.html`은 앱 UI와 vendor/`data.js`/`app.js`를 로드하고, `site/app.html`은 `noindex` + `/app` canonical 호환 경로로 유지됨. 공개 문서 복귀 링크는 href `/` 유지, 라벨만 앱 기준으로 변경됨.
-- 보안 담당: PASS. BLOCKER/MAJOR/MINOR 0건. root/app에 inline handler 0건, root 앱 화면 AdSense/analytics 없음, `site/app.js`·`site/data.js`·vendor·assets·evidence·security diff 0건.
-- 보안 NIT: 비루트 공개 문서에는 기존 AdSense loader가 남아 있음. 현재 전략상 공개 가이드 광고 후보를 유지하는 의도와 일치하므로 차단 이슈 아님. 사이트 전체 광고 제거가 목표가 되면 별도 티켓으로 분리한다.
-- QA 담당: PASS. `/` desktop 1280px·mobile 390px 모두 앱 바로 진입, `.landing-page` 0, `신규 선수 등록` 표시, AdSense 0, overflowX false. `/guides.html`은 `← 앱으로 돌아가기` 라벨과 AdSense 유지 확인.
-- QA 참고: 공개 가이드에서 Google 광고 품질 요청 1건 `ERR_ABORTED`가 있었으나 console error/warn 0건이며 비차단 요청으로 분류.
-- 총괄 결론: 루트 앱 전환 1차는 코드·보안·QA 검증 기준 통과. 사용자 지시에 따라 커밋 진행.
+0-8. 구현 및 에이전트 검증 결과 (2026-07-04)
+- 코드 담당: PASS. `site/manifest.webmanifest`, `site/icon-192.png`, `site/icon-512.png` 추가. `site/index.html`, `site/app.html`에 manifest link 각각 1건 추가.
+- 총괄 1차 대조: `file site/icon-192.png site/icon-512.png` 결과 192x192·512x512 확인. manifest JSON parse PASS. root/app manifest link 확인.
+- 보안 담당: PASS. BLOCKER/MAJOR/MINOR 0건. `start_url`·`scope` 모두 `/`, service worker 0건, inline handler 0건, root/app 광고·analytics 문자열 0건, 보호 경로 diff 0건.
+- QA 담당: PASS. `/manifest.webmanifest` HTTP 200 및 `application/manifest+json`, icons HTTP 200, desktop 1280px·mobile 390px overflow 없음, console warn/error 0건, service worker registration 없음.
+- 총괄 결론: PWA manifest 1차는 사용자 실사용 확인 가능 상태. 커밋은 사용자 지시 전까지 보류한다.
 
 1. 요청 요약
 - 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`
