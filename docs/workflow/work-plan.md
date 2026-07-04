@@ -1,67 +1,64 @@
 0. 현재 활성 티켓
-- 활성 티켓: `PWA manifest 설계·기초 구현 1차`
-- 현재 단계: `[Step 3. 코드·보안·QA 에이전트 검증 완료 — 사용자 실사용 확인 대기]`
-- 담당: 코드 담당 에이전트가 구현하고, 보안 담당 에이전트와 QA 담당 에이전트가 독립 검증한다. 총괄 Codex는 워크플랜·최종 판단만 수행한다.
-- 배경: 루트 `/`가 앱 화면으로 전환됐으므로, 다음 단계는 설치형 앱 전환을 위한 최소 PWA 기반을 만든다.
-- 전략: 1차는 `manifest.webmanifest`, 192/512 앱 아이콘, root/app head 연결만 수행한다. service worker, 오프라인 캐시, 로그인, 구독, cloud sync는 제외한다.
-- 상세 계획: `docs/superpowers/plans/2026-07-04-pwa-manifest-plan.md`를 기준으로 한다.
+- 활성 티켓: `TWA package·signing·assetlinks 준비 1차`
+- 현재 단계: `[Step 3. 코드·보안 검증 완료 — 커밋 대기]`
+- 담당: 코드 담당 에이전트가 로컬 비밀키 보관 규칙과 TWA 준비 문서를 작성하고, 보안 담당 에이전트가 비밀정보 커밋 위험을 점검한다.
+- 배경: TWA 체크리스트 결과, 다음 단계는 package name과 signing/assetlinks 준비 절차를 안전하게 고정하는 것이다.
+- 전략: 기본 package name은 `com.baseballlabsnc.app`으로 둔다. 실제 keystore와 비밀번호는 repo에 커밋하지 않는다. Java Runtime이 없어 이번 티켓에서는 키 생성 대신 준비 문서와 ignore 규칙만 만든다.
+- 상세 계획: 이 티켓은 TWA Android 프로젝트 생성 전 안전장치와 실행 절차를 만든다.
 
 0-1. 대상 파일
-- 수정 허용: `site/manifest.webmanifest`, `site/icon-192.png`, `site/icon-512.png`, `site/index.html`, `site/app.html`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
-- 읽기 허용: `site/apple-touch-icon.png`, `site/favicon.svg`, `site/og-image.png`, `site/style.css`, `site/app.js`, `site/data.js`.
-- 수정 금지: `site/app.js`, `site/data.js`, `site/vendor/**`, `site/assets/**`, `docs/evidence/**`, `docs/security/**`, 공개 문서 본문.
+- 수정 허용: `.gitignore`, `docs/release/twa-android-prep.md`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
+- 읽기 허용: `site/index.html`, `site/app.html`, `site/manifest.webmanifest`, `site/app.js`, `site/data.js`, `site/_headers`.
+- 수정 금지: `site/*`, `docs/evidence/**`, `docs/security/**`, 실제 keystore 파일, 비밀번호 파일.
 
 0-2. 구현 범위
-- 새 `site/manifest.webmanifest`를 추가한다.
-- 기존 `site/apple-touch-icon.png`에서 `site/icon-192.png`, `site/icon-512.png`를 생성한다.
-- `site/index.html`과 `site/app.html` head에 `<link rel="manifest" href="/manifest.webmanifest">`를 1건씩 추가한다.
-- manifest `start_url`과 `scope`는 `/`로 둔다.
-- service worker와 offline cache는 이번 티켓에서 추가하지 않는다.
+- `.gitignore`에 `.local-secrets/`를 추가해 Android signing key와 비밀번호가 커밋되지 않게 한다.
+- `docs/release/twa-android-prep.md`를 생성한다.
+- 문서에는 package name `com.baseballlabsnc.app`, keystore 로컬 보관 경로, Java Runtime 필요, keytool 명령, SHA-256 추출 명령, `assetlinks.json` 템플릿, Play Console 준비 항목을 적는다.
+- 실제 keystore 생성, `assetlinks.json` 실제 배포, Android 프로젝트 생성은 이번 티켓에서 하지 않는다.
 
 0-3. 정적 검증 명령
-- `file site/icon-192.png site/icon-512.png`
-- `node -e "JSON.parse(require('fs').readFileSync('site/manifest.webmanifest','utf8')); console.log('manifest ok')"`
-- `rg -n 'rel="manifest"|manifest.webmanifest' site/index.html site/app.html site/manifest.webmanifest`
-- `rg -n 'serviceWorker|service-worker|sw\\.js' site || true`
-- `rg -n "onclick=|oninput=|onchange=" site/*.html || true`
+- `git status --short`
+- `rg -n "^\\.local-secrets/" .gitignore`
+- `rg -n "com\\.baseballlabsnc\\.app|assetlinks\\.json|SHA-256|keytool|\\.local-secrets|Play Console|closed testing|Data Safety|privacy policy|Ads declaration" docs/release/twa-android-prep.md`
+- `rg -n "manifest.webmanifest|start_url|scope|display" site/manifest.webmanifest site/index.html site/app.html`
 - `node --check site/app.js`
 - `node --check site/data.js`
+- `git diff -- site`
 - `git diff --check`
-- `git diff -- site/app.js site/data.js site/vendor site/assets docs/evidence docs/security`
 
 0-4. 완료 조건
-- manifest JSON parse PASS.
-- root/app에 manifest link가 각각 1건 존재.
-- icon 192/512 PNG가 존재하고 크기가 맞음.
-- service worker 참조 0건.
-- 앱 저장 schema, 백업/복원, `site/data.js` 변경 0건.
-- 브라우저 QA에서 root 앱 로드, manifest HTTP 200, desktop/mobile overflowX false, manifest/icon console error 0건.
+- `.local-secrets/`가 git ignore됨.
+- TWA 준비 문서에 package name, signing key 보관 규칙, keytool 명령, SHA-256 추출, assetlinks 템플릿, Play Console 준비 항목이 포함됨.
+- `site/*` 변경 0건.
+- 실제 keystore·비밀번호 파일 커밋 0건.
+- 다음 티켓 후보가 1개로 좁혀짐.
 
 0-5. 이슈 분류 기준
-- BLOCKER: root 앱 로드 실패, manifest JSON 파싱 실패, service worker 도입, `site/app.js`/`site/data.js` 변경.
-- MAJOR: `start_url`/`scope`가 `/`가 아님, root/app manifest link 누락, 아이콘 파일 깨짐.
-- MINOR: icon size mismatch, manifest description/name 부정확, app.html 호환 경로 누락.
-- NIT: manifest 색상값·short_name 표현 보정 후보.
+- BLOCKER: keystore/password 커밋, `site/*` 변경, 실제 Android 프로젝트 생성.
+- MAJOR: `.local-secrets/` ignore 누락, package name 누락, SHA-256/assetlinks 절차 누락.
+- MINOR: Play Console 준비 항목 일부 누락, Java Runtime 필요 조건 누락.
+- NIT: 문서 표현 보정, 명령 예시 경로 보정.
 
 0-6. 에이전트 운영 지침
-- 코드 담당 에이전트는 계획 문서 Task 1~2만 수행한다.
-- 보안 담당 에이전트는 service worker 0건, inline handler 0건, schema diff 0건, manifest 경로·scope를 읽기 전용 점검한다.
-- QA 담당 에이전트는 최신 cache-bust URL로 root/app과 manifest HTTP 200을 확인한다.
+- 코드 담당 에이전트는 `.gitignore`와 `docs/release/twa-android-prep.md`만 수정한다.
+- 보안 담당 에이전트는 secret 커밋 위험, `site/*` diff 0건, 문서의 민감정보 포함 여부를 읽기 전용 점검한다.
+- QA 담당 에이전트는 이번 티켓에서 호출하지 않는다.
 - 하위 에이전트는 다음 티켓 선택, 최종 완료, 커밋 판단을 하지 않는다.
-- 총괄 Codex는 에이전트 결과 대조 후 work-plan 결과 기록과 커밋 여부만 판단한다.
+- 총괄 Codex는 에이전트 결과 대조 후 다음 티켓을 1개로 확정한다.
 
-0-7. 직전 티켓 결과 — 루트 진입 앱 전환 1차 (2026-07-04)
-- 커밋: `a795909 Switch root entry to app-first flow`.
-- 결과: root `/`는 앱 바로 진입, `/app.html`은 호환 경로 유지, 공개 문서 복귀 라벨은 앱 기준으로 정리.
-- 검증: 코드 담당 PASS / 보안 담당 PASS / QA 담당 PASS. `site/app.js`, `site/data.js`, vendor, assets, evidence, security diff 0건.
-- 참고: 공개 가이드 문서의 기존 AdSense loader는 광고 후보 유지 의도와 일치하므로 제거하지 않음.
+0-7. 직전 티켓 결과 — TWA 최소 구현 체크리스트 1차 (2026-07-04)
+- 결과: TWA 구현에는 Android package name, signing key SHA-256 fingerprint, `site/.well-known/assetlinks.json`, Play Console 준비 항목이 필요함을 확인했다.
+- 현재 준비: HTTPS, manifest, icons, privacy, root app 구조는 준비됨. service worker, IndexedDB, fetch 기반 서버 통신 없음.
+- 차단: package name과 signing key 관리 방식 확정 전에는 Android 프로젝트와 실제 `assetlinks.json`을 생성하지 않는다.
+- 결론: 다음 티켓은 `TWA package·signing·assetlinks 준비 1차`.
 
-0-8. 구현 및 에이전트 검증 결과 (2026-07-04)
-- 코드 담당: PASS. `site/manifest.webmanifest`, `site/icon-192.png`, `site/icon-512.png` 추가. `site/index.html`, `site/app.html`에 manifest link 각각 1건 추가.
-- 총괄 1차 대조: `file site/icon-192.png site/icon-512.png` 결과 192x192·512x512 확인. manifest JSON parse PASS. root/app manifest link 확인.
-- 보안 담당: PASS. BLOCKER/MAJOR/MINOR 0건. `start_url`·`scope` 모두 `/`, service worker 0건, inline handler 0건, root/app 광고·analytics 문자열 0건, 보호 경로 diff 0건.
-- QA 담당: PASS. `/manifest.webmanifest` HTTP 200 및 `application/manifest+json`, icons HTTP 200, desktop 1280px·mobile 390px overflow 없음, console warn/error 0건, service worker registration 없음.
-- 총괄 결론: PWA manifest 1차는 사용자 실사용 확인 가능 상태. 커밋은 사용자 지시 전까지 보류한다.
+0-8. 구현 및 보안 검증 결과 — TWA package·signing·assetlinks 준비 1차 (2026-07-04)
+- 코드 담당 에이전트: `.gitignore`에 `.local-secrets/` 추가, `docs/release/twa-android-prep.md` 생성·보강 완료. package `com.baseballlabsnc.app`, domain `https://www.baseballlabsnc.com`, scope `/`, keytool 예시, SHA-256 추출 예시, `assetlinks.json` 템플릿, Play Console 체크리스트 포함.
+- 보안 담당 에이전트: PASS. 실제 비밀번호, 실제 keystore, 실제 SHA-256 fingerprint, Android 프로젝트 생성, `site/*` 변경 없음.
+- 총괄 검증: `.local-secrets/` ignore 확인 / TWA 문서 핵심 항목 grep PASS / `.jks`·`.keystore`·`*password*` 파일 0건 / `git diff -- site` 0건 / `git diff --check` PASS / `node --check site/app.js`·`site/data.js` PASS.
+- 환경 확인: `keytool` 경로는 `/usr/bin/keytool`이나 `java -version`은 Java Runtime 없음으로 실패. 이번 티켓에서 키 생성과 실제 `assetlinks.json` 배포는 진행하지 않는다.
+- 다음 게이트: Java Runtime 또는 Android Studio 설치 후 로컬 signing key 생성, 실제 SHA-256 확보, `site/.well-known/assetlinks.json` 생성 티켓으로 이동한다.
 
 1. 요청 요약
 - 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`

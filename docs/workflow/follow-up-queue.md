@@ -4,7 +4,7 @@
 
 ## 현재 활성 큐
 
-- `앱 제품 우선 전환 묶음` — 활성. 첫 진입을 설명형 랜딩이 아니라 앱 화면으로 전환했고, PWA/Android 앱화 준비를 순차 진행한다. 현재 티켓은 `docs/workflow/work-plan.md`의 `PWA manifest 설계·기초 구현 1차`다.
+- `앱 제품 우선 전환 묶음` — 활성. 첫 진입을 설명형 랜딩이 아니라 앱 화면으로 전환했고, PWA manifest 기초와 TWA 체크리스트 조사를 완료했다. 현재 티켓은 `docs/workflow/work-plan.md`의 `TWA package·signing·assetlinks 준비 1차`다.
 - `AdSense 콘텐츠 가치 보강 묶음` — 보류. 앱 제품 우선 전환 중에는 AdSense 승인을 최우선 목표로 두지 않는다. 공개 가이드와 정책 문서는 유지하되, 루트 앱 UX를 흔드는 광고 승인용 구조 변경은 중단한다.
 - `앱 전환 로드맵 후속 결정` — 진행 방향 확정. 우선순위는 `루트 앱 진입 → PWA manifest → Android 앱화 검토 → 로그인/구독 v2 설계`다.
 - `도메인/운영자 연락처 확정 후 SEO 구현 1차` — 차단. 최종 도메인과 운영자 이메일 확정 후 sitemap/canonical/robots Sitemap 지시문을 구현한다.
