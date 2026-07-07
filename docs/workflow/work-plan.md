@@ -1,48 +1,50 @@
 0. 현재 활성 티켓
-- 활성 티켓: `TWA package·signing·assetlinks 준비 1차`
-- 현재 단계: `[Step 3. 코드·보안 검증 완료 — 커밋 대기]`
-- 담당: 코드 담당 에이전트가 로컬 비밀키 보관 규칙과 TWA 준비 문서를 작성하고, 보안 담당 에이전트가 비밀정보 커밋 위험을 점검한다.
-- 배경: TWA 체크리스트 결과, 다음 단계는 package name과 signing/assetlinks 준비 절차를 안전하게 고정하는 것이다.
-- 전략: 기본 package name은 `com.baseballlabsnc.app`으로 둔다. 실제 keystore와 비밀번호는 repo에 커밋하지 않는다. Java Runtime이 없어 이번 티켓에서는 키 생성 대신 준비 문서와 ignore 규칙만 만든다.
-- 상세 계획: 이 티켓은 TWA Android 프로젝트 생성 전 안전장치와 실행 절차를 만든다.
+- 활성 티켓: `TWA signing key·assetlinks 생성 1차`
+- 현재 단계: `[Step 3. 구현·보안 검증 완료 — 커밋 대기]`
+- 담당: 총괄 Codex가 로컬 signing key를 생성하고, 보안 담당 에이전트가 비밀정보 커밋 위험과 assetlinks 형식을 점검한다.
+- 배경: Android Studio 내장 JDK가 확인되어 실제 signing key와 Digital Asset Links 파일을 만들 수 있는 상태가 됐다.
+- 전략: package name은 `com.baseballlabsnc.app`으로 유지한다. 실제 keystore와 비밀번호는 `.local-secrets/android/`에만 보관하고, 공개 가능한 SHA-256 fingerprint만 `site/.well-known/assetlinks.json`에 기록한다.
+- 상세 계획: 이 티켓은 TWA Android 프로젝트 생성 전 웹-앱 소유권 연결 파일을 준비한다.
 
 0-1. 대상 파일
-- 수정 허용: `.gitignore`, `docs/release/twa-android-prep.md`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
+- 수정 허용: `site/.well-known/assetlinks.json`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
 - 읽기 허용: `site/index.html`, `site/app.html`, `site/manifest.webmanifest`, `site/app.js`, `site/data.js`, `site/_headers`.
-- 수정 금지: `site/*`, `docs/evidence/**`, `docs/security/**`, 실제 keystore 파일, 비밀번호 파일.
+- 수정 금지: `site/.well-known/assetlinks.json` 외 `site/*`, `docs/evidence/**`, `docs/security/**`, 실제 keystore 파일, 비밀번호 파일.
 
 0-2. 구현 범위
-- `.gitignore`에 `.local-secrets/`를 추가해 Android signing key와 비밀번호가 커밋되지 않게 한다.
-- `docs/release/twa-android-prep.md`를 생성한다.
-- 문서에는 package name `com.baseballlabsnc.app`, keystore 로컬 보관 경로, Java Runtime 필요, keytool 명령, SHA-256 추출 명령, `assetlinks.json` 템플릿, Play Console 준비 항목을 적는다.
-- 실제 keystore 생성, `assetlinks.json` 실제 배포, Android 프로젝트 생성은 이번 티켓에서 하지 않는다.
+- `.local-secrets/android/`에 Android signing key와 비밀번호 파일을 생성한다.
+- 생성된 keystore에서 SHA-256 certificate fingerprint를 추출한다.
+- `site/.well-known/assetlinks.json`을 생성해 package name과 SHA-256 fingerprint를 기록한다.
+- Android 프로젝트 생성과 Play Console 업로드는 이번 티켓에서 하지 않는다.
 
 0-3. 정적 검증 명령
 - `git status --short`
 - `rg -n "^\\.local-secrets/" .gitignore`
-- `rg -n "com\\.baseballlabsnc\\.app|assetlinks\\.json|SHA-256|keytool|\\.local-secrets|Play Console|closed testing|Data Safety|privacy policy|Ads declaration" docs/release/twa-android-prep.md`
+- `python3 -m json.tool site/.well-known/assetlinks.json`
+- `rg -n "com\\.baseballlabsnc\\.app|delegate_permission/common.handle_all_urls|sha256_cert_fingerprints" site/.well-known/assetlinks.json`
 - `rg -n "manifest.webmanifest|start_url|scope|display" site/manifest.webmanifest site/index.html site/app.html`
 - `node --check site/app.js`
 - `node --check site/data.js`
-- `git diff -- site`
+- `git status --short --ignored .local-secrets site/.well-known`
 - `git diff --check`
 
 0-4. 완료 조건
 - `.local-secrets/`가 git ignore됨.
-- TWA 준비 문서에 package name, signing key 보관 규칙, keytool 명령, SHA-256 추출, assetlinks 템플릿, Play Console 준비 항목이 포함됨.
-- `site/*` 변경 0건.
-- 실제 keystore·비밀번호 파일 커밋 0건.
+- `site/.well-known/assetlinks.json` JSON parse PASS.
+- package name과 SHA-256 fingerprint가 assetlinks에 포함됨.
+- `site/.well-known/assetlinks.json` 외 `site/*` 변경 0건.
+- 실제 keystore·비밀번호 파일이 git ignored 상태임.
 - 다음 티켓 후보가 1개로 좁혀짐.
 
 0-5. 이슈 분류 기준
-- BLOCKER: keystore/password 커밋, `site/*` 변경, 실제 Android 프로젝트 생성.
-- MAJOR: `.local-secrets/` ignore 누락, package name 누락, SHA-256/assetlinks 절차 누락.
-- MINOR: Play Console 준비 항목 일부 누락, Java Runtime 필요 조건 누락.
+- BLOCKER: keystore/password 커밋, `assetlinks.json` 외 `site/*` 변경, 실제 Android 프로젝트 생성.
+- MAJOR: `.local-secrets/` ignore 누락, package name 불일치, SHA-256 fingerprint 누락, assetlinks JSON parse 실패.
+- MINOR: Play Console/TWA 다음 단계 문서와 실제 상태 불일치.
 - NIT: 문서 표현 보정, 명령 예시 경로 보정.
 
 0-6. 에이전트 운영 지침
-- 코드 담당 에이전트는 `.gitignore`와 `docs/release/twa-android-prep.md`만 수정한다.
-- 보안 담당 에이전트는 secret 커밋 위험, `site/*` diff 0건, 문서의 민감정보 포함 여부를 읽기 전용 점검한다.
+- 총괄 Codex는 signing key 생성과 assetlinks 파일 생성을 수행한다.
+- 보안 담당 에이전트는 secret 커밋 위험, assetlinks JSON 형식, package/fingerprint 정합성을 읽기 전용 점검한다.
 - QA 담당 에이전트는 이번 티켓에서 호출하지 않는다.
 - 하위 에이전트는 다음 티켓 선택, 최종 완료, 커밋 판단을 하지 않는다.
 - 총괄 Codex는 에이전트 결과 대조 후 다음 티켓을 1개로 확정한다.
@@ -59,6 +61,15 @@
 - 총괄 검증: `.local-secrets/` ignore 확인 / TWA 문서 핵심 항목 grep PASS / `.jks`·`.keystore`·`*password*` 파일 0건 / `git diff -- site` 0건 / `git diff --check` PASS / `node --check site/app.js`·`site/data.js` PASS.
 - 환경 확인: `keytool` 경로는 `/usr/bin/keytool`이나 `java -version`은 Java Runtime 없음으로 실패. 이번 티켓에서 키 생성과 실제 `assetlinks.json` 배포는 진행하지 않는다.
 - 다음 게이트: Java Runtime 또는 Android Studio 설치 후 로컬 signing key 생성, 실제 SHA-256 확보, `site/.well-known/assetlinks.json` 생성 티켓으로 이동한다.
+
+0-9. 구현 결과 — TWA signing key·assetlinks 생성 1차 (2026-07-07)
+- 환경 확인: Android Studio 내장 JDK `/Applications/Android Studio.app/Contents/jbr/Contents/Home`에서 `java`와 `keytool` 정상 실행.
+- 로컬 생성: `.local-secrets/android/baseballlabsnc-release.jks`, `.local-secrets/android/keystore-password.txt`, `.local-secrets/android/key-alias.txt` 생성. `.local-secrets/`는 `.gitignore` 대상.
+- 공개 파일 생성: `site/.well-known/assetlinks.json` 추가. package `com.baseballlabsnc.app`, SHA-256 fingerprint `8D:ED:A0:89:52:42:DE:FF:E1:83:FD:A8:82:B6:86:E6:F1:05:2C:05:94:55:72:4C:97:AD:F1:1A:AC:7C:0B:BB`.
+- 총괄 검증: `python3 -m json.tool site/.well-known/assetlinks.json` PASS / SHA-256 32바이트 콜론 구분 형식 확인 / `.local-secrets` ignored 확인 / `node --check site/app.js`·`site/data.js` PASS / `git diff --check` PASS.
+- 보안 담당 에이전트: PASS. BLOCKER/MAJOR/MINOR 0건. keystore·비밀번호 파일은 git ignored, `assetlinks.json` JSON 형식·package name·SHA-256 형식 정상, `assetlinks.json` 외 `site/*` 변경 없음.
+- Play App Signing 주의: 현재 fingerprint는 로컬 upload key 기준이다. Google Play App Signing 사용 시 최종 배포 앱은 Play Console의 App signing key certificate SHA-256이 필요할 수 있으므로 첫 Play 업로드 후 `assetlinks.json`에 Play signing fingerprint를 추가/교체해야 한다.
+- 다음 티켓 후보: `Android TWA 프로젝트 생성 1차`. 실제 Android 프로젝트 생성 전 Bubblewrap 또는 Android Studio 기반 생성 방식 중 하나를 선택해야 한다.
 
 1. 요청 요약
 - 활성 티켓: `총괄 Codex 에이전트 운영 체계 전환 1차`

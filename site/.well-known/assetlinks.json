@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.baseballlabsnc.app",
+      "sha256_cert_fingerprints": [
+        "8D:ED:A0:89:52:42:DE:FF:E1:83:FD:A8:82:B6:86:E6:F1:05:2C:05:94:55:72:4C:97:AD:F1:1A:AC:7C:0B:BB"
+      ]
+    }
+  }
+]

@@ -75,6 +75,14 @@ When the real SHA-256 fingerprint is ready, create `site/.well-known/assetlinks.
 
 Only the `<SHA256_CERT_FINGERPRINT>` placeholder should appear in this document for the fingerprint field.
 
+## Play App Signing Caveat
+
+- The local keystore fingerprint is valid for locally signed builds and direct install testing.
+- If Google Play App Signing is used, Google may sign the final distributed APK with the Play app signing key, not the local upload key.
+- Before production release, check Play Console > App integrity / App signing and copy the SHA-256 fingerprint from the **App signing key certificate**.
+- If that fingerprint differs from the local upload key fingerprint, update `site/.well-known/assetlinks.json` to include the Play app signing key fingerprint before production testing.
+- The current local key still matters as the upload key for building and uploading the Android App Bundle.
+
 ## Play Console Checklist
 
 - Developer account fee: confirm the current Google Play developer registration cost before creating the app listing.
@@ -87,6 +95,7 @@ Only the `<SHA256_CERT_FINGERPRINT>` placeholder should appear in this document 
 
 ## Next Ticket Gate
 
-- After Java or Android Studio is ready, create the local signing key on the target machine.
-- After the real SHA-256 certificate fingerprint is captured, move to the ticket that creates `site/.well-known/assetlinks.json`.
-- Android TWA project creation comes after that, as the following ticket.
+- Local signing key creation is complete on this machine.
+- Initial `site/.well-known/assetlinks.json` creation is complete for local/upload-key based testing.
+- Move to the Android TWA project generation ticket next.
+- Before Play Store production testing, revisit the Play App Signing caveat and update `assetlinks.json` if Play Console provides a different App signing key certificate fingerprint.
