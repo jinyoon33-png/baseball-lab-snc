@@ -1,10 +1,70 @@
 0. 현재 활성 티켓
-- 활성 티켓: `TWA signing key·assetlinks 생성 1차`
-- 현재 단계: `[Step 3. 구현·보안 검증 완료 — 커밋 대기]`
-- 담당: 총괄 Codex가 로컬 signing key를 생성하고, 보안 담당 에이전트가 비밀정보 커밋 위험과 assetlinks 형식을 점검한다.
-- 배경: Android Studio 내장 JDK가 확인되어 실제 signing key와 Digital Asset Links 파일을 만들 수 있는 상태가 됐다.
-- 전략: package name은 `com.baseballlabsnc.app`으로 유지한다. 실제 keystore와 비밀번호는 `.local-secrets/android/`에만 보관하고, 공개 가능한 SHA-256 fingerprint만 `site/.well-known/assetlinks.json`에 기록한다.
-- 상세 계획: 이 티켓은 TWA Android 프로젝트 생성 전 웹-앱 소유권 연결 파일을 준비한다.
+- 활성 티켓: `Android TWA 프로젝트 생성 1차`
+- 현재 단계: `[Step 3. 구현·보안 검증·커밋 완료]`
+- 담당: 코드 담당 에이전트가 `android/**` 생성 작업을 수행하고, 총괄 Codex가 결과를 직접 검토한다. 필요 시 보안 담당 에이전트가 secrets/build output 커밋 위험을 읽기 전용 점검한다.
+- 배경: TWA signing key와 `site/.well-known/assetlinks.json` 준비가 완료됐고, Bubblewrap doctor 기준 JDK 17·Android SDK 로컬 환경도 준비됐다.
+- 전략: `site/`를 복사하지 않는다. Android 앱은 `https://www.baseballlabsnc.com/manifest.webmanifest`와 `https://www.baseballlabsnc.com/`를 여는 TWA wrapper로 만든다.
+- 상세 계획: `docs/superpowers/plans/2026-07-07-android-twa-project-plan.md`를 기준으로 한다.
+
+0-0. 요청 요약
+- 목적: 기존 웹앱 core(`site/`)를 유지하면서 Android 앱 출시용 TWA 프로젝트를 `android/**` 아래에 생성한다.
+- package name: `com.baseballlabsnc.app`.
+- manifest URL: `https://www.baseballlabsnc.com/manifest.webmanifest`.
+- signing key: `.local-secrets/android/baseballlabsnc-release.jks`를 사용하되 비밀번호와 keystore는 절대 커밋하지 않는다.
+
+0-0-1. 대상 파일
+- 수정 허용: `android/**`, `docs/workflow/work-plan.md`, `docs/superpowers/plans/2026-07-07-android-twa-project-plan.md`.
+- 읽기 허용: `site/manifest.webmanifest`, `site/.well-known/assetlinks.json`, `.local-secrets/android/**`, `site/app.js`, `site/data.js`.
+- 수정 금지: `site/**`, `.local-secrets/**`, `docs/evidence/**`, `docs/security/**`.
+
+0-0-2. 구현 범위
+- Bubblewrap 기반 TWA Android project를 생성한다.
+- 기존 `site/` 파일을 Android 프로젝트에 복사하지 않는다.
+- build output, APK/AAB, `.jks`, password 파일이 `android/**` 또는 git tracked 영역에 들어오지 않도록 한다.
+- Play Console 업로드와 Play App Signing fingerprint 교체는 이번 티켓 범위 밖이다.
+
+0-0-3. 정적 검증 명령
+- `NPM_CONFIG_CACHE=/tmp/baseball-lab-npm-cache npx @bubblewrap/cli doctor`
+- `python3 -m json.tool site/.well-known/assetlinks.json`
+- `node --check site/app.js`
+- `node --check site/data.js`
+- `git diff -- site`
+- `git status --short --ignored .local-secrets android site/.well-known`
+- `git diff --check`
+
+0-0-4. 완료 조건
+- `android/**`에 TWA wrapper project가 존재한다.
+- `site/**` 변경 0건.
+- `.local-secrets/**`, keystore, password, APK/AAB가 커밋 대상에 포함되지 않는다.
+- Bubblewrap doctor PASS.
+- generated Android project가 최소 validate/build 가능한 상태임을 확인한다.
+
+0-0-5. 이슈 분류 기준
+- BLOCKER: secret/keystore/password 커밋 위험, `site/**` 변경, `site/` 복사본을 Android 프로젝트에 포함.
+- MAJOR: package name 불일치, manifest URL 불일치, assetlinks fingerprint와 signing key 불일치, Android project validation/build 실패.
+- MINOR: Play App Signing caveat 문서 누락, generated config의 표시명/색상 불일치.
+- NIT: Android project 주석/문서 표현 보정.
+
+0-0-6. 에이전트 운영 지침
+- 코드 담당 에이전트는 `android/**` 생성만 담당한다.
+- 보안 담당 에이전트는 secrets/build output/git status를 읽기 전용으로 점검한다.
+- 총괄 Codex는 에이전트 결과를 그대로 믿지 않고 `git diff`, `git status`, 정적 명령으로 직접 대조한다.
+- 커밋/푸시는 총괄 Codex만 수행한다.
+
+0-A. 직전 티켓 결과 — TWA signing key·assetlinks 생성 1차 (2026-07-07)
+- 로컬 생성: `.local-secrets/android/baseballlabsnc-release.jks`, `.local-secrets/android/keystore-password.txt`, `.local-secrets/android/key-alias.txt` 생성. `.local-secrets/`는 `.gitignore` 대상.
+- 공개 파일: `site/.well-known/assetlinks.json` 생성. package `com.baseballlabsnc.app`, SHA-256 `8D:ED:A0:89:52:42:DE:FF:E1:83:FD:A8:82:B6:86:E6:F1:05:2C:05:94:55:72:4C:97:AD:F1:1A:AC:7C:0B:BB`.
+- 검증: JSON parse PASS / `.local-secrets` ignored / `node --check site/app.js`·`site/data.js` PASS / `git diff --check` PASS / 보안 담당 에이전트 PASS.
+- 커밋: `4960e18 Add TWA asset links`.
+
+0-B. 구현 및 보안 검증 결과 — Android TWA 프로젝트 생성 1차 (2026-07-07)
+- 코드 담당 에이전트: `android/**` Bubblewrap TWA wrapper project 생성. package `com.baseballlabsnc.app`, host `www.baseballlabsnc.com`, start URL `/`, manifest URL `https://www.baseballlabsnc.com/manifest.webmanifest`.
+- 총괄 보정: 생성 프로젝트의 `jcenter()`를 `mavenCentral()`로 교체, `androix.browser.trusted.*` 오타를 `androidx.browser.trusted.*`로 수정, 현재 웹앱이 알림을 사용하지 않으므로 알림 권한/permission request activity 제거.
+- 보호 범위: `site/**`, `.local-secrets/**`, `docs/evidence/**`, `docs/security/**` diff 0건. `site/` 복사본, keystore/password, APK/AAB, `local.properties`, build output 커밋 대상 0건.
+- 검증: Bubblewrap doctor PASS / `./gradlew assembleDebug --no-daemon` 실제 디버그 APK 컴파일 PASS / `node --check site/app.js`·`site/data.js` PASS / `assetlinks.json`·`twa-manifest.json` JSON parse PASS / signing key와 assetlinks SHA-256 일치 / `git diff --check` PASS.
+- 보안 담당 에이전트 재점검: BLOCKER/MAJOR/MINOR/NIT 0건. `jcenter()`, `androix`, `POST_NOTIFICATIONS`, `NotificationPermissionRequestActivity` 잔존 0건.
+- 남은 리스크: release APK/AAB 서명 빌드와 실제 Android 기기/에뮬레이터 TWA 실행 검증은 다음 티켓에서 수행한다. Play App Signing 사용 시 Play Console의 app signing SHA-256으로 `assetlinks.json` 추가/교체가 필요할 수 있다.
+- 다음 티켓 후보: `Android TWA release build·실기기 검증 1차`.
 
 0-1. 대상 파일
 - 수정 허용: `site/.well-known/assetlinks.json`, `docs/workflow/work-plan.md`, 필요 시 `docs/workflow/follow-up-queue.md`.
